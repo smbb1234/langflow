@@ -27,12 +27,10 @@ RUN apt-get update \
     && apt-get upgrade -y \
     && apt-get install --no-install-recommends -y \
     # deps for building python deps
-    build-essential \
-    git \
-    # npm
-    npm \
-    # gcc
-    gcc \
+    build-essential git gcc \
+    curl ca-certificates gnupg \
+    && curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
+    && apt-get install --no-install-recommends -y nodejs \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
