@@ -61,7 +61,7 @@ def safe_convert(data: Any, *, clean_data: bool = False) -> str:
             # Replace pipe characters to avoid markdown table issues
             processed_data = data.replace(r"\|", r"\\|", regex=True)
 
-            return processed_data.to_markdown(index=False)
+            return processed_data.to_markdown(index=False, floatfmt=".2f")
 
         return clean_string(str(data))
     except (ValueError, TypeError, AttributeError) as e:
