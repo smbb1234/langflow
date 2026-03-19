@@ -5,15 +5,23 @@ import { getURL } from "@/controllers/API/helpers/constants";
 import useAlertStore from "@/stores/alertStore";
 import useFlowStore from "@/stores/flowStore";
 import useFlowsManagerStore from "@/stores/flowsManagerStore";
-import type { APIClassType, APITemplateType } from "@/types/api";
+import type {
+  APIClassType,
+  APITemplateType,
+  ModelOptionType,
+} from "@/types/api";
 import type { AllNodeType } from "@/types/flow";
 
 export interface RefreshOptions {
   silent?: boolean;
 }
 
-// Prevents concurrent refresh operations
+// Prevents concurrent refresh operations; queues the latest request if busy
 let isRefreshInProgress = false;
+let pendingRefresh: {
+  queryClient?: QueryClient;
+  options?: RefreshOptions;
+} | null = null;
 
 /** Checks if a node has a model-type input field */
 export function isModelNode(node: AllNodeType): boolean {
@@ -69,7 +77,11 @@ export async function refreshAllModelInputs(
   queryClient?: QueryClient,
   options?: RefreshOptions,
 ): Promise<void> {
-  if (isRefreshInProgress) return;
+  if (isRefreshInProgress) {
+    // Queue the latest request so it runs after the current one finishes
+    pendingRefresh = { queryClient, options };
+    return;
+  }
   isRefreshInProgress = true;
 
   const { setSuccessData, setErrorData } = useAlertStore.getState();
@@ -82,10 +94,12 @@ export async function refreshAllModelInputs(
     const folderId = useFlowsManagerStore.getState().currentFlow?.folder_id;
 
     if (queryClient) {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["useGetModelProviders"] }),
-        queryClient.invalidateQueries({ queryKey: ["useGetEnabledModels"] }),
-      ]);
+      await queryClient.invalidateQueries({
+        queryKey: ["useGetModelProviders"],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["useGetEnabledModels"],
+      });
     }
 
     const nodesWithModelFields = allNodes.filter(isModelNode);
@@ -117,7 +131,78 @@ export async function refreshAllModelInputs(
     }
   } finally {
     isRefreshInProgress = false;
+    // If another refresh was requested while this one was running, run it now
+    if (pendingRefresh) {
+      const { queryClient: qc, options: opts } = pendingRefresh;
+      pendingRefresh = null;
+      await refreshAllModelInputs(qc, opts);
+    }
   }
+}
+
+/** Validates and corrects model value against available options */
+function validateModelValue(
+  template: APITemplateType,
+  modelFieldKey: string,
+): APITemplateType {
+  const modelField = template[modelFieldKey];
+  if (!modelField) return template;
+
+  const options = modelField.options || [];
+  const currentValue = modelField.value;
+
+  // Filter out disabled provider placeholders to get actual available models
+  const availableOptions = options.filter(
+    (opt: ModelOptionType) => !opt?.metadata?.is_disabled_provider,
+  );
+
+  // Get current model name from value
+  const currentModelName = Array.isArray(currentValue)
+    ? currentValue[0]?.name
+    : currentValue?.name;
+
+  // Check if current model is still available
+  const isCurrentModelValid =
+    currentModelName &&
+    availableOptions.some(
+      (opt: ModelOptionType) => opt.name === currentModelName,
+    );
+
+  if (isCurrentModelValid) {
+    // Current value is valid, no changes needed
+    return template;
+  }
+
+  // Current value is invalid - need to update it
+  if (availableOptions.length > 0) {
+    // Select the first available model
+    const firstOption = availableOptions[0];
+    const newValue = [
+      {
+        ...(firstOption.id && { id: firstOption.id }),
+        name: firstOption.name,
+        icon: firstOption.icon || "Bot",
+        provider: firstOption.provider || "Unknown",
+        metadata: firstOption.metadata ?? {},
+      },
+    ];
+    return {
+      ...template,
+      [modelFieldKey]: {
+        ...modelField,
+        value: newValue,
+      },
+    };
+  }
+
+  // No available options - clear the value
+  return {
+    ...template,
+    [modelFieldKey]: {
+      ...modelField,
+      value: [],
+    },
+  };
 }
 
 /** Refreshes a single node's model field via API */
@@ -156,18 +241,16 @@ async function refreshSingleNode(
     const responseData = response.data;
     if (!responseData?.template) return;
 
-    // Skip if no options (prevents infinite loops)
-    const newModelOptions = responseData.template[modelFieldKey]?.options || [];
-    if (newModelOptions.length === 0) return;
+    // Validate and correct the model value against available options
+    const validatedTemplate = validateModelValue(
+      responseData.template,
+      modelFieldKey,
+    );
 
     setNode(
       node.id,
       (currentNode) =>
-        createUpdatedNode(
-          currentNode,
-          responseData.template,
-          responseData.outputs,
-        ),
+        createUpdatedNode(currentNode, validatedTemplate, responseData.outputs),
       false,
     );
   } catch (error) {

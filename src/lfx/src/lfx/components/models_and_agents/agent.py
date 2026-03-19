@@ -14,15 +14,19 @@ if TYPE_CHECKING:
 from lfx.base.agents.agent import LCToolsAgentComponent
 from lfx.base.agents.events import ExceptionWithMessageError
 from lfx.base.models.unified_models import (
+    apply_provider_variable_config_to_build_config,
     get_language_model_options,
     get_llm,
+    get_provider_for_model_name,
     update_model_options_in_build_config,
 )
+from lfx.base.models.watsonx_constants import IBM_WATSONX_URLS
 from lfx.components.helpers import CurrentDateComponent
 from lfx.components.langchain_utilities.tool_calling import ToolCallingAgentComponent
 from lfx.custom.custom_component.component import get_component_toolkit
+from lfx.field_typing.range_spec import RangeSpec
 from lfx.helpers.base_model import build_model_from_schema
-from lfx.inputs.inputs import BoolInput, ModelInput
+from lfx.inputs.inputs import BoolInput, DropdownInput, ModelInput, StrInput
 from lfx.io import IntInput, MessageTextInput, MultilineInput, Output, SecretStrInput, TableInput
 from lfx.log.logger import logger
 from lfx.schema.data import Data
@@ -61,6 +65,22 @@ class AgentComponent(ToolCallingAgentComponent):
             real_time_refresh=True,
             advanced=True,
         ),
+        DropdownInput(
+            name="base_url_ibm_watsonx",
+            display_name="watsonx API Endpoint",
+            info="The base URL of the API (IBM watsonx.ai only)",
+            options=IBM_WATSONX_URLS,
+            value=IBM_WATSONX_URLS[0],
+            show=False,
+            real_time_refresh=True,
+        ),
+        StrInput(
+            name="project_id",
+            display_name="watsonx Project ID",
+            info="The project ID associated with the foundation model (IBM watsonx.ai only)",
+            show=False,
+            required=False,
+        ),
         MultilineInput(
             name="system_prompt",
             display_name="Agent Instructions",
@@ -82,6 +102,13 @@ class AgentComponent(ToolCallingAgentComponent):
             info="Number of chat history messages to retrieve.",
             advanced=True,
             show=True,
+        ),
+        IntInput(
+            name="max_tokens",
+            display_name="Max Tokens",
+            info="Maximum number of tokens to generate. Field name varies by provider.",
+            advanced=True,
+            range_spec=RangeSpec(min=1, max=128000, step=1, step_type="int"),
         ),
         MultilineInput(
             name="format_instructions",
@@ -159,15 +186,29 @@ class AgentComponent(ToolCallingAgentComponent):
         Output(name="response", display_name="Response", method="message_response"),
     ]
 
+    def _get_max_tokens_value(self):
+        """Return the user-supplied max_tokens or None when unset/zero."""
+        val = getattr(self, "max_tokens", None)
+        if val in {"", 0}:
+            return None
+        return val
+
+    def _get_llm(self):
+        """Override parent to include max_tokens from the Agent's input field."""
+        return get_llm(
+            model=self.model,
+            user_id=self.user_id,
+            api_key=getattr(self, "api_key", None),
+            max_tokens=self._get_max_tokens_value(),
+            watsonx_url=getattr(self, "base_url_ibm_watsonx", None),
+            watsonx_project_id=getattr(self, "project_id", None),
+        )
+
     async def get_agent_requirements(self):
         """Get the agent requirements for the agent."""
         from langchain_core.tools import StructuredTool
 
-        llm_model = get_llm(
-            model=self.model,
-            user_id=self.user_id,
-            api_key=self.api_key,
-        )
+        llm_model = self._get_llm()
         if llm_model is None:
             msg = "No language model selected. Please choose a model to proceed."
             raise ValueError(msg)
@@ -449,13 +490,21 @@ class AgentComponent(ToolCallingAgentComponent):
         )
         build_config = dotdict(build_config)
 
-        # Iterate over all providers in the MODEL_PROVIDERS_DICT
         if field_name == "model":
-            self.log(str(field_value))
-            # Update input types for all fields
             build_config = self.update_input_types(build_config)
 
-            # Validate required keys
+        current_model_value = field_value if field_name == "model" else build_config.get("model", {}).get("value")
+        provider = ""
+        if isinstance(current_model_value, list) and current_model_value:
+            selected_model = current_model_value[0]
+            provider = (selected_model.get("provider") or "").strip()
+            if not provider and selected_model.get("name"):
+                provider = get_provider_for_model_name(str(selected_model["name"]))
+
+        if provider:
+            build_config = apply_provider_variable_config_to_build_config(build_config, provider)
+
+        if field_name == "model":
             default_keys = [
                 "code",
                 "_type",

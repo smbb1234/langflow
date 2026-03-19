@@ -53,7 +53,6 @@ class SaveToFileComponent(Component):
     GDRIVE_FORMAT_CHOICES = ["txt", "json", "csv", "xlsx", "slides", "docs", "jpg", "mp3"]
 
     inputs = [
-        # Storage location selection
         SortableListInput(
             name="storage_location",
             display_name="Storage Location",
@@ -62,6 +61,8 @@ class SaveToFileComponent(Component):
             options=_get_storage_location_options(),
             real_time_refresh=True,
             limit=1,
+            value=[{"name": "Local", "icon": "hard-drive"}],
+            advanced=True,
         ),
         # Common inputs
         HandleInput(
@@ -69,7 +70,7 @@ class SaveToFileComponent(Component):
             display_name="File Content",
             info="The input to save.",
             dynamic=True,
-            input_types=["Data", "DataFrame", "Message"],
+            input_types=["Data", "JSON", "DataFrame", "Table", "Message"],
             required=True,
         ),
         StrInput(

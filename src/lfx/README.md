@@ -26,6 +26,18 @@ uv run lfx serve my_flow.json
 
 ## Key Features
 
+### Pluggable Services
+
+lfx supports a pluggable service architecture that allows you to customize and extend its behavior. You can replace built-in services (storage, telemetry, tracing, etc.) with your own implementations or use Langflow's full-featured services.
+
+📖 **See [PLUGGABLE_SERVICES.md](./PLUGGABLE_SERVICES.md) for details** including:
+
+- Quick start guides for CLI users, library developers, and plugin authors
+- Service registration via config files, decorators, and entry points
+- Creating custom service implementations with dependency injection
+- Using full-featured Langflow services in lfx
+- Troubleshooting and migration guides
+
 ### Flattened Component Access
 
 lfx now supports simplified component imports for better developer experience:
@@ -116,6 +128,7 @@ uv run lfx run my_flow.json "What is AI?"
 - `--flow-json`: Inline JSON flow content as a string
 - `--stdin`: Read JSON flow from stdin
 - `--check-variables/--no-check-variables`: Check global variables for environment compatibility (default: check)
+- `--env-var`: Pass environment variables to the flow in the format `KEY=VALUE`. These variables take precedence over OS environment variables.
 
 **Examples:**
 
@@ -137,6 +150,9 @@ echo '{"data": {"nodes": [...], "edges": [...]}}' | uv run lfx run --stdin --inp
 
 # Inline JSON
 uv run lfx run --flow-json '{"data": {"nodes": [...], "edges": [...]}}' --input-value "Test"
+
+# Pass dynamic environment variables (overrides OS environment variables)
+uv run lfx run my_flow.json "Hello" --env-var API_KEY=my-api-key --env-var MODEL_NAME=gpt-4
 ```
 
 ### Complete Agent Example
