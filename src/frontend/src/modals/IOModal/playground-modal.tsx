@@ -29,6 +29,11 @@ import { SelectedViewField } from "./components/selected-view-field";
 import { SidebarOpenView } from "./components/sidebar-open-view";
 import { useGetFlowId } from "./hooks/useGetFlowId";
 
+import {
+  PLAYGROUND_BACKGROUNDS,
+  PLAYGROUND_OVERLAY_CLASSES,
+} from "@/constants/playground-backgrounds";
+
 export default function IOModal({
   children,
   open,
@@ -367,7 +372,13 @@ export default function IOModal({
                 className={cn(
                   "relative flex h-full flex-col overflow-y-auto border-r border-border bg-muted p-4 text-center custom-scroll dark:bg-canvas",
                   playgroundPage ? "pt-[15px]" : "pt-3.5",
-                )}
+                )} 
+                style={{
+                  backgroundImage: `url(${PLAYGROUND_BACKGROUNDS.sidebar})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  backgroundRepeat: "no-repeat",
+                }}
               >
                 <div className="flex items-center justify-between gap-2 pb-8 align-middle">
                   <div className="flex items-center gap-2">
@@ -452,7 +463,15 @@ export default function IOModal({
                 </ShadTooltip>
               </div>
             )} */}
-            <div className="flex h-full min-w-96 flex-grow bg-background">
+            <div 
+              className="relative flex h-full min-w-96 flex-grow overflow-hidden bg-background"
+              style={{
+                backgroundImage: `url(${PLAYGROUND_BACKGROUNDS.main})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+              }}
+            >
               {selectedViewField && !sessionsLoading && (
                 <SelectedViewField
                   selectedViewField={selectedViewField}

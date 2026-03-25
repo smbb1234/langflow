@@ -16,6 +16,11 @@ import { Messages } from "../../chat-view/chat-messages";
 import { useChatHistory } from "../../chat-view/chat-messages/hooks/use-chat-history";
 import { useSessionManager } from "../../hooks/use-session-manager";
 
+import {
+  PLAYGROUND_BACKGROUNDS,
+  PLAYGROUND_OVERLAY_CLASSES,
+} from "@/constants/playground-backgrounds";
+
 type FlowPageSlidingContainerContentProps = {
   isFullscreen: boolean;
   setIsFullscreen: (value: boolean) => void;
@@ -128,16 +133,43 @@ export function FlowPageSlidingContainerContent({
 
   return (
     <div
-      className="h-full w-full muted shadow-lg flex flex-col relative z-[50] @container/chat-panel"
+      className="h-full w-full bg-background shadow-lg flex flex-col relative z-[50] @container/chat-panel overflow-hidden"
+      style={{
+        backgroundImage: `url(${PLAYGROUND_BACKGROUNDS.main})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+      role="presentation"
       onDragOver={dragOver}
       onDragEnter={dragEnter}
       onDragLeave={dragLeave}
       onDrop={onDrop}
     >
-      <div className="flex-1 flex overflow-hidden">
+      <div
+        className={`
+          pointer-events-none absolute inset-0
+          ${PLAYGROUND_OVERLAY_CLASSES.main}
+        `}
+      />
+      <div className="relative z-10 flex-1 flex overflow-hidden">
         <AnimatedConditional isOpen={sidebarOpen} width="236px">
-          <div className="h-full overflow-y-auto border-r border-border w-218 bg-primary-foreground">
-            <div className="p-4">
+          <div
+            className="relative h-full overflow-y-auto border-r border-border w-218 bg-primary-foreground"
+            style={{
+              backgroundImage: `url(${PLAYGROUND_BACKGROUNDS.sidebar})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+            }}
+          >
+            <div
+              className={`
+                pointer-events-none absolute inset-0
+                ${PLAYGROUND_OVERLAY_CLASSES.sidebar}
+              `}
+            />
+            <div className="relative z-10 p-4">
               <ChatSidebar
                 sessions={sessions}
                 onNewChat={createSession}
