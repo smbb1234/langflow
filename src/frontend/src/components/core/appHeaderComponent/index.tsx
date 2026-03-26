@@ -16,6 +16,8 @@ import useTheme from "@/customization/hooks/use-custom-theme";
 import useAlertStore from "@/stores/alertStore";
 import FlowMenu from "./components/FlowMenu";
 
+import topbarBg from "@/assets/backgrounds/topbar-bg.png";
+
 export default function AppHeader(): JSX.Element {
   const notificationCenter = useAlertStore((state) => state.notificationCenter);
   const navigate = useCustomNavigate();
@@ -51,7 +53,13 @@ export default function AppHeader(): JSX.Element {
 
   return (
     <div
-      className={`z-10 flex h-[48px] w-full items-center justify-between border-b pr-5 pl-2.5 dark:bg-background`}
+      className={`z-10 flex h-[48px] w-full items-center justify-between border-b pr-5 pl-2.5`}
+      style={{
+        backgroundImage: `url(${topbarBg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
       data-testid="app-header"
     >
       {/* Left Section */}

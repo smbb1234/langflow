@@ -30,8 +30,7 @@ import { SidebarOpenView } from "./components/sidebar-open-view";
 import { useGetFlowId } from "./hooks/useGetFlowId";
 
 import {
-  PLAYGROUND_BACKGROUNDS,
-  PLAYGROUND_OVERLAY_CLASSES,
+  PLAYGROUND_BACKGROUNDS
 } from "@/constants/playground-backgrounds";
 
 export default function IOModal({

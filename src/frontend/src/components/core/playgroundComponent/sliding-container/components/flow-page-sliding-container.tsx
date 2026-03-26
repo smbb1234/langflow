@@ -17,8 +17,7 @@ import { useChatHistory } from "../../chat-view/chat-messages/hooks/use-chat-his
 import { useSessionManager } from "../../hooks/use-session-manager";
 
 import {
-  PLAYGROUND_BACKGROUNDS,
-  PLAYGROUND_OVERLAY_CLASSES,
+  PLAYGROUND_BACKGROUNDS
 } from "@/constants/playground-backgrounds";
 
 type FlowPageSlidingContainerContentProps = {
@@ -146,16 +145,10 @@ export function FlowPageSlidingContainerContent({
       onDragLeave={dragLeave}
       onDrop={onDrop}
     >
-      <div
-        className={`
-          pointer-events-none absolute inset-0
-          ${PLAYGROUND_OVERLAY_CLASSES.main}
-        `}
-      />
-      <div className="relative z-10 flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-hidden">
         <AnimatedConditional isOpen={sidebarOpen} width="236px">
           <div
-            className="relative h-full overflow-y-auto border-r border-border w-218 bg-primary-foreground"
+            className="h-full overflow-y-auto border-r border-border w-218 bg-primary-foreground"
             style={{
               backgroundImage: `url(${PLAYGROUND_BACKGROUNDS.sidebar})`,
               backgroundSize: "cover",
@@ -163,13 +156,7 @@ export function FlowPageSlidingContainerContent({
               backgroundRepeat: "no-repeat",
             }}
           >
-            <div
-              className={`
-                pointer-events-none absolute inset-0
-                ${PLAYGROUND_OVERLAY_CLASSES.sidebar}
-              `}
-            />
-            <div className="relative z-10 p-4">
+            <div className="p-4">
               <ChatSidebar
                 sessions={sessions}
                 onNewChat={createSession}
