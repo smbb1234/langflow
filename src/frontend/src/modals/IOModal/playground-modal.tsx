@@ -446,7 +446,7 @@ export default function IOModal({
                       <div className="text-sm">
                         {t("modal.io.builtWithLangflow")}
                       </div>
-                    </Button>
+                    </Button> */}
                   </div>
                 )}
               </div>
