@@ -134,14 +134,6 @@ jobs:
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup Environment
-        uses: astral-sh/setup-uv@v6
-        with:
-          enable-cache: true
-          cache-dependency-glob: "uv.lock"
-          python-version: ${{ env.PYTHON_VERSION }}
-          prune-cache: false
-
       - name: Determine version
         id: version
         shell: bash
@@ -166,14 +158,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
-
-      - name: Setup Environment
-        uses: astral-sh/setup-uv@v6
-        with:
-          enable-cache: true
-          cache-dependency-glob: "uv.lock"
-          python-version: ${{ env.PYTHON_VERSION }}
-          prune-cache: false
 
       - name: Determine version
         id: version
