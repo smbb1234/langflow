@@ -134,14 +134,6 @@ jobs:
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup Environment
-        uses: astral-sh/setup-uv@v6
-        with:
-          enable-cache: true
-          cache-dependency-glob: "uv.lock"
-          python-version: ${{ env.PYTHON_VERSION }}
-          prune-cache: false
-
       - name: Determine version
         id: version
         shell: bash
@@ -167,29 +159,12 @@ jobs:
         with:
           ref: ${{ inputs.ref }}
 
-      - name: Setup Environment
-        uses: astral-sh/setup-uv@v6
-        with:
-          enable-cache: true
-          cache-dependency-glob: "uv.lock"
-          python-version: ${{ env.PYTHON_VERSION }}
-          prune-cache: false
-
       - name: Determine version
         id: version
         shell: bash
         run: |
           set -Eeuo pipefail
-          version=$(uv tree 2>/dev/null | grep '^langflow ' | head -n 1 | cut -d' ' -f2 | sed 's/^v//')
-          if [[ -z "$version" ]]; then
-            version=$(python - <<'PY'
-              import re, pathlib
-              text = pathlib.Path("pyproject.toml").read_text(encoding="utf-8")
-              m = re.search(r'^\s*version\s*=\s*"([^"]+)"', text, re.M)
-              print(m.group(1) if m else "")
-              PY
-              )
-          fi
+          version=$(python -c 'import re, pathlib; text = pathlib.Path("pyproject.toml").read_text(encoding="utf-8"); m = re.search(r"^\s*version\s*=\s*\"([^\"]+)\"", text, re.M); print(m.group(1) if m else "")')
           if [[ -z "$version" ]]; then
             echo "Failed to determine main version." >&2
             exit 1
@@ -200,6 +175,12 @@ jobs:
   package-image:
     name: Build and Export Docker Image
     needs: [determine-base-version, determine-main-version]
+    if: |
+      always() &&
+      (
+        (inputs.release_type == 'base' && needs.determine-base-version.result == 'success') ||
+        (inputs.release_type != 'base' && needs.determine-main-version.result == 'success')
+      )
     runs-on: ubuntu-latest
     outputs:
       image_full_name: ${{ steps.meta.outputs.image_full_name }}
