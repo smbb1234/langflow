@@ -180,16 +180,7 @@ jobs:
         shell: bash
         run: |
           set -Eeuo pipefail
-          version=$(uv tree 2>/dev/null | grep '^langflow ' | head -n 1 | cut -d' ' -f2 | sed 's/^v//')
-          if [[ -z "$version" ]]; then
-            version=$(python - <<'PY'
-              import re, pathlib
-              text = pathlib.Path("pyproject.toml").read_text(encoding="utf-8")
-              m = re.search(r'^\s*version\s*=\s*"([^"]+)"', text, re.M)
-              print(m.group(1) if m else "")
-              PY
-              )
-          fi
+          version=$(python -c 'import re, pathlib; text = pathlib.Path("pyproject.toml").read_text(encoding="utf-8"); m = re.search(r"^\s*version\s*=\s*\"([^\"]+)\"", text, re.M); print(m.group(1) if m else "")')
           if [[ -z "$version" ]]; then
             echo "Failed to determine main version." >&2
             exit 1
