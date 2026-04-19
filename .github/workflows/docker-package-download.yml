@@ -176,6 +176,12 @@ jobs:
   package-image:
     name: Build and Export Docker Image
     needs: [determine-base-version, determine-main-version]
+    if: |
+      always() &&
+      (
+        (inputs.release_type == 'base' && needs.determine-base-version.result == 'success') ||
+        (inputs.release_type != 'base' && needs.determine-main-version.result == 'success')
+      )
     runs-on: ubuntu-latest
     outputs:
       image_full_name: ${{ steps.meta.outputs.image_full_name }}
