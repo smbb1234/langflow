@@ -75,6 +75,7 @@ on:
       ref:
         required: false
         type: string
+        default: dx_dev
         description: "Ref to check out (branch, tag, or commit)."
       push_to_registry:
         description: "Compatibility input only. This workflow does not push images."
