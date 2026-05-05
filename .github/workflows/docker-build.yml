@@ -263,7 +263,7 @@ jobs:
         if: ${{ inputs.release_type == 'main' || inputs.release_type == 'main-frontend' || inputs.release_type == 'main-all' }}
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
           cache-dependency-path: src/frontend/package-lock.json
 
