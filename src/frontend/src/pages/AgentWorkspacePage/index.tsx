@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import AlertDisplayArea from "@/alerts/displayArea";
@@ -8,7 +8,7 @@ import { useCustomNavigate } from "@/customization/hooks/use-custom-navigate";
 import useFlowsManagerStore from "@/stores/flowsManagerStore";
 import { useUtilityStore } from "@/stores/utilityStore";
 import { type CookieOptions, getCookie, setCookie } from "@/utils/utils";
-import { getInputsAndOutputs } from "../../utils/storeUtils";
+import { getInputsAndOutputs } from "@/utils/storeUtils";
 import { MOCK_AGENT_WORKSPACE_RUN } from "./constants";
 import { RunInspectorPanel } from "./components/RunInspectorPanel";
 import { RunMainPanel } from "./components/RunMainPanel";
@@ -24,9 +24,12 @@ export default function AgentWorkspacePage() {
   const setCurrentFlow = useFlowsManagerStore((state) => state.setCurrentFlow);
   const setClientId = useUtilityStore((state) => state.setClientId);
   const [isLoading, setIsLoading] = useState(true);
+  const requestRef = useRef(0);
 
   useEffect(() => {
     let mounted = true;
+    const requestId = requestRef.current + 1;
+    requestRef.current = requestId;
 
     const initializeWorkspace = async () => {
       setIsLoading(true);
@@ -37,6 +40,7 @@ export default function AgentWorkspacePage() {
         }
 
         const flow = await getFlow({ id, public: true });
+
         if (!flow) {
           navigate("/");
           return;
@@ -51,14 +55,14 @@ export default function AgentWorkspacePage() {
           return;
         }
 
-        if (mounted) {
+        if (mounted && requestRef.current === requestId) {
           setCurrentFlow(flow);
           document.title = `${flow.name} · Agent Workspace`;
         }
       } catch {
         navigate("/");
       } finally {
-        if (mounted) {
+        if (mounted && requestRef.current === requestId) {
           setIsLoading(false);
         }
       }
@@ -69,7 +73,10 @@ export default function AgentWorkspacePage() {
     return () => {
       mounted = false;
     };
-  }, [getFlow, id, navigate, setCurrentFlow]);
+    // We intentionally key initialization by URL id to avoid unstable hook callbacks
+    // from retriggering endless loading requests on every render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   useEffect(() => {
     const clientId = getCookie("client_id");
