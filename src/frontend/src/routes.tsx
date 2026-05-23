@@ -69,7 +69,7 @@ const router = createBrowserRouter(
       <Route
         path=""
         element={
-          <ContextWrapper key={3}>
+          <ContextWrapper key="workspace">
             <PlaygroundAuthGate>
               <AgentWorkspacePage />
             </PlaygroundAuthGate>
