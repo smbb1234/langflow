@@ -1,6 +1,6 @@
-import React, {
+import {
   type Dispatch,
-  ReactNode,
+  type ReactNode,
   type SetStateAction,
   useState,
 } from "react";
@@ -81,9 +81,10 @@ export default function PublishDropdown({
             });
           }
         },
-        onError: (e: any) => {
+        onError: (e: unknown) => {
+          const err = e as { response?: { data?: { detail?: string } }; message?: string };
           const detail =
-            e.response?.data?.detail || e.message || "Unknown error";
+            err.response?.data?.detail || err.message || "Unknown error";
           setErrorData({
             title: "Failed to save flow",
             list: [detail],
@@ -215,6 +216,28 @@ export default function PublishDropdown({
                 />
               </div>
             </DropdownMenuItem>
+          )}
+
+          {ENABLE_PUBLISH && hasIO && isPublished && flowId && (
+            <CustomLink className="flex-1" to={`/workspace/${flowId}`} target="_blank">
+              <DropdownMenuItem
+                className="deploy-dropdown-item group"
+                data-testid="agent-workspace-item"
+                onClick={() => {}}
+              >
+                <IconComponent
+                  name="Activity"
+                  aria-hidden="true"
+                  className="icon-size mr-2"
+                />
+                <span>Agent Workspace</span>
+                <IconComponent
+                  name="ExternalLink"
+                  aria-hidden="true"
+                  className="icon-size ml-auto hidden group-hover:block"
+                />
+              </DropdownMenuItem>
+            </CustomLink>
           )}
         </DropdownMenuContent>
       </DropdownMenu>
