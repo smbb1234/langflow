@@ -1,6 +1,6 @@
-import React, {
+import {
   type Dispatch,
-  ReactNode,
+  type ReactNode,
   type SetStateAction,
   useState,
 } from "react";
@@ -81,9 +81,10 @@ export default function PublishDropdown({
             });
           }
         },
-        onError: (e: any) => {
+        onError: (e: unknown) => {
+          const err = e as { response?: { data?: { detail?: string } }; message?: string };
           const detail =
-            e.response?.data?.detail || e.message || "Unknown error";
+            err.response?.data?.detail || err.message || "Unknown error";
           setErrorData({
             title: "Failed to save flow",
             list: [detail],
