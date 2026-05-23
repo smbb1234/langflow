@@ -155,6 +155,15 @@ export function LoginAuthPanel(props: LoginAuthPanelProps): JSX.Element {
           </Button>
         </Form.Submit>
 
+        <CustomLink to="/signup" className="w-full">
+          <Button
+            type="button"
+            className="w-full rounded-[8px] bg-[#0ea5e9] px-6 py-[14px] text-[15px] font-semibold text-white"
+          >
+            Sign up
+          </Button>
+        </CustomLink>
+
         <div className="flex w-full gap-[10px] rounded-[6px] border border-[#1e293b] bg-[#0a1018] px-3 py-2.5">
           <span
             aria-hidden="true"
@@ -169,11 +178,7 @@ export function LoginAuthPanel(props: LoginAuthPanelProps): JSX.Element {
         </div>
 
         <p className="text-center text-[12px] text-[#64748b]">
-          New here?{" "}
-          <CustomLink to="/signup" className="font-medium text-[#0ea5e9]">
-            Request access
-          </CustomLink>{" "}
-          ·{" "}
+          New here? Request access ·{" "}
           <button type="button" className="font-medium text-[#0ea5e9]">
             What's new
           </button>

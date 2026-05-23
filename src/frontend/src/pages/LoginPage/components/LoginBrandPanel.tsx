@@ -13,8 +13,11 @@ export function LoginBrandPanel({
     <div className="relative h-full w-full shrink-0 overflow-hidden bg-[#070d14] p-[2px] lg:w-[820px] lg:flex lg:flex-col lg:gap-[2px]">
       <div className="relative z-10 flex h-full flex-col gap-[2px]">
         <div className="flex w-full items-center justify-between px-12 py-6 max-lg:px-6">
-          <LangflowLogo title="Langflow logo" className="h-[32px] w-[40px]" />
           <div className="flex items-center gap-4">
+            <LangflowLogo
+              title="Langflow logo"
+              className="h-[32px] w-[40px] text-[#0ea5e9]"
+            />
             <span className="text-[13px] text-[#94a3b8]">Need help?</span>
             <button
               type="button"
