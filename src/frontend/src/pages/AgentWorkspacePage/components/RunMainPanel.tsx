@@ -10,7 +10,7 @@ const TOOL_CANDIDATES = [
   { name: "python.execute", score: 0.41, selected: false, progress: 22 },
 ];
 
-export function RunMainPanel({ run: _run }: { run: AgentWorkspaceRun }) {
+export function RunMainPanel({ run }: { run: AgentWorkspaceRun }) {
   // TODO: connect to real agent runtime API.
   const handleNoopAction = () => {};
 
