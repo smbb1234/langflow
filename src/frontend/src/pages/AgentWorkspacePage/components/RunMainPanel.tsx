@@ -10,6 +10,9 @@ const TOOL_CANDIDATES = [
 ];
 
 export function RunMainPanel({ run: _run }: { run: AgentWorkspaceRun }) {
+  // TODO: connect to real agent runtime API.
+  const handleNoopAction = () => {};
+
   return (
     <main className="flex min-h-0 flex-1 flex-col bg-[#0b1320]">
       <header className="border-b border-white/10 px-4 py-4 lg:px-6">
@@ -26,18 +29,22 @@ export function RunMainPanel({ run: _run }: { run: AgentWorkspaceRun }) {
           <div className="flex items-center gap-2">
             <button
               className="rounded-[10px] border border-white/15 bg-[#111b2b] px-3 py-1.5 text-xs text-slate-100"
+              onClick={handleNoopAction}
               type="button"
             >
               Branch
             </button>
             <button
               className="rounded-[10px] border border-white/15 bg-[#111b2b] px-3 py-1.5 text-xs text-slate-100"
+              onClick={handleNoopAction}
               type="button"
             >
               Export
             </button>
             <button
+              aria-label="More actions"
               className="rounded-[10px] border border-white/15 bg-[#111b2b] px-3 py-1.5 text-xs text-slate-100"
+              onClick={handleNoopAction}
               type="button"
             >
               ...
@@ -162,6 +169,7 @@ export function RunMainPanel({ run: _run }: { run: AgentWorkspaceRun }) {
             />
             <button
               className="rounded-[10px] bg-sky-500 px-3 py-2 text-xs font-medium text-white"
+              onClick={handleNoopAction}
               type="submit"
             >
               Send

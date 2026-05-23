@@ -4,7 +4,7 @@ import { ApprovalCard } from "./ApprovalCard";
 import { UncertaintyCard } from "./UncertaintyCard";
 
 export function RunInspectorPanel({ run }: { run: AgentWorkspaceRun }) {
-  // TODO: connect to real guardrail/evidence/trace/approval APIs.
+  // TODO: connect to real guardrail/evidence/trace API.
   const currentRunItems = [
     { label: "Run ID", value: run.id },
     { label: "Started", value: run.startedAt },
