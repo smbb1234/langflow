@@ -1,6 +1,5 @@
 import type { AgentWorkspaceRun } from "../types";
-
-const stageChips = ["Plan", "Retrieve", "Reason", "Tool", "Validate", "Response"];
+import { MOCK_AGENT_WORKSPACE_COPY } from "../constants";
 
 export function WorkspaceTopBar({ run }: { run: AgentWorkspaceRun }) {
   // TODO: connect to real runtime/token/cost API.
@@ -25,7 +24,7 @@ export function WorkspaceTopBar({ run }: { run: AgentWorkspaceRun }) {
           </span>
           <span className="min-w-0 truncate text-slate-100">{run.title}</span>
           <div className="hidden shrink-0 items-center gap-1 xl:flex">
-            {stageChips.map((stage) => (
+            {MOCK_AGENT_WORKSPACE_COPY.stageChips.map((stage) => (
               <span
                 className="rounded-md border border-slate-700/80 px-1.5 py-0.5 text-[10px] text-slate-300"
                 key={stage}
@@ -43,13 +42,13 @@ export function WorkspaceTopBar({ run }: { run: AgentWorkspaceRun }) {
 
       <div className="ml-3 flex max-w-[320px] flex-wrap items-center justify-end gap-1.5 text-[11px]">
         <span className="rounded-md border border-slate-700/80 px-2 py-0.5 text-slate-200">
-          p95 412ms
+          p95 {run.metrics.p95Ms}ms
         </span>
         <span className="rounded-md border border-slate-700/80 px-2 py-0.5 text-slate-200">
-          tok 1.2k
+          tok {(run.metrics.tokenCount / 1000).toFixed(1)}k
         </span>
         <span className="rounded-md border border-slate-700/80 px-2 py-0.5 text-slate-200">
-          $0.014
+          ${run.metrics.costUsd.toFixed(3)}
         </span>
         <span className="rounded-md border border-amber-500/70 bg-amber-500/10 px-2 py-0.5 text-amber-300">
           1 approval pending
