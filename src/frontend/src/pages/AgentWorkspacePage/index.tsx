@@ -1,3 +1,4 @@
+import { MOCK_AGENT_WORKSPACE_RUN } from "./constants";
 import { RunInspectorPanel } from "./components/RunInspectorPanel";
 import { RunMainPanel } from "./components/RunMainPanel";
 import { RunSidebar } from "./components/RunSidebar";
@@ -7,13 +8,13 @@ import { WorkspaceTopBar } from "./components/WorkspaceTopBar";
 export default function AgentWorkspacePage() {
   return (
     <div className="h-screen w-full overflow-hidden bg-[#0a1018] text-[#f1f5f9]">
-      <WorkspaceTopBar />
+      <WorkspaceTopBar run={MOCK_AGENT_WORKSPACE_RUN} />
       <div className="flex h-[calc(100vh-56px-64px)] min-h-0 flex-col overflow-hidden lg:flex-row">
-        <RunSidebar />
-        <RunMainPanel />
-        <RunInspectorPanel />
+        <RunSidebar run={MOCK_AGENT_WORKSPACE_RUN} />
+        <RunMainPanel run={MOCK_AGENT_WORKSPACE_RUN} />
+        <RunInspectorPanel run={MOCK_AGENT_WORKSPACE_RUN} />
       </div>
-      <TraceConsoleBar />
+      <TraceConsoleBar run={MOCK_AGENT_WORKSPACE_RUN} />
     </div>
   );
 }
