@@ -1,4 +1,5 @@
 import type { AgentWorkspaceRun } from "../types";
+import { WORKSPACE_UI } from "../ui";
 import { ApprovalCard } from "./ApprovalCard";
 import { UncertaintyCard } from "./UncertaintyCard";
 
@@ -27,11 +28,13 @@ export function RunInspectorPanel({ run }: { run: AgentWorkspaceRun }) {
   ] as const;
 
   return (
-    <aside className="order-last h-full overflow-y-auto border-l border-white/10 bg-[#0d1522] p-3 md:w-[300px] lg:w-[336px]">
+    <aside
+      className={`order-last h-full min-h-0 overflow-y-auto border-l border-white/10 ${WORKSPACE_UI.panelBg} p-[14px] md:w-[300px] lg:w-[336px]`}
+    >
       <div className="space-y-3">
         <nav
           aria-label="Inspector tabs"
-          className="flex gap-2 rounded-[12px] border border-white/10 bg-[#121b2b] p-1"
+          className={`flex gap-2 ${WORKSPACE_UI.radius12} ${WORKSPACE_UI.panelCardBorder} ${WORKSPACE_UI.panelCardBg} p-1`}
           role="tablist"
         >
           {[
@@ -52,8 +55,12 @@ export function RunInspectorPanel({ run }: { run: AgentWorkspaceRun }) {
           ))}
         </nav>
 
-        <section className="rounded-[14px] border border-white/10 bg-[#121b2b] p-3">
-          <h2 className="mb-2 text-sm font-medium text-slate-100">
+        <section
+          className={`${WORKSPACE_UI.radius12} ${WORKSPACE_UI.panelCardBorder} ${WORKSPACE_UI.panelCardBg} ${WORKSPACE_UI.pad14}`}
+        >
+          <h2
+            className={`mb-2 ${WORKSPACE_UI.title13} ${WORKSPACE_UI.textPrimary}`}
+          >
             Current run
           </h2>
           <dl className="grid grid-cols-2 gap-x-3 gap-y-2">
@@ -71,8 +78,12 @@ export function RunInspectorPanel({ run }: { run: AgentWorkspaceRun }) {
         <ApprovalCard run={run} />
         <UncertaintyCard run={run} />
 
-        <section className="rounded-[14px] border border-white/10 bg-[#121b2b] p-3">
-          <h2 className="mb-2 text-sm font-medium text-slate-100">
+        <section
+          className={`${WORKSPACE_UI.radius12} ${WORKSPACE_UI.panelCardBorder} ${WORKSPACE_UI.panelCardBg} ${WORKSPACE_UI.pad14}`}
+        >
+          <h2
+            className={`mb-2 ${WORKSPACE_UI.title13} ${WORKSPACE_UI.textPrimary}`}
+          >
             Blocked / unresolved
           </h2>
           <ul className="space-y-2">
@@ -90,8 +101,12 @@ export function RunInspectorPanel({ run }: { run: AgentWorkspaceRun }) {
           </ul>
         </section>
 
-        <section className="rounded-[14px] border border-white/10 bg-[#121b2b] p-3">
-          <h2 className="mb-2 text-sm font-medium text-slate-100">
+        <section
+          className={`${WORKSPACE_UI.radius12} ${WORKSPACE_UI.panelCardBorder} ${WORKSPACE_UI.panelCardBg} ${WORKSPACE_UI.pad14}`}
+        >
+          <h2
+            className={`mb-2 ${WORKSPACE_UI.title13} ${WORKSPACE_UI.textPrimary}`}
+          >
             Tool choice (compact)
           </h2>
           <dl className="space-y-2 text-xs">
@@ -112,8 +127,14 @@ export function RunInspectorPanel({ run }: { run: AgentWorkspaceRun }) {
           </dl>
         </section>
 
-        <section className="rounded-[14px] border border-white/10 bg-[#121b2b] p-3">
-          <h2 className="mb-1 text-sm font-medium text-slate-100">Evidence</h2>
+        <section
+          className={`${WORKSPACE_UI.radius12} ${WORKSPACE_UI.panelCardBorder} ${WORKSPACE_UI.panelCardBg} ${WORKSPACE_UI.pad14}`}
+        >
+          <h2
+            className={`mb-1 ${WORKSPACE_UI.title13} ${WORKSPACE_UI.textPrimary}`}
+          >
+            Evidence
+          </h2>
           {run.evidence.map((item) => (
             <p className="text-xs text-slate-300" key={item.id}>
               {item.source}: {item.detail}

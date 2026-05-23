@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import type { AgentWorkspaceRun } from "../types";
+import { WORKSPACE_UI } from "../ui";
 
 export function RunSidebar({ run }: { run: AgentWorkspaceRun }) {
   const [search, setSearch] = useState("");
@@ -42,15 +43,17 @@ export function RunSidebar({ run }: { run: AgentWorkspaceRun }) {
   }, [search, activeFilter]);
 
   return (
-    <aside className="hidden h-full flex-col border-r border-white/10 bg-[#0d1522] p-3 md:flex md:w-[240px] lg:w-[272px]">
+    <aside
+      className={`hidden h-full min-h-0 flex-col border-r border-white/10 ${WORKSPACE_UI.panelBg} p-[14px] md:flex md:w-[240px] lg:w-[272px]`}
+    >
       <button
-        className="mb-3 w-full rounded-md border border-slate-700 bg-slate-800 px-3 py-2 text-left text-sm font-medium text-slate-100 transition hover:bg-slate-700"
+        className="mb-3 w-full rounded-[12px] border border-slate-700 bg-slate-800 px-3 py-2 text-left text-sm font-medium text-slate-100 transition hover:bg-slate-700"
         type="button"
       >
         New run
       </button>
       <input
-        className="mb-3 w-full rounded-md border border-slate-700 bg-[#0a1220] px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
+        className="mb-3 w-full rounded-[12px] border border-slate-700 bg-[#0a1220] px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
         onChange={(event) => setSearch(event.target.value)}
         placeholder="Search runs, agents..."
         value={search}
