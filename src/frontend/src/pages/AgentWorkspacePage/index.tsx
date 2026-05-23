@@ -15,6 +15,7 @@ import { RunMainPanel } from "./components/RunMainPanel";
 import { RunSidebar } from "./components/RunSidebar";
 import { TraceConsoleBar } from "./components/TraceConsoleBar";
 import { WorkspaceTopBar } from "./components/WorkspaceTopBar";
+import { MOCK_AGENT_WORKSPACE_RUN } from "./constants";
 
 export default function AgentWorkspacePage() {
   useGetConfig({});
@@ -102,10 +103,10 @@ export default function AgentWorkspacePage() {
   }
 
   return (
-    <div className="flex h-screen w-full flex-col overflow-hidden bg-[#0a1018] text-[#f1f5f9]">
+    <div className="h-screen w-full overflow-x-hidden overflow-y-hidden bg-[#0a1018] text-[#f1f5f9]">
       {/* TODO: connect to real agent runtime API. */}
       <WorkspaceTopBar run={MOCK_AGENT_WORKSPACE_RUN} />
-      <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
+      <div className="flex h-[calc(100vh-56px-64px)] min-h-0 flex-col overflow-hidden border-y border-white/10 md:flex-row md:border-y-0">
         <RunSidebar run={MOCK_AGENT_WORKSPACE_RUN} />
         <RunMainPanel run={MOCK_AGENT_WORKSPACE_RUN} />
         <RunInspectorPanel run={MOCK_AGENT_WORKSPACE_RUN} />

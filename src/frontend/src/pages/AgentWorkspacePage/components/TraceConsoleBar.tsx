@@ -1,32 +1,52 @@
+import { useState } from "react";
+
+import { MOCK_AGENT_WORKSPACE_COPY } from "../constants";
 import type { AgentWorkspaceRun } from "../types";
 
 export function TraceConsoleBar({ run }: { run: AgentWorkspaceRun }) {
+  const mappedTabs = run.trace.tabs.map((tab) => MOCK_AGENT_WORKSPACE_COPY.traceTabs[tab]);
+  const [activeTab, setActiveTab] = useState<string>(mappedTabs[0]);
+  const badges = [
+    `${run.metrics.retryCount} retry`,
+    `${run.metrics.eventCount} events`,
+    `budget ${run.metrics.budgetUsedPct}%`,
+    `$${run.metrics.costUsd.toFixed(3)}`,
+  ];
+
   // TODO: connect to real guardrail/evidence/trace API.
-  // TODO: add expanded console drawer with sticky filters and persisted tab state.
+  // TODO: add expanded console drawer with timeline/raw JSON/waterfall views.
   return (
-    <footer className="flex h-[64px] items-center justify-between border-t border-white/10 bg-[#0f1724] px-4 lg:px-6">
-      <div className="text-xs text-slate-400">
-        <p>{run.trace.eventsLabel}</p>
-        <nav aria-label="Trace tabs" className="flex gap-2" role="tablist">
-          {run.trace.tabs.map((tab) => (
-            <button
-              aria-selected={run.trace.activeTab === tab}
-              className="text-[11px]"
-              key={tab}
-              role="tab"
-              type="button"
-            >
-              {tab}
-            </button>
-          ))}
+    <footer className="flex h-[64px] flex-wrap items-center justify-between gap-x-4 gap-y-2 border-t border-[#1e293b] bg-[#070d14] px-4 py-2 lg:px-6">
+      <div className="flex min-w-0 items-center">
+        <nav aria-label="Trace tabs" className="flex flex-wrap gap-1" role="tablist">
+          {mappedTabs.map((tab) => {
+            const isActive = activeTab === tab;
+
+            return (
+              <button
+                aria-selected={isActive}
+                className={`rounded px-2 py-1 text-[11px] leading-none transition-colors ${
+                  isActive ? "bg-slate-800 text-slate-100" : "text-slate-400 hover:text-slate-200"
+                }`}
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                role="tab"
+                type="button"
+              >
+                {tab}
+              </button>
+            );
+          })}
         </nav>
       </div>
-      <p className="text-[11px] text-slate-300">
-        <span aria-hidden="true">• </span>
-        p95 {run.metrics.p95Ms}ms · tok {run.metrics.tokenCount} · cost $
-        {run.metrics.costUsd} · events {run.metrics.eventCount} · retry{" "}
-        {run.metrics.retryCount} · budget {run.metrics.budgetUsedPct}%
-      </p>
+      <div className="flex flex-wrap items-center justify-end gap-1.5 text-[11px] text-slate-200">
+        {badges.map((badge) => (
+          <span className="rounded-full border border-slate-700 bg-slate-900/70 px-2 py-0.5" key={badge}>
+            {badge}
+          </span>
+        ))}
+      </div>
+      <span className="sr-only">{run.trace.eventsLabel}</span>
     </footer>
   );
 }
