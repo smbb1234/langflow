@@ -47,6 +47,7 @@ const LoginAdminPage = lazy(() => import("./pages/AdminPage/LoginPage"));
 const DeleteAccountPage = lazy(() => import("./pages/DeleteAccountPage"));
 
 const PlaygroundPage = lazy(() => import("./pages/Playground"));
+const AgentWorkspacePage = lazy(() => import("./pages/AgentWorkspacePage"));
 
 const SignUp = lazy(() => import("./pages/SignUpPage"));
 
@@ -59,6 +60,18 @@ const router = createBrowserRouter(
           <ContextWrapper key={1}>
             <PlaygroundAuthGate>
               <PlaygroundPage />
+            </PlaygroundAuthGate>
+          </ContextWrapper>
+        }
+      />
+    </Route>,
+    <Route path="/workspace/:id/">
+      <Route
+        path=""
+        element={
+          <ContextWrapper key="workspace">
+            <PlaygroundAuthGate>
+              <AgentWorkspacePage />
             </PlaygroundAuthGate>
           </ContextWrapper>
         }
