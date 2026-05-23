@@ -10,10 +10,14 @@ import { CONTROL_LOGIN_STATE } from "../../constants/constants";
 import { AuthContext } from "../../contexts/authContext";
 import useAlertStore from "../../stores/alertStore";
 import type { LoginType } from "../../types/api";
-import type { inputHandlerEventType, loginInputStateType } from "../../types/components";
+import type {
+  inputHandlerEventType,
+  loginInputStateType,
+} from "../../types/components";
 
 export default function LoginPage(): JSX.Element {
-  const [inputState, setInputState] = useState<loginInputStateType>(CONTROL_LOGIN_STATE);
+  const [inputState, setInputState] =
+    useState<loginInputStateType>(CONTROL_LOGIN_STATE);
   const [rememberDevice, setRememberDevice] = useState(true);
 
   const { password, username } = inputState;
@@ -46,7 +50,10 @@ export default function LoginPage(): JSX.Element {
         queryClient.clear();
       },
       onError: (error) => {
-        const detail = error?.response?.data?.detail || error?.message || t("errors.generic");
+        const detail =
+          error?.response?.data?.detail ||
+          error?.message ||
+          t("errors.generic");
 
         setErrorData({
           title: t("errors.signin"),
@@ -72,8 +79,12 @@ export default function LoginPage(): JSX.Element {
           password={password}
           isPending={isPending}
           rememberDevice={rememberDevice}
-          onUsernameChange={(value) => handleInput({ target: { name: "username", value } })}
-          onPasswordChange={(value) => handleInput({ target: { name: "password", value } })}
+          onUsernameChange={(value) =>
+            handleInput({ target: { name: "username", value } })
+          }
+          onPasswordChange={(value) =>
+            handleInput({ target: { name: "password", value } })
+          }
           onRememberDeviceChange={(checked) => setRememberDevice(checked)}
         />
       </div>

@@ -43,10 +43,27 @@ export const LIVE_RUN_PREVIEW_DATA: LiveRunPreviewData = {
     { label: "Respond", state: "pending" },
   ],
   events: [
-    { time: "14:22:03", status: "success", text: "✓ plan.compiled · 4 steps · est cost $0.018" },
-    { time: "14:22:05", status: "success", text: "✓ retrieve.snowflake · 1,284 rows · 412ms" },
-    { time: "14:22:09", status: "running", text: "→ tool.run_sql · scope:", highlight: "finance_ro" },
-    { time: "14:22:16", status: "warning", text: "⚠ awaiting validation.pre_action" },
+    {
+      time: "14:22:03",
+      status: "success",
+      text: "✓ plan.compiled · 4 steps · est cost $0.018",
+    },
+    {
+      time: "14:22:05",
+      status: "success",
+      text: "✓ retrieve.snowflake · 1,284 rows · 412ms",
+    },
+    {
+      time: "14:22:09",
+      status: "running",
+      text: "→ tool.run_sql · scope:",
+      highlight: "finance_ro",
+    },
+    {
+      time: "14:22:16",
+      status: "warning",
+      text: "⚠ awaiting validation.pre_action",
+    },
   ],
   badges: [
     { label: "● Guardrails 12/12 pass", tone: "success" },

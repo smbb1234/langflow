@@ -6,7 +6,9 @@ type LoginBrandPanelProps = {
   onContactSupport?: () => void;
 };
 
-export function LoginBrandPanel({ onContactSupport }: LoginBrandPanelProps): JSX.Element {
+export function LoginBrandPanel({
+  onContactSupport,
+}: LoginBrandPanelProps): JSX.Element {
   return (
     <div className="relative h-full w-full shrink-0 overflow-hidden bg-[#070d14] p-[2px] lg:w-[820px] lg:flex lg:flex-col lg:gap-[2px]">
       <div className="relative z-10 flex h-full flex-col gap-[2px]">
@@ -37,8 +39,9 @@ export function LoginBrandPanel({ onContactSupport }: LoginBrandPanelProps): JSX
             </span>
           </h1>
           <p className="max-w-[580px] text-[15px] leading-6 text-[#94a3b8]">
-            A unified workspace for multi-agent runs — with live execution stages, guardrail telemetry,
-            evidence provenance, and full audit replay.
+            A unified workspace for multi-agent runs — with live execution
+            stages, guardrail telemetry, evidence provenance, and full audit
+            replay.
           </p>
         </div>
 
