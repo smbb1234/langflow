@@ -1,4 +1,5 @@
 import type { AgentWorkspaceRun } from "../types";
+import { WORKSPACE_UI } from "../ui";
 
 const TABS = ["Overview", "Guardrails", "Evidence", "Trace"] as const;
 
@@ -14,7 +15,7 @@ export function RunMainPanel({ run: _run }: { run: AgentWorkspaceRun }) {
       <header className="border-b border-white/10 px-4 py-4 lg:px-6">
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-1">
-            <h1 className="text-base font-semibold text-white">
+            <h1 className={`${WORKSPACE_UI.title20} text-white`}>
               Q3 revenue analysis
             </h1>
             <p className="text-xs text-slate-400">run_xxx</p>
@@ -68,23 +69,37 @@ export function RunMainPanel({ run: _run }: { run: AgentWorkspaceRun }) {
       </section>
 
       <section className="min-h-0 flex-1 space-y-3 overflow-y-auto px-4 py-4 lg:px-6">
-        <article className="rounded-[14px] border border-white/10 bg-[#121d2e] p-3">
-          <p className="mb-2 text-xs text-slate-400">User request</p>
+        <article
+          className={`${WORKSPACE_UI.radius12} ${WORKSPACE_UI.panelCardBorder} bg-[#121d2e] p-[14px]`}
+        >
+          <p
+            className={`mb-2 ${WORKSPACE_UI.text12} ${WORKSPACE_UI.textMuted}`}
+          >
+            User request
+          </p>
           <p className="text-sm text-slate-100">
             Compare Q3 revenue by region, identify the top variance drivers, and
             output a chart-ready dataset.
           </p>
         </article>
 
-        <article className="rounded-[14px] border border-white/10 bg-[#121d2e] p-3">
-          <p className="mb-2 text-xs text-slate-400">AgentPlanCard</p>
+        <article
+          className={`${WORKSPACE_UI.radius12} ${WORKSPACE_UI.panelCardBorder} bg-[#121d2e] p-[14px]`}
+        >
+          <p
+            className={`mb-2 ${WORKSPACE_UI.text12} ${WORKSPACE_UI.textMuted}`}
+          >
+            AgentPlanCard
+          </p>
           <p className="text-sm text-slate-100">
             Plan: fetch revenue aggregates, compute deltas, then format for
             chart rendering.
           </p>
         </article>
 
-        <article className="rounded-[14px] border border-cyan-300/70 bg-[#0f1f34] p-4 shadow-[0_0_0_1px_rgba(34,211,238,0.35)]">
+        <article
+          className={`${WORKSPACE_UI.radius12} border border-cyan-300/70 bg-[#0f1f34] p-4 shadow-[0_0_0_1px_rgba(34,211,238,0.35)]`}
+        >
           <div className="mb-3 flex items-center justify-between">
             <p className="text-xs font-medium uppercase tracking-wide text-cyan-200">
               ToolChoiceCard
@@ -95,10 +110,10 @@ export function RunMainPanel({ run: _run }: { run: AgentWorkspaceRun }) {
           <div className="space-y-2">
             {TOOL_CANDIDATES.map((tool) => (
               <div
-                className={`rounded-[12px] border px-3 py-2 ${
+                className={`rounded-[12px] border px-3 py-2 transition-colors ${
                   tool.selected
-                    ? "border-cyan-300/80 bg-cyan-400/10"
-                    : "border-white/10 bg-white/[0.03] opacity-65"
+                    ? "border-cyan-300/80 bg-cyan-400/15"
+                    : "border-white/10 bg-white/[0.03] opacity-80 hover:bg-white/[0.06]"
                 }`}
                 key={tool.name}
               >
@@ -126,7 +141,7 @@ export function RunMainPanel({ run: _run }: { run: AgentWorkspaceRun }) {
 
       <section className="border-t border-white/10 px-4 py-3 lg:px-6">
         <form
-          className="space-y-2 rounded-[14px] border border-white/10 bg-[#111b2b] p-2"
+          className={`${WORKSPACE_UI.radius12} ${WORKSPACE_UI.panelCardBorder} space-y-2 bg-[#111b2b] p-[14px]`}
           onSubmit={(e) => e.preventDefault()}
         >
           <div className="flex flex-wrap items-center gap-2 px-1 pt-1">
