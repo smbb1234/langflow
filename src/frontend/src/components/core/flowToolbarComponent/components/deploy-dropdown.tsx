@@ -216,6 +216,28 @@ export default function PublishDropdown({
               </div>
             </DropdownMenuItem>
           )}
+
+          {ENABLE_PUBLISH && hasIO && isPublished && flowId && (
+            <CustomLink className="flex-1" to={`/workspace/${flowId}`} target="_blank">
+              <DropdownMenuItem
+                className="deploy-dropdown-item group"
+                data-testid="agent-workspace-item"
+                onClick={() => {}}
+              >
+                <IconComponent
+                  name="Activity"
+                  aria-hidden="true"
+                  className="icon-size mr-2"
+                />
+                <span>Agent Workspace</span>
+                <IconComponent
+                  name="ExternalLink"
+                  aria-hidden="true"
+                  className="icon-size ml-auto hidden group-hover:block"
+                />
+              </DropdownMenuItem>
+            </CustomLink>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
       <ApiModal open={openApiModal} setOpen={setOpenApiModal}>
