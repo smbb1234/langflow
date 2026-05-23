@@ -2,7 +2,7 @@ import type { AgentWorkspaceRun, RunListItem } from "./types";
 
 export const MOCK_AGENT_WORKSPACE_RUN: AgentWorkspaceRun = {
   id: "A-2026-0523",
-  title: "Q3 revenue analysis",
+  title: "Revenue variance triage · Q3",
   agentName: "finance_sql_agent",
   status: "RUNNING",
   mode: "Tool",
@@ -27,23 +27,23 @@ export const MOCK_AGENT_WORKSPACE_RUN: AgentWorkspaceRun = {
     { id: "t3", name: "web_search", reason: "External benchmark cross-check", score: 0.41 },
   ],
   metrics: {
-    p95Ms: 1280,
-    tokenCount: 8241,
-    costUsd: 0.37,
+    p95Ms: 412,
+    tokenCount: 1200,
+    costUsd: 0.014,
     eventCount: 42,
     retryCount: 1,
-    budgetUsedPct: 64,
+    budgetUsedPct: 78,
   },
   approval: {
     id: "approval-1",
-    title: "Pending Approval",
-    description: "Approve execution against the production finance warehouse.",
+    title: "Approval required",
+    description: "Approve production finance read-only access before final execution.",
     recommendedAction: "approve",
   },
   uncertainty: {
     id: "uncertainty-1",
-    summary: "Confidence reduced due to incomplete Q3 refunds tagging in one region.",
-    confidence: 0.78,
+    summary: "Minor schema drift detected; attribution remains stable across sampled regions.",
+    confidence: 0.91,
   },
   evidence: [
     { id: "e1", source: "monthly_revenue_fact", detail: "2025-Q3 gross revenue +14.2% YoY." },
@@ -56,7 +56,7 @@ export const MOCK_AGENT_WORKSPACE_RUN: AgentWorkspaceRun = {
   trace: {
     activeTab: "events",
     tabs: ["events", "console", "metrics", "evidence"],
-    eventsLabel: "Trace Console · 42 events",
+    eventsLabel: "Trace · 42 events",
   },
   events: [
     { id: "m1", actor: "user", timestamp: "09:12", summary: "Analyze Q3 revenue changes by segment." },
@@ -64,6 +64,22 @@ export const MOCK_AGENT_WORKSPACE_RUN: AgentWorkspaceRun = {
     { id: "m3", actor: "tool", timestamp: "09:16", summary: "warehouse_query executed with filtered cohort." },
   ],
 };
+
+export const MOCK_AGENT_WORKSPACE_COPY = {
+  stageChips: ["Plan", "Retrieve", "Reason", "Tool", "Validate", "Response"],
+  traceTabs: {
+    events: "Timeline",
+    console: "Raw events",
+    metrics: "Retries / latency",
+    evidence: "Evidence links",
+  },
+  mainTabs: ["Overview", "Guardrails", "Evidence", "Trace"],
+  inspectorTabs: ["Overview", "Guardrails", "Evidence", "Trace"],
+  unresolvedItems: [
+    { id: "guardrail-1", level: "warning", text: "PII mask confidence below threshold in draft answer." },
+    { id: "evidence-1", level: "error", text: "Evidence source for policy quote is missing citation anchor." },
+  ] as const,
+} as const;
 
 export const MOCK_RUNS: RunListItem[] = [
   {

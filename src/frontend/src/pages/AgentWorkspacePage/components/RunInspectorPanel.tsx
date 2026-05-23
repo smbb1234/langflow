@@ -1,4 +1,5 @@
 import type { AgentWorkspaceRun } from "../types";
+import { MOCK_AGENT_WORKSPACE_COPY } from "../constants";
 import { WORKSPACE_UI } from "../ui";
 import { ApprovalCard } from "./ApprovalCard";
 import { UncertaintyCard } from "./UncertaintyCard";
@@ -7,25 +8,12 @@ export function RunInspectorPanel({ run }: { run: AgentWorkspaceRun }) {
   // TODO: connect to real guardrail/evidence/trace API.
   const currentRunItems = [
     { label: "Run ID", value: run.id },
-    { label: "Started", value: run.startedAt },
-    { label: "Active agent", value: run.activeAgent },
-    { label: "Stage", value: run.stage },
-    { label: "Next checkpoint", value: "Guardrail validation" },
+    { label: "Status", value: run.status },
+    { label: "Active agent", value: run.agentName },
+    { label: "Stage", value: run.stages.find((stage) => stage.status === "ACTIVE")?.label ?? "N/A" },
+    { label: "Next checkpoint", value: run.plan.find((step) => step.status === "PENDING")?.label ?? "Final review" },
     { label: "Initiated by", value: "Workspace operator" },
   ];
-
-  const unresolvedItems = [
-    {
-      id: "guardrail-1",
-      level: "warning",
-      text: "PII mask confidence below threshold in draft answer.",
-    },
-    {
-      id: "evidence-1",
-      level: "error",
-      text: "Evidence source for policy quote is missing citation anchor.",
-    },
-  ] as const;
 
   return (
     <aside
@@ -37,20 +25,15 @@ export function RunInspectorPanel({ run }: { run: AgentWorkspaceRun }) {
           className={`flex gap-2 ${WORKSPACE_UI.radius12} ${WORKSPACE_UI.panelCardBorder} ${WORKSPACE_UI.panelCardBg} p-1`}
           role="tablist"
         >
-          {[
-            { label: "Overview", selected: true },
-            { label: "Guardrails", selected: false },
-            { label: "Evidence", selected: false },
-            { label: "Trace", selected: false },
-          ].map((tab) => (
+          {MOCK_AGENT_WORKSPACE_COPY.inspectorTabs.map((tab, index) => (
             <button
-              aria-selected={tab.selected}
-              className={`rounded-md px-2 py-1 text-xs ${tab.selected ? "bg-slate-200/10 text-slate-100" : "text-slate-400"}`}
-              key={tab.label}
+              aria-selected={index === 0}
+              className={`rounded-md px-2 py-1 text-xs ${index === 0 ? "bg-slate-200/10 text-slate-100" : "text-slate-400"}`}
+              key={tab}
               role="tab"
               type="button"
             >
-              {tab.label}
+              {tab}
             </button>
           ))}
         </nav>
@@ -87,7 +70,7 @@ export function RunInspectorPanel({ run }: { run: AgentWorkspaceRun }) {
             Blocked / unresolved
           </h2>
           <ul className="space-y-2">
-            {unresolvedItems.map((item) => (
+            {MOCK_AGENT_WORKSPACE_COPY.unresolvedItems.map((item) => (
               <li
                 className="flex items-start gap-2 text-xs text-slate-200"
                 key={item.id}
@@ -112,16 +95,16 @@ export function RunInspectorPanel({ run }: { run: AgentWorkspaceRun }) {
           <dl className="space-y-2 text-xs">
             <div>
               <dt className="text-slate-400">Picked</dt>
-              <dd className="text-slate-200">Web search + retrieval rerank</dd>
+              <dd className="text-slate-200">{run.toolChoices[0]?.name}</dd>
             </div>
             <div>
               <dt className="text-slate-400">Rejected</dt>
-              <dd className="text-slate-200">Database migration utility</dd>
+              <dd className="text-slate-200">{run.toolChoices[2]?.name}</dd>
             </div>
             <div>
               <dt className="text-slate-400">Reason</dt>
               <dd className="text-slate-200">
-                Need fresh sources; no schema changes required.
+                {run.toolChoices[0]?.reason}
               </dd>
             </div>
           </dl>

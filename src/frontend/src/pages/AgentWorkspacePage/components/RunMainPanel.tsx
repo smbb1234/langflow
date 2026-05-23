@@ -1,4 +1,5 @@
 import type { AgentWorkspaceRun } from "../types";
+import { MOCK_AGENT_WORKSPACE_COPY } from "../constants";
 import { WORKSPACE_UI } from "../ui";
 
 const TABS = ["Overview", "Guardrails", "Evidence", "Trace"] as const;
@@ -19,11 +20,11 @@ export function RunMainPanel({ run: _run }: { run: AgentWorkspaceRun }) {
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-1">
             <h1 className={`${WORKSPACE_UI.title20} text-white`}>
-              Q3 revenue analysis
+              {run.title}
             </h1>
-            <p className="text-xs text-slate-400">run_xxx</p>
+            <p className="text-xs text-slate-400">{run.id}</p>
             <p className="text-xs text-slate-300">
-              finance_sql_agent -&gt; chart_agent
+              {run.agentName}
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -55,7 +56,7 @@ export function RunMainPanel({ run: _run }: { run: AgentWorkspaceRun }) {
 
       <section className="border-b border-white/10 px-4 lg:px-6">
         <div aria-label="Run detail tabs" className="flex gap-5" role="tablist">
-          {TABS.map((tab, index) => {
+          {MOCK_AGENT_WORKSPACE_COPY.mainTabs.map((tab, index) => {
             const active = index === 0;
             return (
               <button
@@ -115,18 +116,18 @@ export function RunMainPanel({ run: _run }: { run: AgentWorkspaceRun }) {
           </div>
 
           <div className="space-y-2">
-            {TOOL_CANDIDATES.map((tool) => (
+            {run.toolChoices.map((tool, index) => (
               <div
                 className={`rounded-[12px] border px-3 py-2 transition-colors ${
-                  tool.selected
+                  index === 0
                     ? "border-cyan-300/80 bg-cyan-400/15"
                     : "border-white/10 bg-white/[0.03] opacity-80 hover:bg-white/[0.06]"
                 }`}
-                key={tool.name}
+                key={tool.id}
               >
                 <div className="mb-1 flex items-center justify-between">
                   <p
-                    className={`text-sm ${tool.selected ? "text-cyan-100" : "text-slate-300"}`}
+                    className={`text-sm ${index === 0 ? "text-cyan-100" : "text-slate-300"}`}
                   >
                     {tool.name}
                   </p>
@@ -136,8 +137,8 @@ export function RunMainPanel({ run: _run }: { run: AgentWorkspaceRun }) {
                 </div>
                 <div className="h-1.5 overflow-hidden rounded-full bg-slate-700/60">
                   <div
-                    className={`h-full rounded-full ${tool.selected ? "bg-cyan-300" : "bg-slate-500"}`}
-                    style={{ width: `${tool.progress}%` }}
+                    className={`h-full rounded-full ${index === 0 ? "bg-cyan-300" : "bg-slate-500"}`}
+                    style={{ width: `${Math.round(tool.score * 100)}%` }}
                   />
                 </div>
               </div>
