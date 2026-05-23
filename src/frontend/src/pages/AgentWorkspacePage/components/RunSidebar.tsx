@@ -48,6 +48,7 @@ export function RunSidebar({ run }: { run: AgentWorkspaceRun }) {
     >
       <button
         className="mb-3 w-full rounded-[12px] border border-slate-700 bg-slate-800 px-3 py-2 text-left text-sm font-medium text-slate-100 transition hover:bg-slate-700"
+        onClick={() => {}}
         type="button"
       >
         New run
