@@ -1,10 +1,12 @@
 import * as Form from "@radix-ui/react-form";
+import type { LoginTheme } from "../theme";
 import { CustomLink } from "@/customization/components/custom-link";
 import InputComponent from "../../../components/core/parameterRenderComponent/components/inputComponent";
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
 
 type LoginAuthPanelProps = {
+  theme: LoginTheme;
   username: string;
   password: string;
   isPending: boolean;
@@ -23,7 +25,13 @@ export function LoginAuthPanel(props: LoginAuthPanelProps): JSX.Element {
     props.isPending || !props.username.trim() || !props.password.trim();
 
   return (
-    <div className="flex h-full min-w-0 flex-1 flex-col gap-[2px] overflow-hidden border border-[#1e293b] bg-[#0a1018] p-[2px]">
+    <div
+      className="flex h-full min-w-0 flex-1 flex-col gap-[2px] overflow-hidden border p-[2px]"
+      style={{
+        borderColor: props.theme.borderPrimary,
+        backgroundColor: props.theme.panelBackground,
+      }}
+    >
       <div className="flex w-full items-center justify-between border border-[#1e293b] px-6 py-4">
         <span className="text-[11px] text-[#64748b]">
           v3.4.0 · build 2026.05.18

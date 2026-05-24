@@ -6,10 +6,11 @@ import { useLoginUser } from "@/controllers/API/queries/auth";
 import { useSanitizeRedirectUrl } from "@/hooks/use-sanitize-redirect-url";
 import { LoginAuthPanel } from "./components/LoginAuthPanel";
 import { LoginBrandPanel } from "./components/LoginBrandPanel";
-import { loginDarkTheme } from "./theme";
+import { loginDarkTheme, loginLightTheme } from "./theme";
 import { CONTROL_LOGIN_STATE } from "../../constants/constants";
 import { AuthContext } from "../../contexts/authContext";
 import useAlertStore from "../../stores/alertStore";
+import { useDarkStore } from "../../stores/darkStore";
 import type { LoginType } from "../../types/api";
 import type {
   inputHandlerEventType,
@@ -17,6 +18,8 @@ import type {
 } from "../../types/components";
 
 export default function LoginPage(): JSX.Element {
+  const dark = useDarkStore((state) => state.dark);
+  const theme = dark ? loginDarkTheme : loginLightTheme;
   const [inputState, setInputState] =
     useState<loginInputStateType>(CONTROL_LOGIN_STATE);
   const [rememberDevice, setRememberDevice] = useState(true);
@@ -74,9 +77,10 @@ export default function LoginPage(): JSX.Element {
       className="min-h-screen w-full"
     >
       <div className="flex min-h-screen w-full gap-[2px] p-[2px] lg:flex-row max-lg:flex-col"
-        style={{ backgroundColor: loginDarkTheme.pageBackground }}>
-        <LoginBrandPanel />
+        style={{ backgroundColor: theme.pageBackground }}>
+        <LoginBrandPanel theme={theme} />
         <LoginAuthPanel
+          theme={theme}
           username={username}
           password={password}
           isPending={isPending}
