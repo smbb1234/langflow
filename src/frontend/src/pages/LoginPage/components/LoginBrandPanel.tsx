@@ -9,9 +9,10 @@ export function LoginBrandPanel({ theme }: LoginBrandPanelProps): JSX.Element {
     <aside
       className="relative w-full overflow-hidden px-[60px] py-[36px] lg:h-screen lg:w-[870px]"
       style={{
-        backgroundImage: `linear-gradient(180deg, ${theme.heroOverlay}, ${theme.heroOverlay}), linear-gradient(180deg, ${theme.heroGradientFrom}, ${theme.heroGradientVia}, ${theme.heroGradientTo}), url('/jai/login-hero-bg.png')`,
-        backgroundSize: "cover, cover, cover",
-        backgroundPosition: "center",
+        backgroundColor: theme.heroGradientTo,
+        backgroundImage: `linear-gradient(180deg, ${theme.heroOverlay}, ${theme.heroOverlay}), url('/jai/login-hero-bg.png')`,
+        backgroundSize: "cover, cover",
+        backgroundPosition: "center, center",
       }}
     >
       <div className="flex h-full flex-col">
