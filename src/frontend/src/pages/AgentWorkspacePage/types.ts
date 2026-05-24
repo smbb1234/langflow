@@ -6,7 +6,7 @@ export type RunListStatus = "RUNNING" | "QUEUED" | "COMPLETED" | "FAILED";
 
 export type TraceTab = "events" | "console" | "metrics" | "evidence";
 
-export type ApprovalAction = "approve" | "reject" | "request_changes";
+export type ApprovalAction = "review" | "approve" | "deny";
 
 export type WorkspaceStage = {
   id: string;
