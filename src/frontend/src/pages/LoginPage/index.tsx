@@ -6,6 +6,7 @@ import { useLoginUser } from "@/controllers/API/queries/auth";
 import { useSanitizeRedirectUrl } from "@/hooks/use-sanitize-redirect-url";
 import { LoginAuthPanel } from "./components/LoginAuthPanel";
 import { LoginBrandPanel } from "./components/LoginBrandPanel";
+import { loginDarkTheme } from "./theme";
 import { CONTROL_LOGIN_STATE } from "../../constants/constants";
 import { AuthContext } from "../../contexts/authContext";
 import useAlertStore from "../../stores/alertStore";
@@ -72,7 +73,8 @@ export default function LoginPage(): JSX.Element {
       }}
       className="min-h-screen w-full"
     >
-      <div className="flex min-h-screen w-full gap-[2px] bg-[#020617] p-[2px] lg:flex-row max-lg:flex-col">
+      <div className="flex min-h-screen w-full gap-[2px] p-[2px] lg:flex-row max-lg:flex-col"
+        style={{ backgroundColor: loginDarkTheme.pageBackground }}>
         <LoginBrandPanel />
         <LoginAuthPanel
           username={username}
