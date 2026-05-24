@@ -2,13 +2,6 @@ import type { AgentWorkspaceRun } from "../types";
 import { MOCK_AGENT_WORKSPACE_COPY } from "../constants";
 import { WORKSPACE_UI } from "../ui";
 
-const TABS = ["Overview", "Guardrails", "Evidence", "Trace"] as const;
-
-const TOOL_CANDIDATES = [
-  { name: "snowflake.run_sql", score: 0.92, selected: true, progress: 78 },
-  { name: "postgres.run_sql", score: 0.64, selected: false, progress: 38 },
-  { name: "python.execute", score: 0.41, selected: false, progress: 22 },
-];
 
 export function RunMainPanel({ run }: { run: AgentWorkspaceRun }) {
   // TODO: connect to real agent runtime API.
