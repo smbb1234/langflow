@@ -15,7 +15,6 @@ import { RunMainPanel } from "./components/RunMainPanel";
 import { RunSidebar } from "./components/RunSidebar";
 import { TraceConsoleBar } from "./components/TraceConsoleBar";
 import { WorkspaceTopBar } from "./components/WorkspaceTopBar";
-import { MOCK_AGENT_WORKSPACE_RUN } from "./constants";
 
 export default function AgentWorkspacePage() {
   useGetConfig({});
