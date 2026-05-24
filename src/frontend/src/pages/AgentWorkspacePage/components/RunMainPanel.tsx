@@ -1,118 +1,41 @@
-import { MOCK_AGENT_WORKSPACE_COPY } from "../constants";
 import type { WorkspaceTheme } from "../theme";
 import type { AgentWorkspaceRun } from "../types";
-import { WORKSPACE_UI } from "../ui";
-import { AgentPlanCard } from "./AgentPlanCard";
-import { ConversationPanel } from "./ConversationPanel";
-import { ToolChoiceCard } from "./ToolChoiceCard";
 import { TraceConsoleBar } from "./TraceConsoleBar";
 import { WorkspacePromptInput } from "./WorkspacePromptInput";
 
-export function RunMainPanel({
-  run,
-  theme,
-}: {
-  run: AgentWorkspaceRun;
-  theme: WorkspaceTheme;
-}) {
-  // TODO: connect to real agent runtime API.
-  const handleNoopAction = () => {};
-  const handlePromptSubmit = (_prompt: string) => {};
+export function RunMainPanel({ run, theme }: { run: AgentWorkspaceRun; theme: WorkspaceTheme }) {
+  const chip = { backgroundColor: theme.surfaceMuted, border: `1px solid ${theme.panelBorder}`, color: theme.textSecondary };
   return (
-    <main
-      className="flex min-h-0 w-full max-w-[795px] flex-1 flex-col"
-      style={{ backgroundColor: "#0b1320" }}
-    >
-      <header
-        className="h-[60px] border-b px-4 py-3 lg:px-6"
-        style={{ borderColor: theme.borderSoft }}
-      >
-        <div className="flex items-start justify-between gap-4">
-          <div className="space-y-1">
-            <h1 className={`${WORKSPACE_UI.title20} text-white`}>
-              Finance anomaly triage · Run A-2026-0523
-            </h1>
-            <p className="text-xs text-slate-400">{run.id}</p>
-            <p className="text-xs text-slate-300">{run.agentName}</p>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              className="rounded-[10px] border border-white/15 bg-[#111b2b] px-3 py-1.5 text-xs text-slate-100"
-              onClick={handleNoopAction}
-              type="button"
-            >
-              Branch
-            </button>
-            <button
-              className="rounded-[10px] border border-white/15 bg-[#111b2b] px-3 py-1.5 text-xs text-slate-100"
-              onClick={handleNoopAction}
-              type="button"
-            >
-              Export
-            </button>
-            <button
-              aria-label="More actions"
-              className="rounded-[10px] border border-white/15 bg-[#111b2b] px-3 py-1.5 text-xs text-slate-100"
-              onClick={handleNoopAction}
-              type="button"
-            >
-              ...
-            </button>
-          </div>
+    <main className="flex min-h-0 min-w-0 flex-1 flex-col" style={{ backgroundColor: theme.pageBg }}>
+      <header className="flex h-[60px] items-center justify-between border-b px-4" style={{ borderColor: theme.panelBorder }}>
+        <div>
+          <h1 className="text-[16px] font-semibold" style={{ color: theme.textPrimary }}>Q3 revenue analysis</h1>
+          <div className="mt-1 flex gap-2 text-[11px]"><span className="rounded px-2 py-0.5" style={chip}>run · r_8f2c14a</span><span className="rounded px-2 py-0.5" style={chip}>finance_sql_agent → chart_agent</span></div>
         </div>
+        <div className="flex gap-2 text-xs"><button type="button" className="rounded px-2 py-1" style={chip}>⑂ Branch</button><button type="button" className="rounded px-2 py-1" style={chip}>⬆ Export</button><button type="button" className="rounded px-2 py-1" style={chip}>···</button></div>
       </header>
-
-      <section
-        className="h-[40px] border-b px-4 lg:px-6"
-        style={{ borderColor: theme.borderSoft }}
-      >
-        <div aria-label="Run detail tabs" className="flex gap-5" role="tablist">
-          {MOCK_AGENT_WORKSPACE_COPY.mainTabs.map((tab, index) => {
-            const active = index === 0;
-            return (
-              <button
-                aria-selected={active}
-                className={`relative py-2 text-sm ${active ? "text-cyan-300" : "text-slate-400"}`}
-                key={tab}
-                role="tab"
-                type="button"
-              >
-                {tab}
-                {active && (
-                  <span className="absolute inset-x-0 bottom-0 h-[2px] rounded-full bg-cyan-300" />
-                )}
-              </button>
-            );
-          })}
+      <div className="flex h-[40px] items-center gap-5 border-b px-4 text-[12px]" style={{ borderColor: theme.panelBorder }}>
+        <span style={{ color: theme.textPrimary, fontWeight: 600 }}>Overview</span><span style={{ color: theme.textTertiary }}>Guardrails •</span><span style={{ color: theme.textTertiary }}>Evidence</span><span style={{ color: theme.textTertiary }}>Trace</span>
+      </div>
+      <section className="h-[440px] overflow-y-auto px-4 py-4">
+        <p className="text-[12px]" style={{ color: theme.textSecondary }}>You  · 14:22:01</p>
+        <p className="mt-1 text-[13px]" style={{ color: theme.textPrimary }}>Break down Q3 revenue by product line vs Q2, exclude internal test accounts, and flag any line that dropped &gt;5%. Use the curated finance warehouse.</p>
+        <div className="mt-5 rounded-[8px] border p-3" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surfaceMuted }}>
+          <p className="text-[12px]" style={{ color: theme.textSecondary }}>finance_sql_agent · planning · 14:22:03</p>
+          <p className="mt-1 text-[13px]" style={{ color: theme.textPrimary }}>I&apos;ll run this in 4 steps. Plan compiled below — pre-flight checks all passed.</p>
+          <ul className="mt-3 space-y-1 text-[12px]" style={{ color: theme.textSecondary }}>
+            <li>✓ Validate scope: warehouse=finance_curated, exclude test_account_ids</li>
+            <li>✓ SQL: revenue by product_line for Q2/Q3</li>
+            <li>✓ Compute QoQ delta, flag drops &gt; 5%</li>
+            <li>4 Render comparison chart + summary table <span style={{ color: theme.primaryStrong, fontWeight: 600 }}>RUNNING</span></li>
+          </ul>
+        </div>
+        <div className="mt-3 rounded-[8px] border px-3 py-2 text-[12px]" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surfaceMuted, color: theme.textSecondary }}>
+          ▼ Tool choice — why Snowflake SQL <span className="ml-3" style={{ color: theme.textTertiary }}>tool · run_sql</span>
         </div>
       </section>
-
-      <section className="h-[440px] min-h-0 overflow-y-auto px-4 py-4 lg:px-6">
-        <div className="space-y-3">
-          <article
-            className={`${WORKSPACE_UI.radius12} ${WORKSPACE_UI.panelCardBorder} bg-[#121d2e] p-[14px]`}
-          >
-            <p
-              className={`mb-2 ${WORKSPACE_UI.text12} ${WORKSPACE_UI.textMuted}`}
-            >
-              V2 summary
-            </p>
-            <p className="text-sm text-slate-100">
-              assistant: Drafting board-ready narrative with validated Q3 deltas.
-            </p>
-          </article>
-
-          <ConversationPanel run={run} />
-          <AgentPlanCard run={run} />
-          <ToolChoiceCard run={run} />
-        </div>
-      </section>
-      <div className="h-[100px]">
-        <WorkspacePromptInput onSubmitPrompt={handlePromptSubmit} />
-      </div>
-      <div className="h-[162px]">
-        <TraceConsoleBar run={run} theme={theme} />
-      </div>
+      <div className="h-[100px]"><WorkspacePromptInput theme={theme} /></div>
+      <div className="h-[162px]"><TraceConsoleBar run={run} theme={theme} /></div>
     </main>
   );
 }

@@ -74,10 +74,10 @@ export default function LoginPage(): JSX.Element {
         if (!username.trim() || !password.trim() || isPending) return;
         signIn();
       }}
-      className="min-h-screen w-full"
+      className="h-screen w-full max-lg:h-auto max-lg:min-h-screen"
     >
-      <div className="flex min-h-screen w-full gap-[2px] p-[2px] lg:flex-row max-lg:flex-col"
-        style={{ backgroundColor: theme.pageBackground }}>
+      <div className="flex h-screen w-full overflow-hidden max-lg:h-auto max-lg:min-h-screen max-lg:flex-col max-lg:overflow-y-auto"
+        style={{ backgroundColor: theme.rootBg }}>
         <LoginBrandPanel theme={theme} />
         <LoginAuthPanel
           theme={theme}

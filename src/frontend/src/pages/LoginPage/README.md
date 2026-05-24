@@ -7,7 +7,14 @@ This page has been refactored to an enterprise workspace login layout with a spl
 - Username/password authentication flow remains unchanged.
 - OAuth, SAML SSO, forgot password, contact support, What's new, and footer links are UI placeholders only.
 - Remember device is local UI state only (no cookie/localStorage persistence).
-- LiveRunPreviewCard and StatusBar use static mock values for now.
+- Hero panel uses static copy and background layer until runtime telemetry wiring lands.
+
+## V2 theme implementation notes (validated on 2026-05-24)
+
+- Login and Agent Workspace now select local light/dark theme tokens from `useDarkStore((state) => state.dark)`.
+- Login keeps `Sign Up` visible and non-submit (`type="button"`) while preserving the existing auth submit path.
+- Agent Workspace keeps existing public flow load/access checks and does not alter `/playground/:id` behavior.
+- Trace Console is rendered inside `RunMainPanel` to match the V2 landing composition.
 
 ## Future integration
 
