@@ -1,8 +1,14 @@
 import { useMemo, useState } from "react";
+import type { WorkspaceTheme } from "../theme";
 import type { AgentWorkspaceRun } from "../types";
-import { WORKSPACE_UI } from "../ui";
 
-export function RunSidebar({ run }: { run: AgentWorkspaceRun }) {
+export function RunSidebar({
+  run,
+  theme,
+}: {
+  run: AgentWorkspaceRun;
+  theme: WorkspaceTheme;
+}) {
   const [search, setSearch] = useState("");
   const [activeFilter, setActiveFilter] = useState<
     "All" | "Active" | "Pending" | "Failed"
@@ -44,7 +50,11 @@ export function RunSidebar({ run }: { run: AgentWorkspaceRun }) {
 
   return (
     <aside
-      className={`hidden h-full min-h-0 flex-col border-r border-white/10 ${WORKSPACE_UI.panelBg} p-[14px] md:flex md:w-[240px] lg:w-[272px]`}
+      className={`hidden h-full min-h-0 flex-col border-r p-[14px] md:flex md:w-[265px]`}
+      style={{
+        borderColor: theme.borderSoft,
+        backgroundColor: theme.panelBackground,
+      }}
     >
       <button
         className="mb-3 w-full rounded-[12px] border border-slate-700 bg-slate-800 px-3 py-2 text-left text-sm font-medium text-slate-100 transition hover:bg-slate-700"

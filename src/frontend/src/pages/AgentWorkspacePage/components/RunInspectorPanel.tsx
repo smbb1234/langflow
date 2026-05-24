@@ -1,23 +1,43 @@
-import type { AgentWorkspaceRun } from "../types";
 import { MOCK_AGENT_WORKSPACE_COPY } from "../constants";
+import type { WorkspaceTheme } from "../theme";
+import type { AgentWorkspaceRun } from "../types";
 import { WORKSPACE_UI } from "../ui";
 import { ApprovalCard } from "./ApprovalCard";
 import { UncertaintyCard } from "./UncertaintyCard";
 
-export function RunInspectorPanel({ run }: { run: AgentWorkspaceRun }) {
+export function RunInspectorPanel({
+  run,
+  theme,
+}: {
+  run: AgentWorkspaceRun;
+  theme: WorkspaceTheme;
+}) {
   // TODO: connect to real guardrail/evidence/trace API.
   const currentRunItems = [
     { label: "Run ID", value: run.id },
     { label: "Status", value: run.status },
     { label: "Active agent", value: run.agentName },
-    { label: "Stage", value: run.stages.find((stage) => stage.status === "ACTIVE")?.label ?? "N/A" },
-    { label: "Next checkpoint", value: run.plan.find((step) => step.status === "PENDING")?.label ?? "Final review" },
+    {
+      label: "Stage",
+      value:
+        run.stages.find((stage) => stage.status === "ACTIVE")?.label ?? "N/A",
+    },
+    {
+      label: "Next checkpoint",
+      value:
+        run.plan.find((step) => step.status === "PENDING")?.label ??
+        "Final review",
+    },
     { label: "Guardrails", value: `${run.guardrails.total} checks` },
   ];
 
   return (
     <aside
-      className={`order-last h-full min-h-0 overflow-y-auto border-l border-white/10 ${WORKSPACE_UI.panelBg} p-[14px] md:w-[300px] lg:w-[336px]`}
+      className="order-last h-full min-h-0 overflow-y-auto border-l p-[14px] md:w-[380px]"
+      style={{
+        borderColor: theme.borderSoft,
+        backgroundColor: theme.panelBackground,
+      }}
     >
       <div className="space-y-3">
         <nav
@@ -79,7 +99,8 @@ export function RunInspectorPanel({ run }: { run: AgentWorkspaceRun }) {
               {
                 id: "uncertainty-reason",
                 level: "warning",
-                text: run.uncertainty.reasons[0] ?? "No uncertainty reason logged.",
+                text:
+                  run.uncertainty.reasons[0] ?? "No uncertainty reason logged.",
               },
             ].map((item) => (
               <li
@@ -106,11 +127,15 @@ export function RunInspectorPanel({ run }: { run: AgentWorkspaceRun }) {
           <dl className="space-y-2 text-xs">
             <div>
               <dt className="text-slate-400">Picked</dt>
-              <dd className="text-slate-200">{run.toolChoices.find((tool) => tool.selected)?.name ?? "N/A"}</dd>
+              <dd className="text-slate-200">
+                {run.toolChoices.find((tool) => tool.selected)?.name ?? "N/A"}
+              </dd>
             </div>
             <div>
               <dt className="text-slate-400">Rejected</dt>
-              <dd className="text-slate-200">{run.toolChoices.find((tool) => !tool.selected)?.name ?? "N/A"}</dd>
+              <dd className="text-slate-200">
+                {run.toolChoices.find((tool) => !tool.selected)?.name ?? "N/A"}
+              </dd>
             </div>
             <div>
               <dt className="text-slate-400">Reason</dt>
@@ -130,9 +155,12 @@ export function RunInspectorPanel({ run }: { run: AgentWorkspaceRun }) {
             Evidence
           </h2>
           <p className="text-xs text-slate-300">
-            {run.evidence.source} · {run.evidence.warehouse} · {run.evidence.rowsScanned} rows · {run.evidence.freshness}
+            {run.evidence.source} · {run.evidence.warehouse} ·{" "}
+            {run.evidence.rowsScanned} rows · {run.evidence.freshness}
           </p>
-          <p className="mt-1 text-xs text-slate-400">Query hash: {run.evidence.queryHash}</p>
+          <p className="mt-1 text-xs text-slate-400">
+            Query hash: {run.evidence.queryHash}
+          </p>
         </section>
       </div>
     </aside>

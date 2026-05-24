@@ -1,13 +1,21 @@
 import { MOCK_AGENT_WORKSPACE_COPY } from "../constants";
+import type { WorkspaceTheme } from "../theme";
 import type { AgentWorkspaceRun } from "../types";
 import { WORKSPACE_UI } from "../ui";
 import { AgentPlanCard } from "./AgentPlanCard";
 import { ConversationPanel } from "./ConversationPanel";
 import { RunStageProgress } from "./RunStageProgress";
 import { ToolChoiceCard } from "./ToolChoiceCard";
+import { TraceConsoleBar } from "./TraceConsoleBar";
 import { WorkspacePromptInput } from "./WorkspacePromptInput";
 
-export function RunMainPanel({ run }: { run: AgentWorkspaceRun }) {
+export function RunMainPanel({
+  run,
+  theme,
+}: {
+  run: AgentWorkspaceRun;
+  theme: WorkspaceTheme;
+}) {
   // TODO: connect to real agent runtime API.
   const handleNoopAction = () => {};
   const handlePromptSubmit = (_prompt: string) => {};
@@ -17,8 +25,14 @@ export function RunMainPanel({ run }: { run: AgentWorkspaceRun }) {
     : `Run status: ${run.status}`;
 
   return (
-    <main className="flex min-h-0 flex-1 flex-col bg-[#0b1320]">
-      <header className="border-b border-white/10 px-4 py-4 lg:px-6">
+    <main
+      className="flex min-h-0 w-full max-w-[795px] flex-1 flex-col"
+      style={{ backgroundColor: "#0b1320" }}
+    >
+      <header
+        className="border-b px-4 py-4 lg:px-6"
+        style={{ borderColor: theme.borderSoft }}
+      >
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-1">
             <h1 className={`${WORKSPACE_UI.title20} text-white`}>
@@ -54,7 +68,10 @@ export function RunMainPanel({ run }: { run: AgentWorkspaceRun }) {
         </div>
       </header>
 
-      <section className="border-b border-white/10 px-4 lg:px-6">
+      <section
+        className="border-b px-4 lg:px-6"
+        style={{ borderColor: theme.borderSoft }}
+      >
         <div aria-label="Run detail tabs" className="flex gap-5" role="tablist">
           {MOCK_AGENT_WORKSPACE_COPY.mainTabs.map((tab, index) => {
             const active = index === 0;
@@ -98,6 +115,7 @@ export function RunMainPanel({ run }: { run: AgentWorkspaceRun }) {
       </section>
 
       <WorkspacePromptInput onSubmitPrompt={handlePromptSubmit} />
+      <TraceConsoleBar run={run} theme={theme} />
     </main>
   );
 }
