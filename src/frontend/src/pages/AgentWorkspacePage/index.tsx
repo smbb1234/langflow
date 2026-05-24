@@ -33,31 +33,14 @@ export default function AgentWorkspacePage() {
     let mounted = true;
     const requestId = requestRef.current + 1;
     requestRef.current = requestId;
-
     const initializeWorkspace = async () => {
       setIsLoading(true);
       try {
-        if (!id) {
-          navigate("/");
-          return;
-        }
-
+        if (!id) return navigate("/");
         const flow = await getFlow({ id, public: true });
-
-        if (!flow) {
-          navigate("/");
-          return;
-        }
-
+        if (!flow) return navigate("/");
         const { inputs, outputs } = getInputsAndOutputs(flow.data?.nodes || []);
-        if (
-          flow.access_type !== "PUBLIC" ||
-          (inputs.length === 0 && outputs.length === 0)
-        ) {
-          navigate("/");
-          return;
-        }
-
+        if (flow.access_type !== "PUBLIC" || (inputs.length === 0 && outputs.length === 0)) return navigate("/");
         if (mounted && requestRef.current === requestId) {
           setCurrentFlow(flow);
           document.title = `${flow.name} · Agent Workspace`;
@@ -65,59 +48,33 @@ export default function AgentWorkspacePage() {
       } catch {
         navigate("/");
       } finally {
-        if (mounted && requestRef.current === requestId) {
-          setIsLoading(false);
-        }
+        if (mounted && requestRef.current === requestId) setIsLoading(false);
       }
     };
-
     initializeWorkspace();
-
     return () => {
       mounted = false;
     };
-    // We intentionally key initialization by URL id to avoid unstable hook callbacks
-    // from retriggering endless loading requests on every render.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   useEffect(() => {
     const clientId = getCookie("client_id");
     if (!clientId) {
       const newClientId = uuid();
-      const cookieOptions: CookieOptions = {
-        secure: window.location.protocol === "https:",
-        sameSite: "Strict",
-      };
+      const cookieOptions: CookieOptions = { secure: window.location.protocol === "https:", sameSite: "Strict" };
       setCookie("client_id", newClientId, cookieOptions);
       setClientId(newClientId);
-    } else {
-      setClientId(clientId);
-    }
+    } else setClientId(clientId);
   }, [setClientId]);
 
   if (isLoading) {
-    return (
-      <div className="flex h-screen w-full items-center justify-center bg-[#0a1018] text-[#94a3b8]">
-        Loading workspace...
-      </div>
-    );
+    return <div className="flex h-screen w-screen items-center justify-center" style={{ backgroundColor: theme.pageBg, color: theme.textMuted }}>Loading workspace...</div>;
   }
 
   return (
-    <div
-      className="h-screen w-full overflow-x-hidden overflow-y-hidden"
-      style={{
-        backgroundColor: theme.pageBackground,
-        color: theme.textPrimary,
-      }}
-    >
-      {/* TODO: connect to real agent runtime API. */}
+    <div className="h-screen w-screen overflow-hidden" style={{ backgroundColor: theme.pageBg, color: theme.textPrimary }}>
       <WorkspaceTopBar run={MOCK_AGENT_WORKSPACE_RUN} theme={theme} />
-      <div
-        className="flex h-[calc(100vh-44px)] min-h-0 flex-col overflow-hidden border-y md:flex-row md:border-y-0"
-        style={{ borderColor: theme.borderSoft }}
-      >
+      <div className="flex h-[calc(100vh-44px)] w-full min-h-0" style={{ borderTop: `1px solid ${theme.panelBorder}` }}>
         <RunSidebar run={MOCK_AGENT_WORKSPACE_RUN} theme={theme} />
         <RunMainPanel run={MOCK_AGENT_WORKSPACE_RUN} theme={theme} />
         <RunInspectorPanel run={MOCK_AGENT_WORKSPACE_RUN} theme={theme} />

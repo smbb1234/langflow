@@ -1,93 +1,77 @@
 import type { LoginTheme } from "../theme";
-import { LiveRunPreviewCard } from "./LiveRunPreviewCard";
 
 type LoginBrandPanelProps = {
   theme: LoginTheme;
-  onContactSupport?: () => void;
 };
 
-export function LoginBrandPanel({
-  theme,
-  onContactSupport,
-}: LoginBrandPanelProps): JSX.Element {
+export function LoginBrandPanel({ theme }: LoginBrandPanelProps): JSX.Element {
   return (
-    <div
-      className="relative h-full w-full shrink-0 overflow-hidden p-[2px] lg:w-[870px] lg:flex lg:flex-col lg:gap-[2px]"
-      style={{ backgroundColor: theme.pageBackgroundAlt }}
+    <aside
+      className="relative w-full overflow-hidden px-[60px] py-[36px] lg:h-screen lg:w-[870px]"
+      style={{
+        backgroundImage: `linear-gradient(180deg, ${theme.heroOverlay}, ${theme.heroOverlay}), linear-gradient(180deg, ${theme.heroGradientFrom}, ${theme.heroGradientVia}, ${theme.heroGradientTo}), url('/jai/login-hero-bg.png')`,
+        backgroundSize: "cover, cover, cover",
+        backgroundPosition: "center",
+      }}
     >
-      <div className="relative z-10 flex h-full flex-col gap-[2px]">
-        <div className="flex w-full items-center justify-between px-[60px] py-[36px] max-lg:px-6 max-lg:py-6">
-          <div>
-            <p
-              className="text-[22px] font-bold uppercase leading-none tracking-[1px]"
-              style={{ color: theme.textPrimary }}
-            >
-              JAI
-            </p>
-            <p
-              className="mt-1 text-[9px] font-medium uppercase tracking-[1.5px]"
-              style={{ color: theme.textMuted }}
-            >
-              BY DIAGONAL MATRIX
-            </p>
-          </div>
-          <div className="flex items-center gap-4">
-            <span className="text-[13px]" style={{ color: theme.textMuted }}>
-              Need help?
-            </span>
-            <button
-              type="button"
-              onClick={() => onContactSupport?.()}
-              className="rounded-[6px] border px-4 py-2 text-[13px] font-medium"
-              style={{ borderColor: theme.borderStrong, color: theme.textSecondary }}
-            >
-              Contact support
-            </button>
-          </div>
+      <div className="flex h-full flex-col">
+        <div>
+          <p
+            className="text-[22px] font-bold leading-none tracking-[1px]"
+            style={{ color: theme.heroLogoPrimary }}
+          >
+            JAI
+          </p>
+          <p
+            className="mt-1 text-[9px] uppercase tracking-[1.5px]"
+            style={{ color: theme.heroLogoSecondary }}
+          >
+            BY DIAGONAL MATRIX
+          </p>
         </div>
 
-        <div className="flex flex-col gap-6 px-[60px] pb-8 pt-8 max-lg:px-6">
+        <div className="mt-[120px] max-w-[680px] max-lg:mt-14">
           <span
-            className="w-fit rounded-[100px] border px-[14px] py-[6px] text-[11px] font-semibold tracking-[0.04em]"
+            className="inline-flex rounded-full border px-[14px] py-[6px] text-[10px] font-semibold tracking-[0.08em]"
             style={{
-              backgroundColor: "rgba(0, 199, 217, 0.08)",
-              borderColor: "#00c7d9",
-              color: "#00c7d9",
+              backgroundColor: theme.heroBadgeBg,
+              borderColor: theme.heroBadgeBorder,
+              color: theme.heroBadgeText,
             }}
           >
             AGENTIC PLATFORM · V3.4 NOW IN GA
           </span>
 
           <h1
-            className="text-[56px] leading-[1.05] tracking-[-0.02em]"
-            style={{ color: "#ffffff" }}
+            className="mt-6 text-[56px] font-extrabold leading-[66px] tracking-[-0.02em]"
+            style={{ color: theme.heroTitle }}
           >
-            <span className="block font-extrabold">The agents do the work.</span>
-            <span className="block font-bold italic">
-              You stay <span style={{ color: theme.titleAccent }}>in control.</span>
+            <span className="block">The agents do the work.</span>
+            <span className="block font-bold italic" style={{ color: theme.heroTitleMuted }}>
+              You stay <span style={{ color: theme.heroAccent }}>in control.</span>
             </span>
           </h1>
-        </div>
 
-        <div className="w-full px-[60px] py-[2px] max-lg:px-6">
-          <LiveRunPreviewCard />
-        </div>
-
-        <div className="flex-1" />
-
-        <div className="flex w-full flex-col gap-2 px-[60px] pb-12 pt-[2px] max-lg:px-6">
-          <span className="text-[10px] font-semibold tracking-[0.08em] text-[#64748b]">
-            TRUSTED BY TEAMS AT
-          </span>
-          <p className="text-[12px] tracking-[0.08em] text-[#94a3b8]">
-            NORTHWIND / acme.co / HELIX / contoso / OMNICORP
+          <p className="mt-6 max-w-[620px] text-[18px] leading-[30px]" style={{ color: theme.heroBody }}>
+            A unified workspace for multi-agent runs — with live execution stages,
+            guardrail telemetry, evidence provenance, and full audit replay. Built for
+            teams who need to ship agents and sleep at night.
           </p>
         </div>
+
+        <div className="mt-auto pt-16">
+          <p className="text-[10px] font-semibold tracking-[0.08em]" style={{ color: theme.heroTrustedLabel }}>
+            TRUSTED BY TEAMS AT
+          </p>
+          <div className="mt-3 flex flex-wrap items-center gap-x-10 gap-y-2 text-[12px] font-semibold tracking-[0.06em]" style={{ color: theme.heroTrustedText }}>
+            <span>NORTHWIND</span>
+            <span>acme.co</span>
+            <span>HELIX</span>
+            <span>contoso</span>
+            <span>OMNICORP</span>
+          </div>
+        </div>
       </div>
-      <div
-        className="pointer-events-none absolute bottom-0 left-0 z-0 h-[400px] w-full"
-        style={{ background: theme.brandGradient }}
-      />
-    </div>
+    </aside>
   );
 }

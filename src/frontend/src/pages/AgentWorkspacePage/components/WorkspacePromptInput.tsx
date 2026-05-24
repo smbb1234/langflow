@@ -1,40 +1,24 @@
 import { type FormEvent, useState } from "react";
+import type { WorkspaceTheme } from "../theme";
 
 type WorkspacePromptInputProps = {
-  onSubmitPrompt?: (prompt: string) => void;
+  theme: WorkspaceTheme;
 };
 
-export function WorkspacePromptInput({
-  onSubmitPrompt,
-}: WorkspacePromptInputProps) {
+export function WorkspacePromptInput({ theme }: WorkspacePromptInputProps) {
   const [prompt, setPrompt] = useState("");
-
-  // TODO: connect WorkspacePromptInput to real run continuation API.
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
-    onSubmitPrompt?.(prompt);
   };
 
   return (
-    <div className="border-t border-white/10 px-4 py-3 lg:px-6">
-      <form
-        className="flex items-center gap-2 rounded-[14px] border border-white/10 bg-[#111b2b] p-2"
-        onSubmit={handleSubmit}
-      >
-        <input
-          aria-label="Continue run prompt"
-          className="w-full bg-transparent px-2 py-2 text-sm text-slate-100 outline-none placeholder:text-slate-500"
-          placeholder="Add approval notes, override constraints, or ask for rerun with new filters..."
-          type="text"
-          value={prompt}
-          onChange={(event) => setPrompt(event.target.value)}
-        />
-        <button
-          className="rounded-[10px] bg-sky-500 px-3 py-2 text-xs font-medium text-white"
-          type="submit"
-        >
-          Send
-        </button>
+    <div className="h-full border-t px-4 py-2" style={{ borderColor: theme.panelBorder }}>
+      <form className="flex h-full flex-col rounded-[10px] border px-3 py-2" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface }} onSubmit={handleSubmit}>
+        <input aria-label="Continue run prompt" className="w-full bg-transparent text-[13px] outline-none" style={{ color: theme.textPrimary }} placeholder="Ask the agent, refine the analysis, or paste a URL…" type="text" value={prompt} onChange={(event) => setPrompt(event.target.value)} />
+        <div className="mt-auto flex items-center justify-between text-[11px]" style={{ color: theme.textTertiary }}>
+          <div className="flex gap-2"><span>📎 Attach</span><span>⊞ finance_curated</span><span>⚙ finance_sql_agent</span></div>
+          <div className="flex items-center gap-3"><span>⌘↵ to send</span><button className="rounded px-2 py-1" style={{ backgroundColor: theme.primary, color: "#fff" }} type="submit">↗ Send</button></div>
+        </div>
       </form>
     </div>
   );
