@@ -24,7 +24,7 @@ export function WorkspacePromptInput({
         <input
           aria-label="Continue run prompt"
           className="w-full bg-transparent px-2 py-2 text-sm text-slate-100 outline-none placeholder:text-slate-500"
-          placeholder="Continue describing your goal or add constraints..."
+          placeholder="Add approval notes, override constraints, or ask for rerun with new filters..."
           type="text"
           value={prompt}
           onChange={(event) => setPrompt(event.target.value)}

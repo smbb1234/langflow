@@ -17,16 +17,16 @@ export function RunSidebar({
   // TODO: connect to real run history/pinned data.
   const MOCK_RUNS = {
     PINNED: [
-      { id: "run-001", title: "Customer support triage", status: "Active" },
-      { id: "run-002", title: "Q2 forecasting cleanup", status: "Pending" },
+      { id: "run-001", title: "Revenue delta monitor", status: "Active" },
+      { id: "run-002", title: "Board packet draft", status: "Pending" },
     ],
     TODAY: [
-      { id: "run-003", title: "RAG ingestion health check", status: "Failed" },
-      { id: "run-004", title: "Security policy draft", status: "Active" },
+      { id: "run-003", title: "Q3 revenue analysis", status: "Active" },
+      { id: "run-004", title: "Margin anomaly sweep", status: "Failed" },
     ],
     EARLIER: [
-      { id: "run-005", title: "Data quality sweep", status: "Pending" },
-      { id: "run-006", title: "Meeting transcript summary", status: "Failed" },
+      { id: "run-005", title: "Spend variance briefing", status: "Pending" },
+      { id: "run-006", title: "Vendor risk memo", status: "Failed" },
     ],
   } as const;
 
@@ -56,12 +56,15 @@ export function RunSidebar({
         backgroundColor: theme.panelBackground,
       }}
     >
+      <div className="mb-3 px-1 text-[11px] font-semibold tracking-[0.16em] text-slate-200">
+        JAI / BY DIAGONAL MATRIX
+      </div>
       <button
         className="mb-3 w-full rounded-[12px] border border-slate-700 bg-slate-800 px-3 py-2 text-left text-sm font-medium text-slate-100 transition hover:bg-slate-700"
         onClick={() => {}}
         type="button"
       >
-        New run
+        + New run
       </button>
       <input
         className="mb-3 w-full rounded-[12px] border border-slate-700 bg-[#0a1220] px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
@@ -114,8 +117,8 @@ export function RunSidebar({
         ))}
       </div>
       <div className="mt-3 border-t border-white/10 pt-3">
-        <p className="text-sm text-slate-100">priya@acme</p>
-        <p className="text-xs text-slate-400">analyst</p>
+        <p className="text-sm text-slate-100">PM / Priya Menon</p>
+        <p className="text-xs text-slate-400">acme · analyst</p>
       </div>
     </aside>
   );

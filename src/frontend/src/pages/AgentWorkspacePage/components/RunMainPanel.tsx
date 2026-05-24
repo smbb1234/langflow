@@ -4,7 +4,6 @@ import type { AgentWorkspaceRun } from "../types";
 import { WORKSPACE_UI } from "../ui";
 import { AgentPlanCard } from "./AgentPlanCard";
 import { ConversationPanel } from "./ConversationPanel";
-import { RunStageProgress } from "./RunStageProgress";
 import { ToolChoiceCard } from "./ToolChoiceCard";
 import { TraceConsoleBar } from "./TraceConsoleBar";
 import { WorkspacePromptInput } from "./WorkspacePromptInput";
@@ -19,24 +18,19 @@ export function RunMainPanel({
   // TODO: connect to real agent runtime API.
   const handleNoopAction = () => {};
   const handlePromptSubmit = (_prompt: string) => {};
-  const latestEvent = run.events[run.events.length - 1];
-  const inlineSummary = latestEvent
-    ? `${latestEvent.actor}: ${latestEvent.summary}`
-    : `Run status: ${run.status}`;
-
   return (
     <main
       className="flex min-h-0 w-full max-w-[795px] flex-1 flex-col"
       style={{ backgroundColor: "#0b1320" }}
     >
       <header
-        className="border-b px-4 py-4 lg:px-6"
+        className="h-[60px] border-b px-4 py-3 lg:px-6"
         style={{ borderColor: theme.borderSoft }}
       >
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-1">
             <h1 className={`${WORKSPACE_UI.title20} text-white`}>
-              {run.title}
+              Finance anomaly triage · Run A-2026-0523
             </h1>
             <p className="text-xs text-slate-400">{run.id}</p>
             <p className="text-xs text-slate-300">{run.agentName}</p>
@@ -69,7 +63,7 @@ export function RunMainPanel({
       </header>
 
       <section
-        className="border-b px-4 lg:px-6"
+        className="h-[40px] border-b px-4 lg:px-6"
         style={{ borderColor: theme.borderSoft }}
       >
         <div aria-label="Run detail tabs" className="flex gap-5" role="tablist">
@@ -78,7 +72,7 @@ export function RunMainPanel({
             return (
               <button
                 aria-selected={active}
-                className={`relative py-3 text-sm ${active ? "text-cyan-300" : "text-slate-400"}`}
+                className={`relative py-2 text-sm ${active ? "text-cyan-300" : "text-slate-400"}`}
                 key={tab}
                 role="tab"
                 type="button"
@@ -93,9 +87,7 @@ export function RunMainPanel({
         </div>
       </section>
 
-      <RunStageProgress run={run} />
-
-      <section className="min-h-0 flex-1 overflow-y-auto px-4 py-4 lg:px-6">
+      <section className="h-[440px] min-h-0 overflow-y-auto px-4 py-4 lg:px-6">
         <div className="space-y-3">
           <article
             className={`${WORKSPACE_UI.radius12} ${WORKSPACE_UI.panelCardBorder} bg-[#121d2e] p-[14px]`}
@@ -103,9 +95,11 @@ export function RunMainPanel({
             <p
               className={`mb-2 ${WORKSPACE_UI.text12} ${WORKSPACE_UI.textMuted}`}
             >
-              Summary
+              V2 summary
             </p>
-            <p className="text-sm text-slate-100">{inlineSummary}</p>
+            <p className="text-sm text-slate-100">
+              assistant: Drafting board-ready narrative with validated Q3 deltas.
+            </p>
           </article>
 
           <ConversationPanel run={run} />
@@ -113,9 +107,12 @@ export function RunMainPanel({
           <ToolChoiceCard run={run} />
         </div>
       </section>
-
-      <WorkspacePromptInput onSubmitPrompt={handlePromptSubmit} />
-      <TraceConsoleBar run={run} theme={theme} />
+      <div className="h-[100px]">
+        <WorkspacePromptInput onSubmitPrompt={handlePromptSubmit} />
+      </div>
+      <div className="h-[162px]">
+        <TraceConsoleBar run={run} theme={theme} />
+      </div>
     </main>
   );
 }
