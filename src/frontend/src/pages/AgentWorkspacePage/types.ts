@@ -53,7 +53,7 @@ export type ApprovalData = {
 };
 
 export type UncertaintyData = {
-  level: string;
+  level: "low" | "medium" | "high";
   confidence: number;
   reasons: string[];
 };
@@ -62,12 +62,12 @@ export type EvidenceData = {
   warehouse: string;
   source: string;
   freshness: string;
-  rowsScanned: number;
+  rowsScanned: string;
   queryHash: string;
 };
 
 export type GuardrailSummary = {
-  passed: boolean;
+  passed: number;
   total: number;
   status: "pass" | "warning" | "failed";
 };
@@ -92,8 +92,8 @@ export type AgentWorkspaceRun = {
   metrics: WorkspaceMetrics;
   approval: ApprovalData;
   uncertainty: UncertaintyData;
-  evidence: EvidenceData[];
-  guardrails: GuardrailSummary[];
+  evidence: EvidenceData;
+  guardrails: GuardrailSummary;
   trace: TraceConsoleData;
   events: WorkspaceEvent[];
 };
