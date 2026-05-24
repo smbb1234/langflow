@@ -255,6 +255,7 @@ export function LoginAuthPanel(props: LoginAuthPanelProps): JSX.Element {
         </p>
         </div>
       </div>
+      </div>
 
       <div className="flex items-center justify-between px-[60px] pb-6 pt-4 text-[11px]" style={{ color: props.theme.textMuted }}>
         <span>© 2026 Diagonal Matrix · All rights reserved</span>
