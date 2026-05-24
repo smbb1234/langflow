@@ -18,20 +18,69 @@ export function RunMainPanel({ run, theme }: { run: AgentWorkspaceRun; theme: Wo
         <span style={{ color: theme.textPrimary, fontWeight: 600 }}>Overview</span><span style={{ color: theme.textTertiary }}>Guardrails •</span><span style={{ color: theme.textTertiary }}>Evidence</span><span style={{ color: theme.textTertiary }}>Trace</span>
       </div>
       <section className="h-[440px] overflow-y-auto px-4 py-4">
-        <p className="text-[12px]" style={{ color: theme.textSecondary }}>You  · 14:22:01</p>
-        <p className="mt-1 text-[13px]" style={{ color: theme.textPrimary }}>Break down Q3 revenue by product line vs Q2, exclude internal test accounts, and flag any line that dropped &gt;5%. Use the curated finance warehouse.</p>
-        <div className="mt-5 rounded-[8px] border p-3" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surfaceMuted }}>
-          <p className="text-[12px]" style={{ color: theme.textSecondary }}>finance_sql_agent · planning · 14:22:03</p>
-          <p className="mt-1 text-[13px]" style={{ color: theme.textPrimary }}>I&apos;ll run this in 4 steps. Plan compiled below — pre-flight checks all passed.</p>
-          <ul className="mt-3 space-y-1 text-[12px]" style={{ color: theme.textSecondary }}>
-            <li>✓ Validate scope: warehouse=finance_curated, exclude test_account_ids</li>
-            <li>✓ SQL: revenue by product_line for Q2/Q3</li>
-            <li>✓ Compute QoQ delta, flag drops &gt; 5%</li>
-            <li>4 Render comparison chart + summary table <span style={{ color: theme.primaryStrong, fontWeight: 600 }}>RUNNING</span></li>
-          </ul>
-        </div>
-        <div className="mt-3 rounded-[8px] border px-3 py-2 text-[12px]" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surfaceMuted, color: theme.textSecondary }}>
-          ▼ Tool choice — why Snowflake SQL <span className="ml-3" style={{ color: theme.textTertiary }}>tool · run_sql</span>
+        <div className="space-y-5">
+          <article className="rounded-[8px] border p-3" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surfaceBase }}>
+            <div className="flex items-start gap-3">
+              <div
+                className="flex h-7 w-7 items-center justify-center rounded-full text-[12px] font-semibold"
+                style={{ backgroundColor: theme.surfaceMuted, color: theme.textPrimary }}
+              >
+                PM
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-[12px]" style={{ color: theme.textSecondary }}>
+                  <span style={{ color: theme.textPrimary, fontWeight: 600 }}>You</span> · 14:22:01
+                </p>
+                <p className="mt-1 text-[13px]" style={{ color: theme.textPrimary }}>
+                  Break down Q3 revenue by product line vs Q2, exclude internal test accounts, and flag any line that dropped
+                  &gt;5%. Use the curated finance warehouse.
+                </p>
+              </div>
+            </div>
+          </article>
+
+          <article className="rounded-[8px] border p-3" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surfaceBase }}>
+            <div className="flex items-start gap-3">
+              <div
+                className="flex h-7 w-7 items-center justify-center rounded-full text-[12px]"
+                style={{ backgroundColor: theme.surfaceMuted, color: theme.primaryStrong }}
+              >
+                ⚡
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-2 text-[12px]" style={{ color: theme.textSecondary }}>
+                  <span style={{ color: theme.textPrimary, fontWeight: 600 }}>finance_sql_agent</span>
+                  <span
+                    className="rounded-full px-2 py-0.5 text-[11px]"
+                    style={{ backgroundColor: theme.surfaceMuted, border: `1px solid ${theme.panelBorder}`, color: theme.textSecondary }}
+                  >
+                    planning
+                  </span>
+                  <span>· 14:22:03</span>
+                </div>
+                <p className="mt-1 text-[13px]" style={{ color: theme.textPrimary }}>
+                  I&apos;ll run this in 4 steps. Plan compiled below — pre-flight checks all passed.
+                </p>
+              </div>
+            </div>
+            <div className="mt-3 rounded-[8px] border p-3" style={{ backgroundColor: theme.surfaceMuted, borderColor: theme.panelBorder }}>
+              <ul className="space-y-1 text-[12px]" style={{ color: theme.textSecondary }}>
+                <li>✓ Validate scope: warehouse=finance_curated, exclude test_account_ids</li>
+                <li>✓ SQL: revenue by product_line for Q2/Q3</li>
+                <li>✓ Compute QoQ delta, flag drops &gt; 5%</li>
+                <li>
+                  4 Render comparison chart + summary table{" "}
+                  <span style={{ color: theme.primaryStrong, fontWeight: 600 }}>RUNNING</span>
+                </li>
+              </ul>
+            </div>
+            <div
+              className="mt-3 rounded-[8px] border px-3 py-2 text-[12px]"
+              style={{ borderColor: theme.panelBorder, backgroundColor: theme.surfaceMuted, color: theme.textSecondary }}
+            >
+              Tool choice — why Snowflake SQL <span className="ml-3" style={{ color: theme.textTertiary }}>tool · run_sql</span>
+            </div>
+          </article>
         </div>
       </section>
       <div className="h-[100px]"><WorkspacePromptInput theme={theme} /></div>
