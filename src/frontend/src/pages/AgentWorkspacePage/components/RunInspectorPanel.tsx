@@ -12,7 +12,7 @@ export function RunInspectorPanel({ run }: { run: AgentWorkspaceRun }) {
     { label: "Active agent", value: run.agentName },
     { label: "Stage", value: run.stages.find((stage) => stage.status === "ACTIVE")?.label ?? "N/A" },
     { label: "Next checkpoint", value: run.plan.find((step) => step.status === "PENDING")?.label ?? "Final review" },
-    { label: "Guardrails", value: `${run.guardrails[0]?.total ?? 0} checks` },
+    { label: "Guardrails", value: `${run.guardrails.total} checks` },
   ];
 
   return (
@@ -73,8 +73,8 @@ export function RunInspectorPanel({ run }: { run: AgentWorkspaceRun }) {
             {[
               {
                 id: "guardrail-status",
-                level: run.guardrails[0]?.status === "failed" ? "error" : "warning",
-                text: `Guardrails status: ${run.guardrails[0]?.status ?? "unknown"}`,
+                level: run.guardrails.status === "failed" ? "error" : "warning",
+                text: `Guardrails status: ${run.guardrails.status}`,
               },
               {
                 id: "uncertainty-reason",
@@ -129,11 +129,10 @@ export function RunInspectorPanel({ run }: { run: AgentWorkspaceRun }) {
           >
             Evidence
           </h2>
-          {run.evidence.map((item) => (
-            <p className="text-xs text-slate-300" key={`${item.source}-${item.queryHash}`}>
-              {item.source} · {item.warehouse} · {item.rowsScanned.toLocaleString()} rows · {item.freshness}
-            </p>
-          ))}
+          <p className="text-xs text-slate-300">
+            {run.evidence.source} · {run.evidence.warehouse} · {run.evidence.rowsScanned} rows · {run.evidence.freshness}
+          </p>
+          <p className="mt-1 text-xs text-slate-400">Query hash: {run.evidence.queryHash}</p>
         </section>
       </div>
     </aside>

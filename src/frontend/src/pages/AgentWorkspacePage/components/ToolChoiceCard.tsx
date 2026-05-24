@@ -11,7 +11,7 @@ export function ToolChoiceCard({ run }: { run: AgentWorkspaceRun }) {
       <h2
         className={`mb-2 ${WORKSPACE_UI.title13} ${WORKSPACE_UI.textPrimary}`}
       >
-        Tool choice
+        Tool choice — why Snowflake SQL
       </h2>
       <div className="space-y-2">
         {run.toolChoices.map((tool, index) => (

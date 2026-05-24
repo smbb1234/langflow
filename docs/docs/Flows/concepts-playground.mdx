@@ -138,7 +138,7 @@ The **Playground** isn't meant for embedding flows in applications. For informat
 The **Shareable Playground** isn't available in Langflow Desktop.
 :::
 
-The **Shareable Playground** option exposes the **Playground** for a single flow at the `/public_flow/$FLOW_ID` endpoint.
+The **Shareable Playground** option exposes the **Playground** for a single flow at the `/playground/$FLOW_ID` endpoint.
 
 After you [deploy a public Langflow server](/deployment-overview), you can share this public URL with another user to allow them to access the specified flow's **Playground** only.
 The user can interact with the flow's chat input and output and view the results without installing Langflow or generating a Langflow API key.
@@ -150,6 +150,8 @@ To share a flow's **Playground** with another user, do the following:
 3. Click **Shareable Playground** again to open the **Playground** window.
 This window's URL is the flow's **Shareable Playground** address, such as `https://3f7c-73-64-93-151.ngrok-free.app/playground/d764c4b8-5cec-4c0f-9de0-4b419b11901a`.
 4. Send the URL to another user to give them access to the flow's **Playground**.
+
+When **Shareable Playground** is enabled and the flow is public, the **Share** menu can also show an **Agent Workspace** link at `/workspace/$FLOW_ID` for the same flow.
 
 ## See also
 
