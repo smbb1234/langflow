@@ -35,7 +35,7 @@ export function RunMainPanel({ run, theme }: { run: AgentWorkspaceRun; theme: Wo
         </div>
       </section>
       <div className="h-[100px]"><WorkspacePromptInput theme={theme} /></div>
-      <div className="h-[162px]"><TraceConsoleBar run={run} theme={theme} /></div>
+      <div className="h-[162px]"><TraceConsoleBar theme={theme} /></div>
     </main>
   );
 }

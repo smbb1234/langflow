@@ -1,7 +1,5 @@
 import type { WorkspaceTheme } from "../theme";
-import type { AgentWorkspaceRun } from "../types";
-
-export function TraceConsoleBar({ run, theme }: { run: AgentWorkspaceRun; theme: WorkspaceTheme }) {
+export function TraceConsoleBar({ theme }: { theme: WorkspaceTheme }) {
   return (
     <footer className="h-full border-t" style={{ borderColor: theme.panelBorder, backgroundColor: theme.panelBg }}>
       <div className="flex h-[41px] items-center justify-between border-b px-3 text-[11px]" style={{ borderColor: theme.panelBorder, color: theme.textSecondary }}>
