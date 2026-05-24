@@ -31,7 +31,7 @@ export function LoginAuthPanel(props: LoginAuthPanelProps): JSX.Element {
     >
       <div className="flex min-h-0 flex-1 flex-col items-center overflow-y-auto px-[60px] pt-[60px]">
         <div className="w-[450px] max-w-full">
-          <h2 className="text-[42px] font-bold leading-[1.1]" style={{ color: props.theme.authTitle }}>
+          <h2 className="text-[34px] font-bold leading-[42px]" style={{ color: props.theme.authTitle }}>
             Welcome back
           </h2>
           <p className="mt-3 text-[14px] leading-[22px]" style={{ color: props.theme.authBody }}>
