@@ -56,11 +56,11 @@ export default function PublishDropdown({
   const isAuth = useAuthStore((state) => !!state.autoLogin);
   const [openExportModal, setOpenExportModal] = useState(false);
 
-  const handlePublishedSwitch = async (checked: boolean) => {
+  const handlePublishedSwitch = async (currentlyPublished: boolean) => {
     mutateAsync(
       {
         id: flowId ?? "",
-        access_type: checked ? "PRIVATE" : "PUBLIC",
+        access_type: currentlyPublished ? "PRIVATE" : "PUBLIC",
       },
       {
         onSuccess: (updatedFlow) => {
