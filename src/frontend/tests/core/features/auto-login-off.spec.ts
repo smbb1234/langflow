@@ -41,7 +41,7 @@ test(
 
     await page.goto("/");
 
-    await page.waitForSelector("text=Sign in to DiagonalMatrix", { timeout: 30000 });
+    await page.waitForSelector("text=Welcome back", { timeout: 30000 });
 
     await page.getByPlaceholder("Username").fill("langflow");
     await page.getByPlaceholder("Password").fill("langflow");
@@ -184,12 +184,12 @@ test(
 
     await page.getByText("Logout", { exact: true }).click();
 
-    await page.waitForSelector("text=Sign in to DiagonalMatrix", { timeout: 30000 });
+    await page.waitForSelector("text=Welcome back", { timeout: 30000 });
 
     await page.getByPlaceholder("Username").fill(secondRandomName);
     await page.getByPlaceholder("Password").fill(randomPassword);
 
-    await page.waitForSelector("text=Sign in", {
+    await page.waitForSelector("text=Welcome back", {
       timeout: 1500,
     });
 
@@ -251,7 +251,7 @@ test(
 
     await page.getByText("Logout", { exact: true }).click();
 
-    await page.waitForSelector("text=Sign in to DiagonalMatrix", { timeout: 30000 });
+    await page.waitForSelector("text=Welcome back", { timeout: 30000 });
 
     await page.getByPlaceholder("Username").fill("langflow");
     await page.getByPlaceholder("Password").fill("langflow");
