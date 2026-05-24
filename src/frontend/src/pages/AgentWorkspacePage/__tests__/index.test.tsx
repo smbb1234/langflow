@@ -83,7 +83,7 @@ describe("AgentWorkspacePage", () => {
     mockGetInputsAndOutputs.mockReturnValue({ inputs: [{ id: "in-1" }], outputs: [{ id: "out-1" }] });
   });
 
-  it("loads and renders workspace for public flow with IO", async () => {
+  it("follows loading then renders workspace for public flow with IO", async () => {
     render(<AgentWorkspacePage />);
 
     expect(screen.getByText("Loading workspace...")).toBeInTheDocument();
@@ -93,6 +93,11 @@ describe("AgentWorkspacePage", () => {
     });
 
     expect(mockNavigate).not.toHaveBeenCalled();
+
+    await waitFor(() => {
+      expect(screen.queryByText("Loading workspace...")).not.toBeInTheDocument();
+    });
+
     expect(await screen.findByText("Alerts")).toBeInTheDocument();
     expect(document.title).toBe("Public Flow · Agent Workspace");
   });
