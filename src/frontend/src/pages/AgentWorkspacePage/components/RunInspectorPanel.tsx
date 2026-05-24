@@ -14,9 +14,9 @@ export function RunInspectorPanel({
 }) {
   // TODO: connect to real guardrail/evidence/trace API.
   const currentRunItems = [
-    { label: "Run ID", value: run.id },
-    { label: "Status", value: run.status },
-    { label: "Active agent", value: run.agentName },
+    { label: "Run ID", value: "A-2026-0523" },
+    { label: "Status", value: "RUNNING" },
+    { label: "Active agent", value: "finance_sql_agent" },
     {
       label: "Stage",
       value:
@@ -87,20 +87,20 @@ export function RunInspectorPanel({
           <h2
             className={`mb-2 ${WORKSPACE_UI.title13} ${WORKSPACE_UI.textPrimary}`}
           >
-            Blocked / unresolved
+            Blocked
           </h2>
           <ul className="space-y-2">
             {[
               {
                 id: "guardrail-status",
                 level: run.guardrails.status === "failed" ? "error" : "warning",
-                text: `Guardrails status: ${run.guardrails.status}`,
+                text: "Waiting on approval gate: publish_to_slack",
               },
               {
                 id: "uncertainty-reason",
                 level: "warning",
                 text:
-                  run.uncertainty.reasons[0] ?? "No uncertainty reason logged.",
+                  "Need confirmation: product taxonomy change did not alter Q2/Q3 mapping.",
               },
             ].map((item) => (
               <li
@@ -122,25 +122,25 @@ export function RunInspectorPanel({
           <h2
             className={`mb-2 ${WORKSPACE_UI.title13} ${WORKSPACE_UI.textPrimary}`}
           >
-            Tool choice (compact)
+            Uncertainty
           </h2>
           <dl className="space-y-2 text-xs">
             <div>
-              <dt className="text-slate-400">Picked</dt>
+              <dt className="text-slate-400">Level</dt>
               <dd className="text-slate-200">
-                {run.toolChoices.find((tool) => tool.selected)?.name ?? "N/A"}
+                Medium
               </dd>
             </div>
             <div>
-              <dt className="text-slate-400">Rejected</dt>
+              <dt className="text-slate-400">Confidence</dt>
               <dd className="text-slate-200">
-                {run.toolChoices.find((tool) => !tool.selected)?.name ?? "N/A"}
+                0.91
               </dd>
             </div>
             <div>
-              <dt className="text-slate-400">Reason</dt>
+              <dt className="text-slate-400">Primary reason</dt>
               <dd className="text-slate-200">
-                {run.toolChoices.find((tool) => tool.selected)?.reason}
+                Potential taxonomy drift across quarter boundary.
               </dd>
             </div>
           </dl>
