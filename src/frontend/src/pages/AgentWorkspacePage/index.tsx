@@ -5,16 +5,17 @@ import AlertDisplayArea from "@/alerts/displayArea";
 import { useGetConfig } from "@/controllers/API/queries/config/use-get-config";
 import { useGetFlow } from "@/controllers/API/queries/flows/use-get-flow";
 import { useCustomNavigate } from "@/customization/hooks/use-custom-navigate";
+import { useDarkStore } from "@/stores/darkStore";
 import useFlowsManagerStore from "@/stores/flowsManagerStore";
 import { useUtilityStore } from "@/stores/utilityStore";
-import { type CookieOptions, getCookie, setCookie } from "@/utils/utils";
 import { getInputsAndOutputs } from "@/utils/storeUtils";
-import { MOCK_AGENT_WORKSPACE_RUN } from "./constants";
+import { type CookieOptions, getCookie, setCookie } from "@/utils/utils";
 import { RunInspectorPanel } from "./components/RunInspectorPanel";
 import { RunMainPanel } from "./components/RunMainPanel";
 import { RunSidebar } from "./components/RunSidebar";
-import { TraceConsoleBar } from "./components/TraceConsoleBar";
 import { WorkspaceTopBar } from "./components/WorkspaceTopBar";
+import { MOCK_AGENT_WORKSPACE_RUN } from "./constants";
+import { workspaceDarkTheme, workspaceLightTheme } from "./theme";
 
 export default function AgentWorkspacePage() {
   useGetConfig({});
@@ -24,6 +25,8 @@ export default function AgentWorkspacePage() {
   const setCurrentFlow = useFlowsManagerStore((state) => state.setCurrentFlow);
   const setClientId = useUtilityStore((state) => state.setClientId);
   const [isLoading, setIsLoading] = useState(true);
+  const isDark = useDarkStore((state) => state.dark);
+  const theme = isDark ? workspaceDarkTheme : workspaceLightTheme;
   const requestRef = useRef(0);
 
   useEffect(() => {
@@ -102,15 +105,23 @@ export default function AgentWorkspacePage() {
   }
 
   return (
-    <div className="h-screen w-full overflow-x-hidden overflow-y-hidden bg-[#0a1018] text-[#f1f5f9]">
+    <div
+      className="h-screen w-full overflow-x-hidden overflow-y-hidden"
+      style={{
+        backgroundColor: theme.pageBackground,
+        color: theme.textPrimary,
+      }}
+    >
       {/* TODO: connect to real agent runtime API. */}
-      <WorkspaceTopBar run={MOCK_AGENT_WORKSPACE_RUN} />
-      <div className="flex h-[calc(100vh-56px-64px)] min-h-0 flex-col overflow-hidden border-y border-white/10 md:flex-row md:border-y-0">
-        <RunSidebar run={MOCK_AGENT_WORKSPACE_RUN} />
-        <RunMainPanel run={MOCK_AGENT_WORKSPACE_RUN} />
-        <RunInspectorPanel run={MOCK_AGENT_WORKSPACE_RUN} />
+      <WorkspaceTopBar run={MOCK_AGENT_WORKSPACE_RUN} theme={theme} />
+      <div
+        className="flex h-[calc(100vh-44px)] min-h-0 flex-col overflow-hidden border-y md:flex-row md:border-y-0"
+        style={{ borderColor: theme.borderSoft }}
+      >
+        <RunSidebar run={MOCK_AGENT_WORKSPACE_RUN} theme={theme} />
+        <RunMainPanel run={MOCK_AGENT_WORKSPACE_RUN} theme={theme} />
+        <RunInspectorPanel run={MOCK_AGENT_WORKSPACE_RUN} theme={theme} />
       </div>
-      <TraceConsoleBar run={MOCK_AGENT_WORKSPACE_RUN} />
       <div className="fixed bottom-4 left-4 z-[999]">
         <AlertDisplayArea />
       </div>

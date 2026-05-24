@@ -1,10 +1,23 @@
-import type { AgentWorkspaceRun } from "../types";
 import { MOCK_AGENT_WORKSPACE_COPY } from "../constants";
+import type { WorkspaceTheme } from "../theme";
+import type { AgentWorkspaceRun } from "../types";
 
-export function WorkspaceTopBar({ run }: { run: AgentWorkspaceRun }) {
+export function WorkspaceTopBar({
+  run,
+  theme,
+}: {
+  run: AgentWorkspaceRun;
+  theme: WorkspaceTheme;
+}) {
   // TODO: connect to real runtime/token/cost API.
   return (
-    <header className="flex h-[56px] items-center justify-between border-b border-[#1e293b] bg-[#070d14] px-4 lg:px-6">
+    <header
+      className="flex h-[44px] items-center justify-between border-b px-4 lg:px-6"
+      style={{
+        borderColor: theme.borderPrimary,
+        backgroundColor: theme.panelBackground,
+      }}
+    >
       <div className="flex min-w-0 flex-1 items-center gap-4">
         <div className="flex shrink-0 items-center gap-1.5 text-[10px] text-slate-300">
           <span className="rounded-md border border-slate-700/80 px-2 py-0.5">
