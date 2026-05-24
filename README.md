@@ -25,13 +25,13 @@ Every release includes a prebuilt container image, so you can start JAI without 
 2. Pull the image:
 
 ```shell
-docker pull jai:latest
+docker pull langflow-custom:latest
 ```
 
 3. Start the container:
 
 ```shell
-docker run --rm -it -p 7860:7860   -v jai-data:/app/.langflow   --name jai   jai:latest
+docker run --rm -it -p 7860:7860   -v jai-data:/app/.langflow   --name langflow-custom   langflow-custom:latest
 ```
 
 4. Open http://localhost:7860.
@@ -90,13 +90,13 @@ For more contributor workflows and troubleshooting, see [DEVELOPMENT.md](./DEVEL
 If you prefer running JAI directly with Python:
 
 ```shell
-uv pip install jai -U
+uv pip install langflow -U
 ```
 
 Run it with:
 
 ```shell
-uv run jai run
+uv run langflow run
 ```
 
 JAI starts at http://127.0.0.1:7860.
@@ -106,26 +106,26 @@ JAI starts at http://127.0.0.1:7860.
 - Check available commands:
 
   ```shell
-  uv run jai --help
+  uv run langflow --help
   ```
 
 - Show help for a specific command:
 
   ```shell
-  uv run jai run --help
+  uv run langflow run --help
   ```
 
 - Run with custom host/port:
 
   ```shell
-  uv run jai run --host 0.0.0.0 --port 7860
+  uv run langflow run --host 0.0.0.0 --port 7860
   ```
 
 - Use a local `.env` file before launching:
 
   ```shell
   set -a && source .env && set +a
-  uv run jai run
+  uv run langflow run
   ```
 
 ### Development setup
