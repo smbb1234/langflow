@@ -2,6 +2,15 @@ import type { WorkspaceTheme } from "../theme";
 import type { AgentWorkspaceRun } from "../types";
 
 export function RunInspectorPanel({ theme }: { run: AgentWorkspaceRun; theme: WorkspaceTheme }) {
+  const currentRunRows = [
+    { key: "Run ID", value: "r_8f2c14a" },
+    { key: "Started", value: "14:22:01" },
+    { key: "Active agent", value: "finance_sql_agent" },
+    { key: "Stage", value: "4/6 · Tool" },
+    { key: "Next checkpoint", value: "Validate" },
+    { key: "Initiated by", value: "priya@acme" },
+  ];
+
   return (
     <aside className="h-full w-[380px] overflow-y-auto border-l" style={{ borderColor: theme.panelBorder, backgroundColor: theme.panelBg }}>
       <div className="flex h-[39px] items-center gap-4 border-b px-4 text-[12px]" style={{ borderColor: theme.panelBorder }}>
@@ -10,7 +19,12 @@ export function RunInspectorPanel({ theme }: { run: AgentWorkspaceRun; theme: Wo
       <div className="space-y-6 px-4 py-4 text-[12px]">
         <section>
           <h2 className="mb-2 font-semibold" style={{ color: theme.textPrimary }}>Current run</h2>
-          <p style={{ color: theme.textSecondary }}>Run ID r_8f2c14a</p><p style={{ color: theme.textSecondary }}>Started 14:22:01</p><p style={{ color: theme.textSecondary }}>Active agent finance_sql_agent</p><p style={{ color: theme.textSecondary }}>Stage 4/6 · Tool</p><p style={{ color: theme.textSecondary }}>Next checkpoint Validate</p><p style={{ color: theme.textSecondary }}>Initiated by priya@acme</p>
+          {currentRunRows.map((row) => (
+            <p key={row.key} className="flex items-center justify-between py-[4px]">
+              <span style={{ color: theme.textMuted }}>{row.key}</span>
+              <span style={{ color: theme.textPrimary }}>{row.value}</span>
+            </p>
+          ))}
         </section>
         <section>
           <h2 className="mb-2 font-semibold" style={{ color: theme.warning }}>Blocked / unresolved</h2>
