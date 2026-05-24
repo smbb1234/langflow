@@ -29,6 +29,32 @@ git remote set-url --push upstream no_push
 
 > [!TIP] > **Windows/WSL Users**: You may find that files "change", specifically the file mode e.g. "changed file mode 100755 → 100644". You can workaround this problem with `git config core.filemode false`.
 
+## Quick local run from source (backend + frontend)
+
+If you only need a fast local run from source (without reading the full guide first):
+
+1. Clone the repository and enter it.
+2. Create your environment file:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+3. Install dependencies:
+
+   ```bash
+   make init
+   ```
+
+4. Start services in two terminals:
+
+   ```bash
+   make backend   # terminal 1
+   make frontend  # terminal 2
+   ```
+
+Then open `http://localhost:3000`.
+
 ## Set up Environment
 
 There are two options available to you: use your local environment with `make` commands (recommended for macOS and Linux), or use a Development Container ("[Dev Container](https://containers.dev/)") which is recommended for Windows users.
