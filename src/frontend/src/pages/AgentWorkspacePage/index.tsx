@@ -55,6 +55,8 @@ export default function AgentWorkspacePage() {
     return () => {
       mounted = false;
     };
+  // We intentionally key initialization by URL id...
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   useEffect(() => {
