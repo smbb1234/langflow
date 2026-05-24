@@ -1,15 +1,41 @@
 # Langflow Security Policy & Responsible Disclosure
 
-This security policy applies to all public projects under the langflow-ai organization on GitHub. We prioritize security and continuously work to safeguard our systems. However, vulnerabilities can still exist. If you identify a security issue, please report it to us so we can address it promptly.
+This security policy applies to public projects under the `langflow-ai` GitHub organization.
 
-### Security/Bugfix Versions
+We take security seriously and investigate all credible reports. If you believe you have found a vulnerability, please report it privately so we can triage and remediate it responsibly.
 
-- Fixes are released either as part of the next minor version (e.g., 1.3.0 → 1.4.0) or as an on-demand patch version (e.g., 1.3.0 → 1.3.1).
-- Security fixes are given priority and might be enough to cause a new version to be released.
+## Supported versions
 
-## Report a vulnerability
+We prioritize security fixes for actively maintained release lines.
 
-Please do not report security vulnerabilities through public GitHub issues or GitHub security advisories.
-To report a vulnerability, submit a report on [HackerOne](https://hackerone.com/ibm).
-Include a clear description of the issue, steps to reproduce, the Langflow version, and any known or suggested mitigations.
-Our team aims to respond to all new vulnerability reports within **7 business days**.
+- Security fixes are generally released in the next available patch or minor release.
+- Depending on severity and impact, we may publish an out-of-band patch release.
+- We strongly recommend running the latest available version.
+
+## How to report a vulnerability
+
+Please **do not** report vulnerabilities in public GitHub issues, discussions, pull requests, or public forums.
+
+Submit reports through HackerOne:
+
+- **HackerOne program:** https://hackerone.com/ibm
+
+Please include:
+
+- A clear description of the issue.
+- Affected component(s) and version(s).
+- Reproduction steps or proof-of-concept.
+- Impact assessment (what an attacker can do).
+- Any suggested mitigations.
+
+## What to expect after reporting
+
+- We aim to acknowledge new reports within **7 business days**.
+- We will triage, validate, and assign severity.
+- If accepted, we will work on remediation and coordinate disclosure timing.
+- We may request additional details during investigation.
+
+## Disclosure policy
+
+Please allow us time to investigate and deploy a fix before public disclosure.
+Coordinated disclosure helps protect users while remediation is in progress.

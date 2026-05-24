@@ -5,16 +5,17 @@ import AlertDisplayArea from "@/alerts/displayArea";
 import { useGetConfig } from "@/controllers/API/queries/config/use-get-config";
 import { useGetFlow } from "@/controllers/API/queries/flows/use-get-flow";
 import { useCustomNavigate } from "@/customization/hooks/use-custom-navigate";
+import { useDarkStore } from "@/stores/darkStore";
 import useFlowsManagerStore from "@/stores/flowsManagerStore";
 import { useUtilityStore } from "@/stores/utilityStore";
-import { type CookieOptions, getCookie, setCookie } from "@/utils/utils";
 import { getInputsAndOutputs } from "@/utils/storeUtils";
-import { MOCK_AGENT_WORKSPACE_RUN } from "./constants";
+import { type CookieOptions, getCookie, setCookie } from "@/utils/utils";
 import { RunInspectorPanel } from "./components/RunInspectorPanel";
 import { RunMainPanel } from "./components/RunMainPanel";
 import { RunSidebar } from "./components/RunSidebar";
-import { TraceConsoleBar } from "./components/TraceConsoleBar";
 import { WorkspaceTopBar } from "./components/WorkspaceTopBar";
+import { MOCK_AGENT_WORKSPACE_RUN } from "./constants";
+import { workspaceDarkTheme, workspaceLightTheme } from "./theme";
 
 export default function AgentWorkspacePage() {
   useGetConfig({});
@@ -24,37 +25,22 @@ export default function AgentWorkspacePage() {
   const setCurrentFlow = useFlowsManagerStore((state) => state.setCurrentFlow);
   const setClientId = useUtilityStore((state) => state.setClientId);
   const [isLoading, setIsLoading] = useState(true);
+  const isDark = useDarkStore((state) => state.dark);
+  const theme = isDark ? workspaceDarkTheme : workspaceLightTheme;
   const requestRef = useRef(0);
 
   useEffect(() => {
     let mounted = true;
     const requestId = requestRef.current + 1;
     requestRef.current = requestId;
-
     const initializeWorkspace = async () => {
       setIsLoading(true);
       try {
-        if (!id) {
-          navigate("/");
-          return;
-        }
-
+        if (!id) return navigate("/");
         const flow = await getFlow({ id, public: true });
-
-        if (!flow) {
-          navigate("/");
-          return;
-        }
-
+        if (!flow) return navigate("/");
         const { inputs, outputs } = getInputsAndOutputs(flow.data?.nodes || []);
-        if (
-          flow.access_type !== "PUBLIC" ||
-          (inputs.length === 0 && outputs.length === 0)
-        ) {
-          navigate("/");
-          return;
-        }
-
+        if (flow.access_type !== "PUBLIC" || (inputs.length === 0 && outputs.length === 0)) return navigate("/");
         if (mounted && requestRef.current === requestId) {
           setCurrentFlow(flow);
           document.title = `${flow.name} · Agent Workspace`;
@@ -62,55 +48,39 @@ export default function AgentWorkspacePage() {
       } catch {
         navigate("/");
       } finally {
-        if (mounted && requestRef.current === requestId) {
-          setIsLoading(false);
-        }
+        if (mounted && requestRef.current === requestId) setIsLoading(false);
       }
     };
-
     initializeWorkspace();
-
     return () => {
       mounted = false;
     };
-    // We intentionally key initialization by URL id to avoid unstable hook callbacks
-    // from retriggering endless loading requests on every render.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // We intentionally key initialization by URL id...
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   useEffect(() => {
     const clientId = getCookie("client_id");
     if (!clientId) {
       const newClientId = uuid();
-      const cookieOptions: CookieOptions = {
-        secure: window.location.protocol === "https:",
-        sameSite: "Strict",
-      };
+      const cookieOptions: CookieOptions = { secure: window.location.protocol === "https:", sameSite: "Strict" };
       setCookie("client_id", newClientId, cookieOptions);
       setClientId(newClientId);
-    } else {
-      setClientId(clientId);
-    }
+    } else setClientId(clientId);
   }, [setClientId]);
 
   if (isLoading) {
-    return (
-      <div className="flex h-screen w-full items-center justify-center bg-[#0a1018] text-[#94a3b8]">
-        Loading workspace...
-      </div>
-    );
+    return <div className="flex h-screen w-screen items-center justify-center" style={{ backgroundColor: theme.pageBg, color: theme.textMuted }}>Loading workspace...</div>;
   }
 
   return (
-    <div className="h-screen w-full overflow-x-hidden overflow-y-hidden bg-[#0a1018] text-[#f1f5f9]">
-      {/* TODO: connect to real agent runtime API. */}
-      <WorkspaceTopBar run={MOCK_AGENT_WORKSPACE_RUN} />
-      <div className="flex h-[calc(100vh-56px-64px)] min-h-0 flex-col overflow-hidden border-y border-white/10 md:flex-row md:border-y-0">
-        <RunSidebar run={MOCK_AGENT_WORKSPACE_RUN} />
-        <RunMainPanel run={MOCK_AGENT_WORKSPACE_RUN} />
-        <RunInspectorPanel run={MOCK_AGENT_WORKSPACE_RUN} />
+    <div className="h-screen w-screen overflow-hidden" style={{ backgroundColor: theme.pageBg, color: theme.textPrimary }}>
+      <WorkspaceTopBar run={MOCK_AGENT_WORKSPACE_RUN} theme={theme} />
+      <div className="flex h-[calc(100vh-44px)] w-full min-h-0" style={{ borderTop: `1px solid ${theme.panelBorder}` }}>
+        <RunSidebar run={MOCK_AGENT_WORKSPACE_RUN} theme={theme} />
+        <RunMainPanel run={MOCK_AGENT_WORKSPACE_RUN} theme={theme} />
+        <RunInspectorPanel run={MOCK_AGENT_WORKSPACE_RUN} theme={theme} />
       </div>
-      <TraceConsoleBar run={MOCK_AGENT_WORKSPACE_RUN} />
       <div className="fixed bottom-4 left-4 z-[999]">
         <AlertDisplayArea />
       </div>

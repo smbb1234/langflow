@@ -1,10 +1,12 @@
 import * as Form from "@radix-ui/react-form";
+import type { LoginTheme } from "../theme";
 import { CustomLink } from "@/customization/components/custom-link";
 import InputComponent from "../../../components/core/parameterRenderComponent/components/inputComponent";
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
 
 type LoginAuthPanelProps = {
+  theme: LoginTheme;
   username: string;
   password: string;
   isPending: boolean;
@@ -23,177 +25,135 @@ export function LoginAuthPanel(props: LoginAuthPanelProps): JSX.Element {
     props.isPending || !props.username.trim() || !props.password.trim();
 
   return (
-    <div className="flex h-full min-w-0 flex-1 flex-col gap-[2px] overflow-hidden border border-[#1e293b] bg-[#0a1018] p-[2px]">
-      <div className="flex w-full items-center justify-between border border-[#1e293b] px-6 py-4">
-        <span className="text-[11px] text-[#64748b]">
-          v3.4.0 · build 2026.05.18
-        </span>
-        <div className="flex items-center gap-[10px] text-[11px] text-[#64748b]">
-          <span className="rounded-[4px] bg-[#021b0c] px-[6px] py-[2px] text-[10px] text-[#4ade80]">
-            ● OPERATIONAL
-          </span>
-          <span>SOC 2 · ISO 27001</span>
-        </div>
-      </div>
-
-      <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto px-6 py-8 lg:px-16 lg:py-12">
-        <span className="inline-flex w-fit items-center gap-1.5 rounded-[6px] border border-[#334155] bg-[#031d2e] px-[10px] py-1 text-[11px] font-semibold text-[#0ea5e9]">
-          ✦ AGENTIC WORKSPACE
-        </span>
-
-        <div className="space-y-2">
-          <h2 className="text-[32px] font-bold text-[#f1f5f9]">Sign in</h2>
-          <p className="text-[14px] leading-[22px] text-[#94a3b8]">
-            Continue where your agents left off — runs, approvals, and trace
-            history are preserved.
+    <section
+      className="flex h-screen w-full flex-col lg:min-w-[570px] lg:flex-1"
+      style={{ backgroundColor: props.theme.authBg }}
+    >
+      <div className="flex min-h-0 flex-1 flex-col items-center overflow-y-auto px-[60px] pt-[60px]">
+        <div className="w-[450px] max-w-full">
+          <h2 className="text-[34px] font-bold leading-[42px]" style={{ color: props.theme.authTitle }}>
+            Welcome back
+          </h2>
+          <p className="mt-3 text-[14px] leading-[22px]" style={{ color: props.theme.authBody }}>
+            Continue where your agents left off — runs, approvals and trace history are preserved.
           </p>
-        </div>
 
-        <div className="flex w-full flex-col gap-3 sm:flex-row">
-          <button
-            type="button"
-            onClick={() => props.onGoogleSignIn?.()}
-            className="flex flex-1 items-center justify-center gap-2 rounded-[8px] border border-[#334155] bg-[#0d1420] px-4 py-3 text-[13px] font-medium text-[#cbd5e1]"
-          >
-            <span
-              aria-hidden="true"
-              className="text-[14px] font-bold text-[#ef4444]"
-            >
-              G
-            </span>
-            Google
-          </button>
-          <button
-            type="button"
-            onClick={() => props.onMicrosoftSignIn?.()}
-            className="flex flex-1 items-center justify-center gap-2 rounded-[8px] border border-[#334155] bg-[#0d1420] px-4 py-3 text-[13px] font-medium text-[#cbd5e1]"
-          >
-            <span
-              aria-hidden="true"
-              className="text-[14px] font-bold text-[#fbbf24]"
-            >
-              ⊞
-            </span>
-            Microsoft
-          </button>
-        </div>
-
-        <button
-          type="button"
-          onClick={() => props.onSamlSignIn?.()}
-          className="w-full rounded-[8px] border border-[#334155] bg-[#0d1420] px-4 py-3 text-[13px] font-medium text-[#cbd5e1]"
-        >
-          🔒 Continue with SAML SSO (acme.com)
-        </button>
-
-        <div className="flex w-full items-center gap-3">
-          <div className="h-px flex-1 bg-[#1a2535]" />
-          <span className="text-[10px] font-semibold text-[#64748b]">
-            OR WITH EMAIL
-          </span>
-          <div className="h-px flex-1 bg-[#1a2535]" />
-        </div>
-
-        <Form.Field name="username" className="space-y-2">
-          <Form.Label className="text-[12px] font-medium text-[#94a3b8]">
-            Work email
-          </Form.Label>
-          <Form.Control asChild>
-            <Input
-              value={props.username}
-              onChange={(event) => props.onUsernameChange(event.target.value)}
-              placeholder="priya.menon@acme.com"
-              className="h-[38px] rounded-[8px] border-[#334155] bg-[#0d1420] px-[14px] py-[10px] text-[13px] text-[#cbd5e1] placeholder:text-[#475569]"
-              required
-            />
-          </Form.Control>
-        </Form.Field>
-
-        <Form.Field name="password" className="space-y-2">
-          <div className="flex items-center justify-between">
-            <Form.Label className="text-[12px] font-medium text-[#94a3b8]">
-              Password
-            </Form.Label>
+          <div className="mt-6 flex gap-3">
             <button
               type="button"
-              onClick={() => props.onForgotPassword?.()}
-              className="text-[12px] text-[#0ea5e9]"
+              onClick={() => props.onGoogleSignIn?.()}
+              className="flex h-[44px] w-[219px] items-center justify-center gap-2 rounded-[8px] border text-[13px] font-medium"
+              style={{ backgroundColor: props.theme.controlBg, borderColor: props.theme.controlBorder, color: props.theme.controlText }}
             >
-              Forgot?
+              <span aria-hidden="true" className="font-semibold text-[#DB4437]">
+                G
+              </span>
+              <span>Google</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => props.onMicrosoftSignIn?.()}
+              className="flex h-[44px] w-[219px] items-center justify-center gap-2 rounded-[8px] border text-[13px] font-medium"
+              style={{ backgroundColor: props.theme.controlBg, borderColor: props.theme.controlBorder, color: props.theme.controlText }}
+            >
+              <span aria-hidden="true" className="grid h-3.5 w-3.5 grid-cols-2 gap-[1px]">
+                <span className="bg-[#F25022]" />
+                <span className="bg-[#7FBA00]" />
+                <span className="bg-[#00A4EF]" />
+                <span className="bg-[#FFB900]" />
+              </span>
+              <span>Microsoft</span>
             </button>
           </div>
-          <InputComponent
-            onChange={(value) => props.onPasswordChange(value)}
-            value={props.password}
-            isForm
-            password={true}
-            required
-            placeholder="Password"
-            className="w-full rounded-[8px] border border-[#334155] bg-[#0d1420] text-[13px] text-[#cbd5e1] placeholder:text-[#475569]"
-          />
-        </Form.Field>
 
-        <label className="flex items-center gap-[10px] text-[13px] text-[#94a3b8]">
-          <input
-            type="checkbox"
-            checked={props.rememberDevice}
-            onChange={(event) =>
-              props.onRememberDeviceChange(event.target.checked)
-            }
-            className="h-4 w-4 rounded-[4px] accent-[#0ea5e9]"
-          />
-          Remember this device for 30 days
-        </label>
+          <button type="button" onClick={() => props.onSamlSignIn?.()} className="mt-3 h-[43px] w-full rounded-[8px] border text-[13px] font-medium" style={{backgroundColor: props.theme.controlBg, borderColor: props.theme.controlBorder, color: props.theme.controlText}}>
+            Continue with SAML SSO (acme.com)
+          </button>
 
-        <Form.Submit asChild>
-          <Button
-            type="submit"
-            disabled={submitDisabled}
-            className="w-full rounded-[8px] bg-[#0ea5e9] px-6 py-[14px] text-[15px] font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {props.isPending ? "Signing in..." : "Sign in to workspace  ›"}
-          </Button>
-        </Form.Submit>
+          <div className="mt-4 flex items-center gap-3">
+            <div className="h-px flex-1" style={{ backgroundColor: props.theme.divider }} />
+            <span className="text-[10px] font-semibold" style={{ color: props.theme.dividerText }}>OR WITH EMAIL</span>
+            <div className="h-px flex-1" style={{ backgroundColor: props.theme.divider }} />
+          </div>
 
-        <CustomLink to="/signup" className="w-full">
-          <Button
-            // Keep as a non-submit action even when rendered within the login form.
-            type="button"
-            className="w-full rounded-[8px] bg-[#0ea5e9] px-6 py-[14px] text-[15px] font-semibold text-white"
-          >
-            Sign up
-          </Button>
-        </CustomLink>
+          <Form.Field name="username" className="mt-4 space-y-2">
+            <Form.Label className="text-[12px]" style={{ color: props.theme.authLabel }}>Work email</Form.Label>
+            <Form.Control asChild>
+              <Input
+                value={props.username}
+                onChange={(event) => props.onUsernameChange(event.target.value)}
+                placeholder="priya.menon@acme.com"
+                className="h-[41px] w-full rounded-[8px] border px-3 text-[13px]"
+                style={{
+                  backgroundColor: props.theme.controlBg,
+                  borderColor: props.theme.controlBorder,
+                  color: props.theme.controlText,
+                }}
+                required
+              />
+            </Form.Control>
+          </Form.Field>
 
-        <div className="flex w-full gap-[10px] rounded-[6px] border border-[#1e293b] bg-[#0a1018] px-3 py-2.5">
-          <span
-            aria-hidden="true"
-            className="inline-flex h-5 w-5 items-center justify-center rounded-[10px] bg-[#031d2e] text-[12px] text-[#0ea5e9]"
-          >
-            ○
-          </span>
-          <p className="text-[11px] text-[#64748b]">
-            You'll authenticate against your tenant policy. Least-privilege
-            scopes are provisioned per session and rotate every 24h.
+          <Form.Field name="password" className="mt-3 space-y-2">
+            <div className="flex items-center justify-between">
+              <Form.Label className="text-[12px]" style={{ color: props.theme.authLabel }}>Password</Form.Label>
+              <button type="button" onClick={() => props.onForgotPassword?.()} className="text-[12px]" style={{ color: props.theme.link }}>Forgot?</button>
+            </div>
+            <InputComponent
+              onChange={(value) => props.onPasswordChange(value)}
+              value={props.password}
+              isForm
+              password={true}
+              required
+              placeholder="Password"
+              className="h-[41px] w-full rounded-[8px] border text-[13px]"
+              style={{ backgroundColor: props.theme.controlBg, borderColor: props.theme.controlBorder, color: props.theme.controlText }}
+            />
+          </Form.Field>
+
+          <label className="mt-4 flex items-center gap-[10px] text-[13px]" style={{ color: props.theme.authMuted }}>
+            <input
+              type="checkbox"
+              checked={props.rememberDevice}
+              onChange={(event) => props.onRememberDeviceChange(event.target.checked)}
+              className="h-4 w-4 rounded"
+              style={{ accentColor: props.theme.checkboxBg }}
+            />
+            Remember this device for 30 days
+          </label>
+
+          <Form.Submit asChild>
+            <Button type="submit" disabled={submitDisabled} className="mt-4 h-[56px] w-full rounded-[8px] text-[15px] font-semibold" style={{ backgroundColor: props.theme.primaryButtonBg, color: props.theme.primaryButtonText }}>
+              {props.isPending ? "Signing in..." : "Sign in to workspace ›"}
+            </Button>
+          </Form.Submit>
+
+          <CustomLink to="/signup" className="block w-full">
+            <Button type="button" className="mt-3 h-[50px] w-full rounded-[8px] border text-[15px] font-semibold" style={{ backgroundColor: props.theme.signUpBg, borderColor: props.theme.signUpBorder, color: props.theme.signUpText }}>
+              Sign up
+            </Button>
+          </CustomLink>
+
+          <div className="mt-4 rounded-[8px] border px-3 py-2.5" style={{ backgroundColor: props.theme.securityBg, borderColor: props.theme.securityBorder }}>
+            <p className="text-[11px]" style={{ color: props.theme.securityText }}>
+              You&apos;ll authenticate against your tenant policy. <span style={{ color: props.theme.securityStrong, fontWeight: 600 }}>Least-privilege scopes</span> are provisioned per session and rotate every 24h.
+            </p>
+          </div>
+
+          <p className="mt-3 text-[12px]" style={{ color: props.theme.authMuted }}>
+            New here? <button type="button" style={{ color: props.theme.link }}>Request access</button> · <button type="button" style={{ color: props.theme.link }}>What&apos;s new</button>
           </p>
         </div>
-
-        <p className="text-center text-[12px] text-[#64748b]">
-          New here? Request access ·{" "}
-          <button type="button" className="font-medium text-[#0ea5e9]">
-            What's new
-          </button>
-        </p>
       </div>
 
-      <div className="flex items-center justify-between px-6 pb-6 pt-4 text-[11px] text-[#64748b] lg:px-16">
-        <span>© 2026 · All rights reserved</span>
+      <div className="flex h-[56px] items-center justify-between px-[60px] text-[11px]" style={{ color: props.theme.footerText }}>
+        <span>© 2026 Diagonal Matrix · All rights reserved</span>
         <div className="flex items-center gap-3">
           <button type="button">Privacy</button>
           <button type="button">Terms</button>
           <button type="button">Trust Center</button>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
