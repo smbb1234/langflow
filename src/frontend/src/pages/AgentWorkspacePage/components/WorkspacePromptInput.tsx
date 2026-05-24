@@ -1,11 +1,18 @@
 import { type FormEvent, useState } from "react";
 
-export function WorkspacePromptInput() {
+type WorkspacePromptInputProps = {
+  onSubmitPrompt?: (prompt: string) => void;
+};
+
+export function WorkspacePromptInput({
+  onSubmitPrompt,
+}: WorkspacePromptInputProps) {
   const [prompt, setPrompt] = useState("");
 
   // TODO: connect WorkspacePromptInput to real run continuation API.
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
+    onSubmitPrompt?.(prompt);
   };
 
   return (
