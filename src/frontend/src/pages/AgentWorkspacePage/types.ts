@@ -4,7 +4,7 @@ export type StepStatus = "DONE" | "ACTIVE" | "PENDING" | "BLOCKED";
 
 export type RunListStatus = "RUNNING" | "QUEUED" | "COMPLETED" | "FAILED";
 
-export type TraceTab = "events" | "console" | "metrics" | "evidence";
+export type TraceTab = "timeline" | "raw" | "guardrails" | "retries";
 
 export type ApprovalAction = "review" | "approve" | "deny";
 
@@ -33,6 +33,7 @@ export type ToolChoice = {
   name: string;
   reason: string;
   score: number;
+  selected?: boolean;
 };
 
 export type WorkspaceMetrics = {
@@ -52,21 +53,23 @@ export type ApprovalData = {
 };
 
 export type UncertaintyData = {
-  id: string;
-  summary: string;
+  level: string;
   confidence: number;
+  reasons: string[];
 };
 
 export type EvidenceData = {
-  id: string;
+  warehouse: string;
   source: string;
-  detail: string;
+  freshness: string;
+  rowsScanned: number;
+  queryHash: string;
 };
 
 export type GuardrailSummary = {
-  id: string;
   passed: boolean;
-  summary: string;
+  total: number;
+  status: "pass" | "warning" | "failed";
 };
 
 export type TraceConsoleData = {
