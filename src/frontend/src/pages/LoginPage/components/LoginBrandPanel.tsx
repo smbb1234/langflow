@@ -52,7 +52,7 @@ export function LoginBrandPanel({ theme }: LoginBrandPanelProps): JSX.Element {
             </span>
           </h1>
 
-          <p className="mt-6 max-w-[620px] text-[18px] leading-[30px]" style={{ color: theme.heroBody }}>
+          <p className="mt-6 max-w-[620px] text-[16px] leading-[26px]" style={{ color: theme.heroBody }}>
             A unified workspace for multi-agent runs — with live execution stages,
             guardrail telemetry, evidence provenance, and full audit replay. Built for
             teams who need to ship agents and sleep at night.
