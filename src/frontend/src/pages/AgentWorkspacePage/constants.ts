@@ -2,7 +2,7 @@ import type { AgentWorkspaceRun, RunListItem } from "./types";
 
 export const MOCK_AGENT_WORKSPACE_RUN: AgentWorkspaceRun = {
   id: "A-2026-0523",
-  title: "Revenue variance triage · Q3",
+  title: "Q3 revenue analysis",
   agentName: "finance_sql_agent",
   status: "RUNNING",
   mode: "Tool",
@@ -12,6 +12,8 @@ export const MOCK_AGENT_WORKSPACE_RUN: AgentWorkspaceRun = {
     { id: "brief", label: "Requirement Review", status: "DONE" },
     { id: "plan", label: "Execution Plan", status: "DONE" },
     { id: "query", label: "SQL Query Generation", status: "ACTIVE" },
+    { id: "qa", label: "Result QA", status: "PENDING" },
+    { id: "final", label: "Final Write-up", status: "PENDING" },
   ],
   plan: [
     { id: "p1", index: 1, label: "Validate schema scope", status: "DONE" },
@@ -22,9 +24,9 @@ export const MOCK_AGENT_WORKSPACE_RUN: AgentWorkspaceRun = {
     { id: "p6", index: 6, label: "Prepare final summary", status: "PENDING" },
   ],
   toolChoices: [
-    { id: "t1", name: "warehouse_query", reason: "Best for validated financial joins", score: 0.96 },
-    { id: "t2", name: "spreadsheet_math", reason: "Fast hypothesis validation", score: 0.83 },
-    { id: "t3", name: "web_search", reason: "External benchmark cross-check", score: 0.41 },
+    { id: "t1", name: "warehouse_query", reason: "Best for validated financial joins", score: 0.96, selected: true },
+    { id: "t2", name: "spreadsheet_math", reason: "Fast hypothesis validation", score: 0.83, selected: false },
+    { id: "t3", name: "web_search", reason: "External benchmark cross-check", score: 0.41, selected: false },
   ],
   metrics: {
     p95Ms: 412,
@@ -41,21 +43,35 @@ export const MOCK_AGENT_WORKSPACE_RUN: AgentWorkspaceRun = {
     recommendedAction: "approve",
   },
   uncertainty: {
-    id: "uncertainty-1",
-    summary: "Minor schema drift detected; attribution remains stable across sampled regions.",
+    level: "medium",
     confidence: 0.91,
+    reasons: [
+      "Minor schema drift detected in APAC refund labels.",
+      "Historical benchmark table refreshed 36h ago, outside preferred SLA.",
+    ],
   },
   evidence: [
-    { id: "e1", source: "monthly_revenue_fact", detail: "2025-Q3 gross revenue +14.2% YoY." },
-    { id: "e2", source: "refunds_adjustment_view", detail: "Region APAC has 3.1% missing refund labels." },
+    {
+      warehouse: "snowflake_finance_prod",
+      source: "monthly_revenue_fact",
+      freshness: "2026-05-23T07:40:00Z",
+      rowsScanned: 1245032,
+      queryHash: "c34ed0a4",
+    },
+    {
+      warehouse: "snowflake_finance_prod",
+      source: "refunds_adjustment_view",
+      freshness: "2026-05-23T08:15:00Z",
+      rowsScanned: 438221,
+      queryHash: "f8101a9b",
+    },
   ],
   guardrails: [
-    { id: "g1", passed: true, summary: "PII access policy check passed." },
-    { id: "g2", passed: true, summary: "SQL row-limit guardrail passed." },
+    { passed: true, total: 8, status: "warning" },
   ],
   trace: {
-    activeTab: "events",
-    tabs: ["events", "console", "metrics", "evidence"],
+    activeTab: "timeline",
+    tabs: ["timeline", "raw", "guardrails", "retries"],
     eventsLabel: "Trace · 42 events",
   },
   events: [
@@ -68,16 +84,16 @@ export const MOCK_AGENT_WORKSPACE_RUN: AgentWorkspaceRun = {
 export const MOCK_AGENT_WORKSPACE_COPY = {
   stageChips: ["Plan", "Retrieve", "Reason", "Tool", "Validate", "Response"],
   traceTabs: {
-    events: "Timeline",
-    console: "Raw events",
-    metrics: "Retries / latency",
-    evidence: "Evidence links",
+    timeline: "Timeline",
+    raw: "Raw",
+    guardrails: "Guardrails",
+    retries: "Retries",
   },
   mainTabs: ["Overview", "Guardrails", "Evidence", "Trace"],
   inspectorTabs: ["Overview", "Guardrails", "Evidence", "Trace"],
   unresolvedItems: [
-    { id: "guardrail-1", level: "warning", text: "PII mask confidence below threshold in draft answer." },
-    { id: "evidence-1", level: "error", text: "Evidence source for policy quote is missing citation anchor." },
+    { id: "guardrail-1", level: "warning", text: "1 of 8 guardrails needs review before completion." },
+    { id: "evidence-1", level: "error", text: "APAC refund label coverage below 97% target." },
   ] as const,
 } as const;
 

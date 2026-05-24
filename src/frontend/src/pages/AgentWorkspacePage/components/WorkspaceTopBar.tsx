@@ -20,7 +20,7 @@ export function WorkspaceTopBar({ run }: { run: AgentWorkspaceRun }) {
 
         <div className="flex min-w-0 items-center gap-2 text-[11px] text-slate-200">
           <span className="shrink-0 font-semibold tracking-wide text-emerald-300">
-            RUNNING
+            {run.status}
           </span>
           <span className="min-w-0 truncate text-slate-100">{run.title}</span>
           <div className="hidden shrink-0 items-center gap-1 xl:flex">
@@ -51,7 +51,7 @@ export function WorkspaceTopBar({ run }: { run: AgentWorkspaceRun }) {
           ${run.metrics.costUsd.toFixed(3)}
         </span>
         <span className="rounded-md border border-amber-500/70 bg-amber-500/10 px-2 py-0.5 text-amber-300">
-          1 approval pending
+          {run.approval.title}
         </span>
       </div>
     </header>

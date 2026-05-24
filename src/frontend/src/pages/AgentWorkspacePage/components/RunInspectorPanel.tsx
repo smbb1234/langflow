@@ -12,7 +12,7 @@ export function RunInspectorPanel({ run }: { run: AgentWorkspaceRun }) {
     { label: "Active agent", value: run.agentName },
     { label: "Stage", value: run.stages.find((stage) => stage.status === "ACTIVE")?.label ?? "N/A" },
     { label: "Next checkpoint", value: run.plan.find((step) => step.status === "PENDING")?.label ?? "Final review" },
-    { label: "Initiated by", value: "Workspace operator" },
+    { label: "Guardrails", value: `${run.guardrails[0]?.total ?? 0} checks` },
   ];
 
   return (
@@ -70,7 +70,18 @@ export function RunInspectorPanel({ run }: { run: AgentWorkspaceRun }) {
             Blocked / unresolved
           </h2>
           <ul className="space-y-2">
-            {MOCK_AGENT_WORKSPACE_COPY.unresolvedItems.map((item) => (
+            {[
+              {
+                id: "guardrail-status",
+                level: run.guardrails[0]?.status === "failed" ? "error" : "warning",
+                text: `Guardrails status: ${run.guardrails[0]?.status ?? "unknown"}`,
+              },
+              {
+                id: "uncertainty-reason",
+                level: "warning",
+                text: run.uncertainty.reasons[0] ?? "No uncertainty reason logged.",
+              },
+            ].map((item) => (
               <li
                 className="flex items-start gap-2 text-xs text-slate-200"
                 key={item.id}
@@ -95,16 +106,16 @@ export function RunInspectorPanel({ run }: { run: AgentWorkspaceRun }) {
           <dl className="space-y-2 text-xs">
             <div>
               <dt className="text-slate-400">Picked</dt>
-              <dd className="text-slate-200">{run.toolChoices[0]?.name}</dd>
+              <dd className="text-slate-200">{run.toolChoices.find((tool) => tool.selected)?.name ?? "N/A"}</dd>
             </div>
             <div>
               <dt className="text-slate-400">Rejected</dt>
-              <dd className="text-slate-200">{run.toolChoices[2]?.name}</dd>
+              <dd className="text-slate-200">{run.toolChoices.find((tool) => !tool.selected)?.name ?? "N/A"}</dd>
             </div>
             <div>
               <dt className="text-slate-400">Reason</dt>
               <dd className="text-slate-200">
-                {run.toolChoices[0]?.reason}
+                {run.toolChoices.find((tool) => tool.selected)?.reason}
               </dd>
             </div>
           </dl>
@@ -119,8 +130,8 @@ export function RunInspectorPanel({ run }: { run: AgentWorkspaceRun }) {
             Evidence
           </h2>
           {run.evidence.map((item) => (
-            <p className="text-xs text-slate-300" key={item.id}>
-              {item.source}: {item.detail}
+            <p className="text-xs text-slate-300" key={`${item.source}-${item.queryHash}`}>
+              {item.source} · {item.warehouse} · {item.rowsScanned.toLocaleString()} rows · {item.freshness}
             </p>
           ))}
         </section>

@@ -11,13 +11,13 @@ export function ToolChoiceCard({ run }: { run: AgentWorkspaceRun }) {
       <h2
         className={`mb-2 ${WORKSPACE_UI.title13} ${WORKSPACE_UI.textPrimary}`}
       >
-        Tool choice — why Snowflake SQL
+        Tool choice
       </h2>
       <div className="space-y-2">
         {run.toolChoices.map((tool, index) => (
           <button
             className={`w-full rounded-[12px] border p-2 text-left transition-colors ${
-              index === 0
+              tool.selected
                 ? "border-cyan-300/70 bg-cyan-400/12 hover:bg-cyan-400/20 active:bg-cyan-400/25"
                 : "border-white/10 bg-[#1a2537] hover:bg-[#213048] active:bg-[#2a3b58]"
             }`}
