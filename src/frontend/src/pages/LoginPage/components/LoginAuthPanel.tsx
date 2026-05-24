@@ -157,6 +157,7 @@ export function LoginAuthPanel(props: LoginAuthPanelProps): JSX.Element {
 
         <CustomLink to="/signup" className="w-full">
           <Button
+            // Keep as a non-submit action even when rendered within the login form.
             type="button"
             className="w-full rounded-[8px] bg-[#0ea5e9] px-6 py-[14px] text-[15px] font-semibold text-white"
           >
