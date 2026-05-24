@@ -39,8 +39,31 @@ export function LoginAuthPanel(props: LoginAuthPanelProps): JSX.Element {
           </p>
 
           <div className="mt-6 flex gap-3">
-            <button type="button" onClick={() => props.onGoogleSignIn?.()} className="h-[44px] w-[219px] rounded-[8px] border text-[13px] font-medium" style={{backgroundColor: props.theme.controlBg, borderColor: props.theme.controlBorder, color: props.theme.controlText}}>Google</button>
-            <button type="button" onClick={() => props.onMicrosoftSignIn?.()} className="h-[44px] w-[219px] rounded-[8px] border text-[13px] font-medium" style={{backgroundColor: props.theme.controlBg, borderColor: props.theme.controlBorder, color: props.theme.controlText}}>Microsoft</button>
+            <button
+              type="button"
+              onClick={() => props.onGoogleSignIn?.()}
+              className="flex h-[44px] w-[219px] items-center justify-center gap-2 rounded-[8px] border text-[13px] font-medium"
+              style={{ backgroundColor: props.theme.controlBg, borderColor: props.theme.controlBorder, color: props.theme.controlText }}
+            >
+              <span aria-hidden="true" className="font-semibold text-[#DB4437]">
+                G
+              </span>
+              <span>Google</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => props.onMicrosoftSignIn?.()}
+              className="flex h-[44px] w-[219px] items-center justify-center gap-2 rounded-[8px] border text-[13px] font-medium"
+              style={{ backgroundColor: props.theme.controlBg, borderColor: props.theme.controlBorder, color: props.theme.controlText }}
+            >
+              <span aria-hidden="true" className="grid h-3.5 w-3.5 grid-cols-2 gap-[1px]">
+                <span className="bg-[#F25022]" />
+                <span className="bg-[#7FBA00]" />
+                <span className="bg-[#00A4EF]" />
+                <span className="bg-[#FFB900]" />
+              </span>
+              <span>Microsoft</span>
+            </button>
           </div>
 
           <button type="button" onClick={() => props.onSamlSignIn?.()} className="mt-3 h-[43px] w-full rounded-[8px] border text-[13px] font-medium" style={{backgroundColor: props.theme.controlBg, borderColor: props.theme.controlBorder, color: props.theme.controlText}}>
