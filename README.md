@@ -15,39 +15,85 @@ JAI is a powerful platform for building and deploying AI-powered agents and work
 - **Observability** with LangSmith, LangFuse, and other integrations.
 - **Enterprise-ready** security and scalability.
 
-## 🆕 Recent UI updates
-
-The latest frontend refresh focused on the **Login** and **Agent Workspace** experiences:
-
-- **Light/Dark theme parity** for login and agent workspace pages with shared, typed theme tokens.
-- **Refreshed login UX** with improved panel hierarchy, copy, sizing, and visual clarity.
-- **Agent workspace v2 layout polish** across top bar, prompt input, trace console bar, run sidebar, and inspector panels.
-- **Updated frontend tests** to reflect the new sign-in copy and UI expectations.
-
-These updates help align the day-to-day authoring flow with a cleaner, more consistent visual system while preserving existing JAI workflow behavior.
-
-## 🖥️ JAI Desktop
-
-JAI Desktop is the easiest way to get started with JAI. All dependencies are included, so you don't need to manage Python environments or install packages manually.
-Available for Windows and macOS.
-
 ## ⚡️ Quickstart
 
-### Install locally (recommended)
+### Start with the prebuilt Docker image (recommended)
 
-Requires Python 3.10–3.13 and [uv](https://docs.astral.sh/uv/getting-started/installation/) (recommended package manager).
+Every release includes a prebuilt container image, so you can start JAI without installing Python, Node.js, or project dependencies locally.
 
-#### Install
+1. Choose a tagged version from Releases (example uses `latest`).
+2. Pull the image:
 
-From a fresh directory, run:
+```shell
+docker pull jai:latest
+```
+
+3. Start the container:
+
+```shell
+docker run --rm -it -p 7860:7860   -v jai-data:/app/.langflow   --name jai   jai:latest
+```
+
+4. Open http://localhost:7860.
+
+> Data generated in JAI is persisted in the `jai-data` Docker volume.
+
+## 🧑‍💻 Run from source (clone + env + start backend/frontend)
+
+If you want to develop locally or customize JAI deeply, use the repository source.
+
+### 1) Clone and enter the repository
+
+```shell
+git clone https://github.com/langflow-ai/langflow.git
+cd langflow
+```
+
+### 2) Configure environment variables
+
+Create a local environment file:
+
+```shell
+cp .env.example .env
+```
+
+Then edit `.env` with the providers and secrets you need (for example OpenAI keys).
+
+### 3) Install dependencies
+
+```shell
+make init
+```
+
+### 4) Start backend and frontend (two terminals)
+
+Terminal 1 (backend):
+
+```shell
+make backend
+```
+
+Terminal 2 (frontend):
+
+```shell
+make frontend
+```
+
+Open http://localhost:3000 for the development UI (hot reload enabled).
+
+For more contributor workflows and troubleshooting, see [DEVELOPMENT.md](./DEVELOPMENT.md).
+
+## 📦 Other install options
+
+### Python CLI install
+
+If you prefer running JAI directly with Python:
 
 ```shell
 uv pip install jai -U
 ```
 
-#### Run
-
-To start JAI, run:
+Run it with:
 
 ```shell
 uv run jai run
@@ -55,33 +101,46 @@ uv run jai run
 
 JAI starts at http://127.0.0.1:7860.
 
-That's it! You're ready to build with JAI! 🎉
+### CLI tips
 
-## 📦 Other install options
+- Check available commands:
 
-### Run from source
+  ```shell
+  uv run jai --help
+  ```
 
-If you've cloned this repository and want to contribute, run this command from the repository root:
+- Show help for a specific command:
+
+  ```shell
+  uv run jai run --help
+  ```
+
+- Run with custom host/port:
+
+  ```shell
+  uv run jai run --host 0.0.0.0 --port 7860
+  ```
+
+- Use a local `.env` file before launching:
+
+  ```shell
+  set -a && source .env && set +a
+  uv run jai run
+  ```
+
+### Development setup
+
+To build and run from source in one command:
 
 ```shell
 make run_cli
 ```
 
-For more information, see [DEVELOPMENT.md](./DEVELOPMENT.md).
-
-### Docker
-
-Start a JAI container with default settings:
-
-```shell
-docker run -p 7860:7860 jai:latest
-```
-
-JAI is available at http://localhost:7860/.
+For detailed development instructions, see [DEVELOPMENT.md](./DEVELOPMENT.md).
 
 ## 🛡️ Security
 
-For security information, see our [Security Policy](./SECURITY.md).
+For security information, reporting guidance, and supported versions, see our [Security Policy](./SECURITY.md).
 
 ## 🚀 Deployment
 
