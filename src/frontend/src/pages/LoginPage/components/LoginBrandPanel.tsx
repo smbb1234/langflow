@@ -7,7 +7,7 @@ type LoginBrandPanelProps = {
 export function LoginBrandPanel({ theme }: LoginBrandPanelProps): JSX.Element {
   return (
     <aside
-      className="relative w-full overflow-hidden px-[60px] py-[36px] lg:h-screen lg:w-[870px]"
+      className="relative w-full overflow-hidden px-[60px] py-[36px] lg:h-screen lg:w-[870px] lg:min-w-[870px]"
       style={{
         backgroundColor: theme.heroGradientTo,
         backgroundImage: `linear-gradient(180deg, ${theme.heroOverlay}, ${theme.heroOverlay}), url('/jai/login-hero-bg.png')`,

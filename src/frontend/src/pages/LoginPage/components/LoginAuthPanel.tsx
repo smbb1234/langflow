@@ -26,7 +26,7 @@ export function LoginAuthPanel(props: LoginAuthPanelProps): JSX.Element {
 
   return (
     <section
-      className="flex h-screen w-full flex-col lg:w-[570px]"
+      className="flex h-screen w-full flex-col lg:min-w-[570px] lg:flex-1"
       style={{ backgroundColor: props.theme.authBg }}
     >
       <div className="flex min-h-0 flex-1 flex-col items-center overflow-y-auto px-[60px] pt-[60px]">
