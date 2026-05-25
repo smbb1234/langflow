@@ -27,6 +27,9 @@ export default function AgentWorkspacePage() {
   const [isLoading, setIsLoading] = useState(true);
   const isDark = useDarkStore((state) => state.dark);
   const theme = isDark ? workspaceDarkTheme : workspaceLightTheme;
+  const workspaceRun = MOCK_AGENT_WORKSPACE_RUN;
+  // TODO: derive workspaceRun from flow execution/session data.
+  // TODO: wire to backend run stream.
   const requestRef = useRef(0);
 
   useEffect(() => {
@@ -75,11 +78,11 @@ export default function AgentWorkspacePage() {
 
   return (
     <div className="h-screen w-screen overflow-hidden" style={{ backgroundColor: theme.pageBg, color: theme.textPrimary }}>
-      <WorkspaceTopBar run={MOCK_AGENT_WORKSPACE_RUN} theme={theme} />
+      <WorkspaceTopBar run={workspaceRun} theme={theme} />
       <div className="flex h-[calc(100vh-44px)] w-full min-h-0" style={{ borderTop: `1px solid ${theme.panelBorder}` }}>
-        <RunSidebar run={MOCK_AGENT_WORKSPACE_RUN} theme={theme} />
-        <RunMainPanel run={MOCK_AGENT_WORKSPACE_RUN} theme={theme} />
-        <RunInspectorPanel run={MOCK_AGENT_WORKSPACE_RUN} theme={theme} />
+        <RunSidebar run={workspaceRun} theme={theme} />
+        <RunMainPanel run={workspaceRun} theme={theme} />
+        <RunInspectorPanel run={workspaceRun} theme={theme} />
       </div>
       <div className="fixed bottom-4 left-4 z-[999]">
         <AlertDisplayArea />

@@ -1,20 +1,20 @@
-export type RunStatus = "RUNNING" | "PAUSED" | "COMPLETED" | "FAILED";
+export type RunStatus = "RUNNING" | "PENDING" | "COMPLETED" | "FAILED" | "BLOCKED";
 
 export type StepStatus = "DONE" | "ACTIVE" | "PENDING" | "BLOCKED";
 
-export type RunListStatus = "RUNNING" | "QUEUED" | "COMPLETED" | "FAILED";
+export type WorkspaceTab = "overview" | "guardrails" | "evidence" | "trace";
 
 export type TraceTab = "timeline" | "raw" | "guardrails" | "retries";
 
 export type ApprovalAction = "review" | "approve" | "deny";
 
-export type WorkspaceStage = {
+export type RunStage = {
   id: string;
   label: string;
   status: StepStatus;
 };
 
-export type AgentPlanStep = {
+export type RunPlanStep = {
   id: string;
   index: number;
   label: string;
@@ -36,29 +36,31 @@ export type ToolChoice = {
   selected?: boolean;
 };
 
-export type WorkspaceMetrics = {
+export type RunMetrics = {
   p95Ms: number;
   tokenCount: number;
   costUsd: number;
   eventCount: number;
   retryCount: number;
-  budgetUsedPct: number;
+  spikeCount: number;
+  budgetUsedLabel: string;
 };
 
-export type ApprovalData = {
+export type ApprovalState = {
   id: string;
+  pendingCount: number;
   title: string;
   description: string;
   recommendedAction: ApprovalAction;
 };
 
-export type UncertaintyData = {
+export type UncertaintyState = {
   level: "low" | "medium" | "high";
   confidence: number;
   reasons: string[];
 };
 
-export type EvidenceData = {
+export type EvidenceState = {
   warehouse: string;
   source: string;
   freshness: string;
@@ -66,62 +68,56 @@ export type EvidenceData = {
   queryHash: string;
 };
 
-export type GuardrailSummary = {
+export type GuardrailsState = {
   passed: number;
   total: number;
   status: "pass" | "warning" | "failed";
 };
 
-export type TraceConsoleData = {
+export type TraceSegment = {
+  id: string;
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+  tone: "green" | "blue" | "orange" | "red";
+};
+
+export type TraceLane = {
+  id: string;
+  label: string;
+};
+
+export type TraceState = {
   activeTab: TraceTab;
   tabs: TraceTab[];
-  eventsLabel: string;
+  axisLabels: string[];
+  lanes: TraceLane[];
+  segments: TraceSegment[];
 };
 
 export type AgentWorkspaceRun = {
   id: string;
   title: string;
+  runDisplayId: string;
   agentName: string;
+  agentPath: string;
+  environment: string;
+  scope: string;
+  tenant: string;
+  startedAt: string;
+  initiatedBy: string;
   status: RunStatus;
-  mode: "Tool" | "Chat";
   currentStep: number;
   totalSteps: number;
-  stages: WorkspaceStage[];
-  plan: AgentPlanStep[];
+  stages: RunStage[];
+  plan: RunPlanStep[];
   toolChoices: ToolChoice[];
-  metrics: WorkspaceMetrics;
-  approval: ApprovalData;
-  uncertainty: UncertaintyData;
-  evidence: EvidenceData;
-  guardrails: GuardrailSummary;
-  trace: TraceConsoleData;
+  metrics: RunMetrics;
+  approval: ApprovalState;
+  uncertainty: UncertaintyState;
+  evidence: EvidenceState;
+  guardrails: GuardrailsState;
+  trace: TraceState;
   events: WorkspaceEvent[];
 };
-
-export type RunListItem = {
-  id: string;
-  title: string;
-  agentName: string;
-  status: RunListStatus;
-};
-
-export interface RuntimeApi {
-  getRun: (runId: string) => Promise<AgentWorkspaceRun>;
-  continueRun: ContinueRunHandler;
-}
-
-export interface ToolChoiceProvider {
-  listChoices: (runId: string) => Promise<ToolChoice[]>;
-}
-
-export interface ObservabilityApi {
-  listEvents: (runId: string) => Promise<WorkspaceEvent[]>;
-  getMetrics: (runId: string) => Promise<WorkspaceMetrics>;
-}
-
-export type ApprovalHandler = (
-  runId: string,
-  action: ApprovalAction,
-) => Promise<void>;
-
-export type ContinueRunHandler = (runId: string, prompt: string) => Promise<void>;
