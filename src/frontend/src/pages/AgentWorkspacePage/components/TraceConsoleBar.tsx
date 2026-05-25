@@ -1,12 +1,78 @@
-import type { WorkspaceTheme } from "../theme";
-import type { AgentWorkspaceRun } from "../types";
+import { useMemo, useState } from "react";
 
-export function TraceConsoleBar({ run, theme }: { run: AgentWorkspaceRun; theme: WorkspaceTheme }) {
-  // TODO: fetch trace events from run execution API.
-  return <footer className="h-[162px] border-t" style={{ borderColor: theme.panelBorder, backgroundColor: theme.panelBg }}>
-    <div className="flex h-[41px] items-center justify-between border-b px-3 text-[11px]" style={{ borderColor: theme.panelBorder, color: theme.textSecondary }}>
-      <div className="flex gap-3"><span>Trace Console</span>{run.trace.tabs.map((tab)=><span key={tab}>{tab}</span>)}</div>
-      <div className="flex gap-3"><span>{run.metrics.retryCount} retries</span><span>{run.metrics.spikeCount} spike</span><span>{run.metrics.eventCount} events</span><span>budget {run.metrics.budgetUsedLabel}</span></div>
-    </div>
-  </footer>;
+import type { WorkspaceTheme } from "../theme";
+import type { AgentWorkspaceRun, TraceTab } from "../types";
+import { TraceConsoleHeader } from "./TraceConsoleHeader";
+import { TraceGuardrailsView } from "./TraceGuardrailsView";
+import { TraceRawEvents } from "./TraceRawEvents";
+import { TraceRetriesView } from "./TraceRetriesView";
+import { TraceTimeline } from "./TraceTimeline";
+
+type TraceConsoleBarProps = {
+  run: AgentWorkspaceRun;
+  theme: WorkspaceTheme;
+  defaultTab?: TraceTab;
+  defaultCollapsed?: boolean;
+  onTraceTabChange?: (tab: TraceTab) => void;
+  onToggleCollapsed?: (collapsed: boolean) => void;
+};
+
+const FALLBACK_TABS: TraceTab[] = ["timeline", "raw", "guardrails", "retries"];
+
+export function TraceConsoleBar({
+  run,
+  theme,
+  defaultTab,
+  defaultCollapsed = false,
+  onTraceTabChange,
+  onToggleCollapsed,
+}: TraceConsoleBarProps) {
+  const availableTabs = run.trace.tabs.length ? run.trace.tabs : FALLBACK_TABS;
+  const initialTab = useMemo(() => {
+    if (defaultTab && availableTabs.includes(defaultTab)) {
+      return defaultTab;
+    }
+    if (availableTabs.includes(run.trace.activeTab)) {
+      return run.trace.activeTab;
+    }
+    return availableTabs[0] ?? "timeline";
+  }, [availableTabs, defaultTab, run.trace.activeTab]);
+
+  const [activeTab, setActiveTab] = useState<TraceTab>(initialTab);
+  const [collapsed, setCollapsed] = useState(defaultCollapsed);
+
+  const handleTabChange = (tab: TraceTab) => {
+    setActiveTab(tab);
+    onTraceTabChange?.(tab);
+  };
+
+  const handleToggleCollapsed = () => {
+    const nextCollapsed = !collapsed;
+    setCollapsed(nextCollapsed);
+    onToggleCollapsed?.(nextCollapsed);
+  };
+
+  return (
+    <footer
+      className="border-t"
+      style={{
+        height: collapsed ? 41 : 162,
+        borderColor: theme.panelBorder,
+        backgroundColor: theme.panelBg,
+      }}
+    >
+      <TraceConsoleHeader
+        activeTab={activeTab}
+        collapsed={collapsed}
+        onTabChange={handleTabChange}
+        onToggleCollapsed={handleToggleCollapsed}
+        run={run}
+        theme={theme}
+      />
+      {!collapsed && activeTab === "timeline" && <TraceTimeline run={run} theme={theme} />}
+      {!collapsed && activeTab === "raw" && <TraceRawEvents run={run} theme={theme} />}
+      {!collapsed && activeTab === "guardrails" && <TraceGuardrailsView run={run} theme={theme} />}
+      {!collapsed && activeTab === "retries" && <TraceRetriesView run={run} theme={theme} />}
+    </footer>
+  );
 }
