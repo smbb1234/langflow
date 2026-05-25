@@ -1,6 +1,80 @@
-import type { AgentWorkspaceRun, WorkspaceTab } from "./types";
+import type { AgentWorkspaceRun, RunGroup, WorkspaceTab } from "./types";
 
 export const WORKSPACE_TABS: WorkspaceTab[] = ["overview", "guardrails", "evidence", "trace"];
+
+export const MOCK_RUN_GROUPS: RunGroup[] = [
+  {
+    label: "PINNED",
+    runs: [
+      {
+        id: "q3-revenue-analysis",
+        title: "Q3 revenue analysis",
+        agentName: "finance_sql_agent",
+        status: "RUNNING",
+        timeLabel: "2m",
+      },
+      {
+        id: "annualized-churn-drivers",
+        title: "Annualized churn drivers",
+        agentName: "analytics_agent",
+        status: "COMPLETED",
+        timeLabel: "now",
+      },
+    ],
+  },
+  {
+    label: "TODAY",
+    runs: [
+      {
+        id: "vendor-invoice-triage",
+        title: "Vendor invoice triage",
+        agentName: "ap_agent",
+        status: "PENDING",
+        timeLabel: "14m",
+      },
+      {
+        id: "customer-escalation-4821",
+        title: "Customer escalation #4821",
+        agentName: "support_router",
+        status: "FAILED",
+        timeLabel: "23m",
+      },
+      {
+        id: "weekly-kpi-digest",
+        title: "Weekly KPI digest",
+        agentName: "reporting_agent",
+        status: "BLOCKED",
+        timeLabel: "1h",
+      },
+      {
+        id: "compliance-scan-eu-dsa",
+        title: "Compliance scan · EU-DSA",
+        agentName: "policy_agent",
+        status: "RUNNING",
+        timeLabel: "3h",
+      },
+    ],
+  },
+  {
+    label: "EARLIER",
+    runs: [
+      {
+        id: "pricing-test-plan",
+        title: "Pricing test plan",
+        agentName: "growth_agent",
+        status: "COMPLETED",
+        timeLabel: "yest",
+      },
+      {
+        id: "onboarding-draft-v3",
+        title: "Onboarding draft v3",
+        agentName: "content_agent",
+        status: "COMPLETED",
+        timeLabel: "yest",
+      },
+    ],
+  },
+];
 
 export const MOCK_AGENT_WORKSPACE_RUN: AgentWorkspaceRun = {
   id: "A-2026-0523",
