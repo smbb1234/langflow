@@ -1,170 +1,214 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { CustomProfileIcon } from "@/customization/components/custom-profile-icon";
+import { MOCK_RUN_GROUPS } from "../constants";
 import type { WorkspaceTheme } from "../theme";
-import type { AgentWorkspaceRun } from "../types";
+import type { AgentWorkspaceRun, RunFilter, RunGroup, RunListItem, RunStatus } from "../types";
 
-type RunTone = "default" | "success" | "warning" | "active";
-
-type RunItem = {
-  id: string;
-  title: string;
-  subtitle: string;
-  tone: RunTone;
+type RunSidebarProps = {
+  run: AgentWorkspaceRun;
+  theme: WorkspaceTheme;
+  runGroups?: RunGroup[];
+  selectedRunId?: string;
+  onSelectRun?: (runId: string) => void;
+  onCreateRun?: () => void;
+  onSearchChange?: (query: string) => void;
+  onFilterChange?: (filter: RunFilter) => void;
 };
 
-const RUN_GROUPS: Record<"PINNED" | "TODAY" | "EARLIER", RunItem[]> = {
-  PINNED: [
-    {
-      id: "annualized-churn-drivers",
-      title: "Annualized churn drivers",
-      subtitle: "analytics_agent · now",
-      tone: "active",
-    },
-    {
-      id: "q3-revenue-analysis",
-      title: "Q3 revenue analysis",
-      subtitle: "finance_sql_agent · 2m",
-      tone: "success",
-    },
-  ],
-  TODAY: [
-    {
-      id: "vendor-invoice-triage",
-      title: "Vendor invoice triage",
-      subtitle: "ap_agent · 14m",
-      tone: "default",
-    },
-    {
-      id: "customer-escalation-4821",
-      title: "Customer escalation #4821",
-      subtitle: "support_router · 23m",
-      tone: "warning",
-    },
-    {
-      id: "weekly-kpi-digest",
-      title: "Weekly KPI digest",
-      subtitle: "reporting_agent · 1h",
-      tone: "default",
-    },
-    {
-      id: "compliance-scan-eu-dsa",
-      title: "Compliance scan · EU-DSA",
-      subtitle: "policy_agent · 3h",
-      tone: "success",
-    },
-  ],
-  EARLIER: [
-    {
-      id: "pricing-test-plan",
-      title: "Pricing test plan",
-      subtitle: "growth_agent · yest",
-      tone: "default",
-    },
-    {
-      id: "onboarding-draft-v3",
-      title: "Onboarding draft v3",
-      subtitle: "content_agent · yest",
-      tone: "default",
-    },
-  ],
-} as const;
+const FILTERS: { label: string; value: RunFilter }[] = [
+  { label: "All", value: "all" },
+  { label: "Active", value: "active" },
+  { label: "Pending", value: "pending" },
+  { label: "Failed", value: "failed" },
+];
 
-export function RunSidebar({ theme }: { run: AgentWorkspaceRun; theme: WorkspaceTheme }) {
-  const [activeFilter, setActiveFilter] = useState("All");
-  const [selectedRunId, setSelectedRunId] = useState("annualized-churn-drivers");
+const statusColor = (status: RunStatus, theme: WorkspaceTheme) => {
+  switch (status) {
+    case "RUNNING":
+      return theme.primaryStrong;
+    case "PENDING":
+    case "BLOCKED":
+      return theme.warning;
+    case "FAILED":
+      return theme.danger;
+    case "COMPLETED":
+    default:
+      return theme.success;
+  }
+};
 
-  const toneColorMap: Record<RunTone, string> = {
-    default: theme.textTertiary,
-    success: theme.success,
-    warning: theme.warning,
-    active: theme.primaryStrong,
+const shouldIncludeByFilter = (status: RunStatus, filter: RunFilter) => {
+  if (filter === "all") return true;
+  if (filter === "active") return status === "RUNNING";
+  if (filter === "pending") return status === "PENDING" || status === "BLOCKED";
+  return status === "FAILED";
+};
+
+const DEFAULT_SELECTED_ID = "q3-revenue-analysis";
+
+export function RunSidebar({
+  run,
+  theme,
+  runGroups,
+  selectedRunId,
+  onSelectRun,
+  onCreateRun,
+  onSearchChange,
+  onFilterChange,
+}: RunSidebarProps) {
+  void run;
+  const [query, setQuery] = useState("");
+  const [activeFilter, setActiveFilter] = useState<RunFilter>("all");
+  const [internalSelectedRunId, setInternalSelectedRunId] = useState(DEFAULT_SELECTED_ID);
+
+  const currentSelectedRunId = selectedRunId ?? internalSelectedRunId;
+  const groups = runGroups ?? MOCK_RUN_GROUPS;
+
+  const filteredGroups = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+
+    return groups
+      .map((group) => {
+        const runs = group.runs.filter((item) => {
+          const filterMatch = shouldIncludeByFilter(item.status, activeFilter);
+          const queryMatch =
+            normalizedQuery.length === 0 ||
+            item.title.toLowerCase().includes(normalizedQuery) ||
+            item.agentName.toLowerCase().includes(normalizedQuery);
+
+          return filterMatch && queryMatch;
+        });
+
+        return { ...group, runs };
+      })
+      .filter((group) => group.runs.length > 0);
+  }, [activeFilter, groups, query]);
+
+  const selectRun = (runId: string) => {
+    if (onSelectRun) {
+      onSelectRun(runId);
+      return;
+    }
+
+    // TODO: replace local selection fallback once run selection is wired to real run list data.
+    setInternalSelectedRunId(runId);
+  };
+
+  const createRun = () => {
+    if (onCreateRun) {
+      onCreateRun();
+      return;
+    }
+
+    // TODO: replace local create-run placeholder when run creation API is connected.
+  };
+
+  const updateQuery = (nextQuery: string) => {
+    setQuery(nextQuery);
+
+    if (onSearchChange) {
+      onSearchChange(nextQuery);
+      return;
+    }
+
+    // TODO: replace local search fallback when backend run search is available.
+  };
+
+  const updateFilter = (filter: RunFilter) => {
+    setActiveFilter(filter);
+
+    if (onFilterChange) {
+      onFilterChange(filter);
+      return;
+    }
+
+    // TODO: replace local filter fallback when backend run filters are available.
   };
 
   return (
     <aside className="hidden h-full w-[265px] flex-col md:flex" style={{ backgroundColor: theme.panelBg, borderRight: `1px solid ${theme.panelBorder}` }}>
-      <div className="px-3 pt-3">
+      <div className="px-4 pt-4">
         <p className="text-[15px] font-bold" style={{ color: theme.textPrimary }}>
           JAI
         </p>
-        <p className="text-[8px] tracking-[1.3px]" style={{ color: theme.textMuted }}>
+        <p className="text-[8px] tracking-[1.3px]" style={{ color: theme.textSecondary }}>
           BY DIAGONAL MATRIX
         </p>
       </div>
-      <div className="px-3 pt-3">
-        <button className="h-[41px] w-full rounded-[8px] text-sm font-semibold" style={{ backgroundColor: theme.primary, color: "#fff" }} type="button">
+      <div className="px-4 pt-4">
+        <button
+          aria-label="Create new run"
+          className="h-[41px] w-full rounded-[8px] text-sm font-semibold"
+          onClick={createRun}
+          style={{ backgroundColor: theme.primary, color: "#fff" }}
+          type="button"
+        >
           + New run
         </button>
       </div>
-      <div className="px-3 pt-2">
+      <div className="px-4 pt-3">
         <div className="flex h-[34px] items-center rounded-[8px] border px-2" style={{ backgroundColor: theme.surfaceMuted, borderColor: theme.panelBorder }}>
           <input
             aria-label="Search runs, agents"
             className="w-full bg-transparent text-xs outline-none placeholder:text-inherit"
+            onChange={(event) => updateQuery(event.target.value)}
             placeholder="Search runs, agents..."
             style={{ color: theme.textTertiary }}
             type="text"
+            value={query}
           />
-          <span className="ml-2 text-xs" style={{ color: theme.textMuted }}>
+          <span className="ml-2 rounded border px-1.5 py-0.5 text-[10px]" style={{ color: theme.textMuted, borderColor: theme.panelBorder }}>
             ⌘K
           </span>
         </div>
       </div>
-      <div className="px-3 pt-2 text-xs">
-        <div className="flex flex-wrap gap-[4px]">
-          {["All", "Active", "Pending", "Failed"].map((filter) => (
+      <div className="px-4 pt-3 text-xs">
+        <div className="flex flex-wrap gap-[6px]">
+          {FILTERS.map((filter) => (
             <button
-              key={filter}
-              className="h-[28px] rounded px-2"
-              onClick={() => setActiveFilter(filter)}
+              key={filter.value}
+              className="h-[28px] rounded px-2.5"
+              onClick={() => updateFilter(filter.value)}
               style={{
-                backgroundColor: activeFilter === filter ? theme.surfaceBlue : "transparent",
-                color: activeFilter === filter ? theme.primaryStrong : theme.textTertiary,
+                backgroundColor: activeFilter === filter.value ? theme.activePanelBg : "transparent",
+                border: `1px solid ${activeFilter === filter.value ? theme.activePanelBorder : "transparent"}`,
+                color: activeFilter === filter.value ? theme.textPrimary : theme.textTertiary,
               }}
               type="button"
             >
-              {filter}
+              {filter.label}
             </button>
           ))}
         </div>
       </div>
-      <div className="min-h-0 flex-1 overflow-y-auto px-3 pt-3">
-        {Object.entries(RUN_GROUPS).map(([section, items]) => (
-          <section key={section} className="mb-4">
-            <h3 className="mb-2 text-[10px] font-semibold uppercase tracking-[0.08em]" style={{ color: theme.textMuted }}>
-              {section}
+      <div className="min-h-0 flex-1 overflow-y-auto px-4 pt-4">
+        {filteredGroups.map((group) => (
+          <section key={group.label} className="mb-5">
+            <h3 className="mb-2 text-[10px] font-semibold uppercase tracking-[0.08em]" style={{ color: theme.textSecondary }}>
+              {group.label}
             </h3>
-            <ul className="space-y-1">
-              {items.map((item) => {
-                const selected = selectedRunId === item.id;
+            <ul className="space-y-1.5">
+              {group.runs.map((item: RunListItem) => {
+                const selected = currentSelectedRunId === item.id;
 
                 return (
                   <li key={item.id}>
                     <button
                       className="flex w-full items-start gap-2 rounded-[8px] border px-2 py-2 text-left"
-                      onClick={() => setSelectedRunId(item.id)}
-                      onMouseEnter={(event) => {
-                        if (!selected) {
-                          event.currentTarget.style.backgroundColor = theme.surfaceMuted;
-                        }
-                      }}
-                      onMouseLeave={(event) => {
-                        if (!selected) {
-                          event.currentTarget.style.backgroundColor = "transparent";
-                        }
-                      }}
+                      onClick={() => selectRun(item.id)}
                       style={{
-                        backgroundColor: selected ? theme.surfaceBlue : "transparent",
-                        borderColor: selected ? theme.surfaceBlueBorder : "transparent",
+                        backgroundColor: selected ? theme.activePanelBg : "transparent",
+                        borderColor: selected ? theme.activePanelBorder : "transparent",
                       }}
                       type="button"
                     >
-                      <span className="mt-[4px] h-[7px] w-[7px] shrink-0 rounded-full" style={{ backgroundColor: toneColorMap[item.tone] }} />
+                      <span className="mt-[4px] h-[7px] w-[7px] shrink-0 rounded-full" style={{ backgroundColor: statusColor(item.status, theme) }} />
                       <span className="min-w-0">
                         <span className="block truncate text-[13px] font-semibold" style={{ color: theme.textPrimary }}>
                           {item.title}
                         </span>
-                        <span className="block truncate text-[11px]" style={{ color: theme.textMuted }}>
-                          {item.subtitle}
+                        <span className="block truncate text-[11px]" style={{ color: theme.textSecondary }}>
+                          {item.agentName} · {item.timeLabel}
                         </span>
                       </span>
                     </button>
@@ -175,13 +219,13 @@ export function RunSidebar({ theme }: { run: AgentWorkspaceRun; theme: Workspace
           </section>
         ))}
       </div>
-      <div className="flex h-[56px] items-center gap-2 border-t px-3" style={{ borderColor: theme.panelBorder }}>
-        <CustomProfileIcon className="h-8 w-8 rounded-full object-cover" />
+      <div className="flex h-[56px] items-center gap-2 border-t px-4" style={{ borderColor: theme.panelBorder }}>
+        <CustomProfileIcon className="h-8 w-8 rounded-full object-cover" fallbackText="PM" />
         <div>
           <p className="text-[12px] font-semibold" style={{ color: theme.textPrimary }}>
             Priya Menon
           </p>
-          <p className="text-[11px]" style={{ color: theme.textMuted }}>
+          <p className="text-[11px]" style={{ color: theme.textSecondary }}>
             acme · analyst
           </p>
         </div>

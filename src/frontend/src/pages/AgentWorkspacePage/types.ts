@@ -1,5 +1,20 @@
 export type RunStatus = "RUNNING" | "PENDING" | "COMPLETED" | "FAILED" | "BLOCKED";
 
+export type RunFilter = "all" | "active" | "pending" | "failed";
+
+export type RunListItem = {
+  id: string;
+  title: string;
+  agentName: string;
+  status: RunStatus;
+  timeLabel: string;
+};
+
+export type RunGroup = {
+  label: "PINNED" | "TODAY" | "EARLIER";
+  runs: RunListItem[];
+};
+
 export type StepStatus = "DONE" | "ACTIVE" | "PENDING" | "BLOCKED";
 
 export type WorkspaceTab = "overview" | "guardrails" | "evidence" | "trace";
