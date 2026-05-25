@@ -34,8 +34,8 @@ export function RunInspectorPanel({ run, theme, activeTab, onTabChange }: RunIns
     return (
       <>
         <CurrentRunSection run={run} theme={theme} />
-        <BlockedSection theme={theme} />
-        <UncertaintySection theme={theme} />
+        <BlockedSection run={run} theme={theme} />
+        <UncertaintySection run={run} theme={theme} />
       </>
     );
   }, [resolvedTab, run, theme]);

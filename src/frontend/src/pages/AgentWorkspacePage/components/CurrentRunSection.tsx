@@ -11,16 +11,19 @@ function Row({ label, value, theme }: { label: string; value: string; theme: Wor
 }
 
 export function CurrentRunSection({ run, theme }: { run: AgentWorkspaceRun; theme: WorkspaceTheme }) {
+  const activeStage = run.stages.find((stage) => stage.status === "ACTIVE");
+  const nextStage = run.stages.find((stage) => stage.status === "PENDING");
+
   return (
     <section className="space-y-3 rounded-md border p-4" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface }}>
       <h3 className="text-xs font-semibold uppercase tracking-wide" style={{ color: theme.textSecondary }}>Current run</h3>
       <div className="space-y-2 text-xs">
         <Row label="Run ID" value={run.runDisplayId || "—"} theme={theme} />
-        <Row label="Started" value="14:22:01" theme={theme} />
+        <Row label="Started" value={run.startedAt || "—"} theme={theme} />
         <Row label="Active agent" value={run.agentName || "—"} theme={theme} />
-        <Row label="Stage" value="4/6 · Tool" theme={theme} />
-        <Row label="Next checkpoint" value="Validate" theme={theme} />
-        <Row label="Initiated by" value="priya@acme" theme={theme} />
+        <Row label="Stage" value={`${run.currentStep}/${run.totalSteps} · ${activeStage?.label ?? "—"}`} theme={theme} />
+        <Row label="Next checkpoint" value={nextStage?.label ?? "—"} theme={theme} />
+        <Row label="Initiated by" value={run.initiatedBy || "—"} theme={theme} />
       </div>
     </section>
   );

@@ -79,13 +79,13 @@ export function WorkspacePromptInput({
   return (
     <div className="h-full border-t px-4 py-2" style={{ borderColor: theme.panelBorder }}>
       <form
-        className="flex min-h-[100px] flex-col rounded-[10px] border px-3 py-2"
+        className="flex h-full min-h-0 flex-col rounded-[10px] border px-3 py-2"
         style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface }}
         onSubmit={handleSubmit}
       >
         <textarea
           aria-label="Continue run prompt"
-          className="min-h-[48px] w-full resize-none bg-transparent text-[13px] leading-[1.35] outline-none"
+          className="min-h-0 flex-1 w-full resize-none bg-transparent text-[13px] leading-[1.35] outline-none"
           style={{ color: theme.textPrimary }}
           placeholder="Ask the agent, refine the analysis, or paste a URL…"
           value={prompt}

@@ -13,6 +13,7 @@ type TraceConsoleBarProps = {
   theme: WorkspaceTheme;
   defaultTab?: TraceTab;
   defaultCollapsed?: boolean;
+  collapsed?: boolean;
   onTraceTabChange?: (tab: TraceTab) => void;
   onToggleCollapsed?: (collapsed: boolean) => void;
 };
@@ -24,6 +25,7 @@ export function TraceConsoleBar({
   theme,
   defaultTab,
   defaultCollapsed = false,
+  collapsed: collapsedProp,
   onTraceTabChange,
   onToggleCollapsed,
 }: TraceConsoleBarProps) {
@@ -39,7 +41,8 @@ export function TraceConsoleBar({
   }, [availableTabs, defaultTab, run.trace.activeTab]);
 
   const [activeTab, setActiveTab] = useState<TraceTab>(initialTab);
-  const [collapsed, setCollapsed] = useState(defaultCollapsed);
+  const [internalCollapsed, setInternalCollapsed] = useState(defaultCollapsed);
+  const collapsed = collapsedProp ?? internalCollapsed;
 
   const handleTabChange = (tab: TraceTab) => {
     setActiveTab(tab);
@@ -48,19 +51,12 @@ export function TraceConsoleBar({
 
   const handleToggleCollapsed = () => {
     const nextCollapsed = !collapsed;
-    setCollapsed(nextCollapsed);
+    setInternalCollapsed(nextCollapsed);
     onToggleCollapsed?.(nextCollapsed);
   };
 
   return (
-    <footer
-      className="border-t"
-      style={{
-        height: collapsed ? 41 : 162,
-        borderColor: theme.panelBorder,
-        backgroundColor: theme.panelBg,
-      }}
-    >
+    <footer className="h-full border-t" style={{ borderColor: theme.panelBorder, backgroundColor: theme.panelBg }}>
       <TraceConsoleHeader
         activeTab={activeTab}
         collapsed={collapsed}
