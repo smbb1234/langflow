@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { WorkspaceTheme } from "../theme";
 import type { AgentWorkspaceRun, WorkspaceTab } from "../types";
 import { ConversationThread } from "./ConversationThread";
@@ -25,6 +26,8 @@ export function RunMainPanel({
   onExportRun,
   onOpenRunMenu,
 }: RunMainPanelProps) {
+  const [traceCollapsed, setTraceCollapsed] = useState(false);
+
   return (
     <main className="flex min-h-0 min-w-0 flex-1 flex-col" style={{ backgroundColor: theme.pageBg }}>
       <RunHeader
@@ -40,8 +43,8 @@ export function RunMainPanel({
       <div className="h-[100px]">
         <WorkspacePromptInput run={run} theme={theme} />
       </div>
-      <div className="h-[162px]">
-        <TraceConsoleBar run={run} theme={theme} />
+      <div className={traceCollapsed ? "h-[41px]" : "h-[162px]"}>
+        <TraceConsoleBar run={run} theme={theme} collapsed={traceCollapsed} onToggleCollapsed={setTraceCollapsed} />
       </div>
     </main>
   );

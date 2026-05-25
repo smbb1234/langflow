@@ -30,7 +30,7 @@ const statusColor = (status: RunStatus, theme: WorkspaceTheme) => {
     case "BLOCKED":
       return theme.warning;
     case "FAILED":
-      return theme.danger;
+      return theme.error;
     case "COMPLETED":
     default:
       return theme.success;
@@ -220,7 +220,7 @@ export function RunSidebar({
         ))}
       </div>
       <div className="flex h-[56px] items-center gap-2 border-t px-4" style={{ borderColor: theme.panelBorder }}>
-        <CustomProfileIcon className="h-8 w-8 rounded-full object-cover" fallbackText="PM" />
+        <CustomProfileIcon className="h-8 w-8 rounded-full object-cover" />
         <div>
           <p className="text-[12px] font-semibold" style={{ color: theme.textPrimary }}>
             Priya Menon

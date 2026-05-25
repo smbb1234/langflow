@@ -1,11 +1,8 @@
 import type { WorkspaceTheme } from "../theme";
+import type { AgentWorkspaceRun } from "../types";
 
-const blockedItems = [
-  "Approval — post_to_slack",
-  "Eval drift — tone.formal below threshold (0.71 / 0.80)",
-];
-
-export function BlockedSection({ theme }: { theme: WorkspaceTheme }) {
+export function BlockedSection({ run, theme }: { run: AgentWorkspaceRun; theme: WorkspaceTheme }) {
+  const blockedItems = [run.approval.title, ...run.uncertainty.reasons].filter(Boolean);
   return (
     <section className="space-y-3 rounded-md border p-4" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface }}>
       <h3 className="text-xs font-semibold uppercase tracking-wide" style={{ color: theme.warning }}>Blocked / unresolved</h3>
@@ -16,6 +13,11 @@ export function BlockedSection({ theme }: { theme: WorkspaceTheme }) {
             <span>{item}</span>
           </li>
         ))}
+        {blockedItems.length === 0 && (
+          <li className="text-xs" style={{ color: theme.textTertiary }}>
+            No blocked items.
+          </li>
+        )}
       </ul>
     </section>
   );
