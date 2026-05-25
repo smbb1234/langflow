@@ -1,52 +1,82 @@
-import { useState } from "react";
+import type { WorkspaceTheme } from "../theme";
 
-import { MOCK_AGENT_WORKSPACE_COPY } from "../constants";
-import type { AgentWorkspaceRun } from "../types";
-
-export function TraceConsoleBar({ run }: { run: AgentWorkspaceRun }) {
-  const mappedTabs = run.trace.tabs.map((tab) => MOCK_AGENT_WORKSPACE_COPY.traceTabs[tab]);
-  const [activeTab, setActiveTab] = useState<string>(mappedTabs[0]);
-  const badges = [
-    `${run.metrics.retryCount} retry`,
-    `${run.metrics.eventCount} events`,
-    `budget ${run.metrics.budgetUsedPct}%`,
-    `$${run.metrics.costUsd.toFixed(3)}`,
-  ];
-
-  // TODO: connect to real guardrail/evidence/trace API.
-  // TODO: add expanded console drawer with timeline/raw JSON/waterfall views.
+export function TraceConsoleBar({ theme }: { theme: WorkspaceTheme }) {
   return (
-    <footer className="flex h-[64px] flex-wrap items-center justify-between gap-x-4 gap-y-2 border-t border-[#1e293b] bg-[#070d14] px-4 py-2 lg:px-6">
-      <div className="flex min-w-0 items-center">
-        <nav aria-label="Trace tabs" className="flex flex-wrap gap-1" role="tablist">
-          {mappedTabs.map((tab) => {
-            const isActive = activeTab === tab;
-
-            return (
-              <button
-                aria-selected={isActive}
-                className={`rounded px-2 py-1 text-[11px] leading-none transition-colors ${
-                  isActive ? "bg-slate-800 text-slate-100" : "text-slate-400 hover:text-slate-200"
-                }`}
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                role="tab"
-                type="button"
-              >
-                {tab}
-              </button>
-            );
-          })}
-        </nav>
+    <footer
+      className="h-[162px] border-t"
+      style={{ borderColor: theme.panelBorder, backgroundColor: theme.panelBg }}
+    >
+      <div
+        className="flex h-[41px] items-center justify-between border-b px-3 text-[11px]"
+        style={{ borderColor: theme.panelBorder, color: theme.textSecondary }}
+      >
+        <div className="flex gap-3">
+          <span>Trace Console</span>
+          <span>Timeline</span>
+          <span>Raw events</span>
+          <span>Guardrails</span>
+          <span>Retries latency</span>
+        </div>
+        <div className="flex gap-3">
+          <span>3 retries</span>
+          <span>1 spike</span>
+          <span>42 events</span>
+          <span>budget $0.014 / $1.00</span>
+        </div>
       </div>
-      <div className="flex flex-wrap items-center justify-end gap-1.5 text-[11px] text-slate-200">
-        {badges.map((badge) => (
-          <span className="rounded-full border border-slate-700 bg-slate-900/70 px-2 py-0.5" key={badge}>
-            {badge}
-          </span>
-        ))}
+      <div className="flex h-[121px]">
+        <div className="w-[130px] px-2 py-2 text-[11px]" style={{ color: theme.textTertiary }}>
+          <p>finance_sql_agent</p>
+          <p>chart_agent</p>
+          <p>tool · run_sql</p>
+          <p>tool · render</p>
+          <p>guardrails</p>
+        </div>
+        <div className="flex-1 overflow-x-auto">
+          <div className="relative min-w-[560px] px-2 py-2 text-[10px]" style={{ color: theme.textMuted }}>
+            <div className="mb-1 flex justify-between">
+              <span>14:22:01</span>
+              <span>14:22:04</span>
+              <span>14:22:07</span>
+              <span>14:22:10</span>
+              <span>14:22:13</span>
+              <span>now</span>
+            </div>
+            <span
+              className="absolute rounded-[3px]"
+              style={{ left: 2, top: 30, width: 160, height: 12, backgroundColor: theme.traceGreen }}
+            />
+            <span
+              className="absolute rounded-[3px]"
+              style={{ left: 170, top: 30, width: 120, height: 12, backgroundColor: theme.traceBlue }}
+            />
+            <span
+              className="absolute rounded-[3px]"
+              style={{ left: 350, top: 50, width: 100, height: 12, backgroundColor: theme.traceOrange }}
+            />
+            <span
+              className="absolute rounded-[3px]"
+              style={{ left: 50, top: 70, width: 130, height: 12, backgroundColor: theme.traceGreen }}
+            />
+            <span
+              className="absolute rounded-[3px]"
+              style={{ left: 400, top: 90, width: 90, height: 12, backgroundColor: theme.traceBlue }}
+            />
+            <span
+              className="absolute rounded-[3px]"
+              style={{ left: 30, top: 110, width: 14, height: 10, backgroundColor: theme.traceGreen }}
+            />
+            <span
+              className="absolute rounded-[3px]"
+              style={{ left: 192, top: 110, width: 14, height: 10, backgroundColor: theme.traceGreen }}
+            />
+            <span
+              className="absolute rounded-[3px]"
+              style={{ left: 360, top: 110, width: 14, height: 10, backgroundColor: theme.traceOrange }}
+            />
+          </div>
+        </div>
       </div>
-      <span className="sr-only">{run.trace.eventsLabel}</span>
     </footer>
   );
 }
