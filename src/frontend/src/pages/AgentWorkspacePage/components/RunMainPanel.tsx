@@ -38,7 +38,7 @@ export function RunMainPanel({
       {/* TODO: render non-overview panels once each tab gets dedicated content. */}
       <ConversationThread run={run} theme={theme} />
       <div className="h-[100px]">
-        <WorkspacePromptInput theme={theme} />
+        <WorkspacePromptInput run={run} theme={theme} />
       </div>
       <div className="h-[162px]">
         <TraceConsoleBar run={run} theme={theme} />

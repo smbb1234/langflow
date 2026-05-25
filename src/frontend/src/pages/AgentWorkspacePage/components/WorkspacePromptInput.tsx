@@ -1,33 +1,130 @@
-import { type FormEvent, useState } from "react";
+import { type FormEvent, type KeyboardEvent, useMemo, useState } from "react";
+import type { AgentWorkspaceRun } from "../types";
 import type { WorkspaceTheme } from "../theme";
 
 type WorkspacePromptInputProps = {
   theme: WorkspaceTheme;
+  run: AgentWorkspaceRun;
+  onSubmitPrompt?: (prompt: string) => void;
+  onAttach?: () => void;
+  onSelectEvidenceScope?: () => void;
+  onSelectAgent?: () => void;
 };
 
-export function WorkspacePromptInput({ theme }: WorkspacePromptInputProps) {
+export function WorkspacePromptInput({
+  theme,
+  run,
+  onSubmitPrompt,
+  onAttach,
+  onSelectEvidenceScope,
+  onSelectAgent,
+}: WorkspacePromptInputProps) {
   const [prompt, setPrompt] = useState("");
-  const handleSubmit = (event: FormEvent) => {
+
+  const evidenceScopeLabel = useMemo(() => run.evidence.warehouse || "finance_curated", [run.evidence.warehouse]);
+  const agentLabel = useMemo(() => run.agentName || "finance_sql_agent", [run.agentName]);
+
+  const handleSubmit = (event?: FormEvent) => {
+    event?.preventDefault();
+
+    if (onSubmitPrompt) {
+      onSubmitPrompt(prompt);
+      return;
+    }
+
+    // TODO: wire prompt submission to run continuation endpoint.
+  };
+
+  const handleKeyboardSubmit = (event: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key !== "Enter") {
+      return;
+    }
+
+    const isShortcutPressed = event.metaKey || event.ctrlKey;
+    if (!isShortcutPressed) {
+      return;
+    }
+
     event.preventDefault();
+    handleSubmit();
+  };
+
+  const handleAttachClick = () => {
+    if (onAttach) {
+      onAttach();
+      return;
+    }
+
+    // TODO: wire attachment selection workflow.
+  };
+
+  const handleSelectEvidenceScopeClick = () => {
+    if (onSelectEvidenceScope) {
+      onSelectEvidenceScope();
+      return;
+    }
+
+    // TODO: wire evidence scope picker workflow.
+  };
+
+  const handleSelectAgentClick = () => {
+    if (onSelectAgent) {
+      onSelectAgent();
+      return;
+    }
+
+    // TODO: wire agent picker workflow.
   };
 
   return (
     <div className="h-full border-t px-4 py-2" style={{ borderColor: theme.panelBorder }}>
-      <form className="flex h-[76px] flex-col rounded-[10px] border px-3 py-2" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface }} onSubmit={handleSubmit}>
-        <input aria-label="Continue run prompt" className="w-full bg-transparent text-[13px] outline-none" style={{ color: theme.textPrimary }} placeholder="Ask the agent, refine the analysis, or paste a URL…" type="text" value={prompt} onChange={(event) => setPrompt(event.target.value)} />
+      <form
+        className="flex min-h-[100px] flex-col rounded-[10px] border px-3 py-2"
+        style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface }}
+        onSubmit={handleSubmit}
+      >
+        <textarea
+          aria-label="Continue run prompt"
+          className="min-h-[48px] w-full resize-none bg-transparent text-[13px] leading-[1.35] outline-none"
+          style={{ color: theme.textPrimary }}
+          placeholder="Ask the agent, refine the analysis, or paste a URL…"
+          value={prompt}
+          onChange={(event) => setPrompt(event.target.value)}
+          onKeyDown={handleKeyboardSubmit}
+        />
         <div className="mt-auto flex items-center justify-between text-[11px]" style={{ color: theme.textTertiary }}>
-          <div className="flex gap-2">
-            <span className="rounded-[6px] border px-2 py-1" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surfaceMuted, color: theme.textSecondary }}>
+          <div className="flex flex-wrap gap-2">
+            <button
+              className="rounded-[8px] border px-3 py-1.5 text-[12px]"
+              style={{ borderColor: theme.panelBorder, backgroundColor: theme.surfaceMuted, color: theme.textSecondary }}
+              type="button"
+              onClick={handleAttachClick}
+            >
               📎 Attach
-            </span>
-            <span className="rounded-[6px] border px-2 py-1" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surfaceMuted, color: theme.textSecondary }}>
-              ⊞ finance_curated
-            </span>
-            <span className="rounded-[6px] border px-2 py-1" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surfaceMuted, color: theme.textSecondary }}>
-              ⚙ finance_sql_agent
-            </span>
+            </button>
+            <button
+              className="rounded-[8px] border px-3 py-1.5 text-[12px]"
+              style={{ borderColor: theme.panelBorder, backgroundColor: theme.surfaceMuted, color: theme.textSecondary }}
+              type="button"
+              onClick={handleSelectEvidenceScopeClick}
+            >
+              ⊞ {evidenceScopeLabel}
+            </button>
+            <button
+              className="rounded-[8px] border px-3 py-1.5 text-[12px]"
+              style={{ borderColor: theme.panelBorder, backgroundColor: theme.surfaceMuted, color: theme.textSecondary }}
+              type="button"
+              onClick={handleSelectAgentClick}
+            >
+              ⚙ {agentLabel}
+            </button>
           </div>
-          <div className="flex items-center gap-3"><span>⌘↵ to send</span><button className="rounded px-2 py-1" style={{ backgroundColor: theme.primary, color: "#fff" }} type="submit">↗ Send</button></div>
+          <div className="flex items-center gap-3">
+            <span>⌘↵ to send</span>
+            <button className="rounded px-3 py-1.5 text-[12px]" style={{ backgroundColor: theme.primary, color: "#fff" }} type="submit">
+              ↗ Send
+            </button>
+          </div>
         </div>
       </form>
     </div>
