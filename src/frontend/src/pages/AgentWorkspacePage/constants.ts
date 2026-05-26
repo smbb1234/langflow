@@ -2,6 +2,8 @@ import type { AgentWorkspaceRun, RunGroup, WorkspaceTab } from "./types";
 
 export const WORKSPACE_TABS: WorkspaceTab[] = ["overview", "guardrails", "evidence", "trace", "memory", "ops"];
 
+export const MAIN_WORKSPACE_TABS: WorkspaceTab[] = ["overview", "guardrails", "evidence", "trace"];
+
 export const WORKSPACE_TAB_LABELS: Record<WorkspaceTab, string> = {
   overview: "Overview",
   guardrails: "Guardrails",
