@@ -1,3 +1,4 @@
+import { JaiLogo } from "@/components/jai/JaiLogo";
 import {
   IconBell,
   IconButton,
@@ -74,9 +75,7 @@ export function WorkspaceTopBar({
       style={{ backgroundColor: theme.panelBg, borderBottom: `1px solid ${theme.panelBorder}` }}
     >
       <div className="flex items-center justify-self-start gap-1.5 min-w-0">
-        <div className="hidden min-w-0 items-center rounded-md border px-2 py-1 text-[10px] font-semibold tracking-[0.08em] md:inline-flex" style={{ borderColor: theme.pillBorder, color: theme.textPrimary }}>
-          JAI
-        </div>
+        <JaiLogo className="hidden h-8 w-[139px] shrink-0 md:block lg:h-10 lg:w-[174px]" />
         <TopBarPill theme={theme}>{run.environment}</TopBarPill>
         <TopBarPill
           theme={theme}

@@ -1,3 +1,4 @@
+import { JaiLogo } from "@/components/jai/JaiLogo";
 import type { LoginTheme } from "../theme";
 
 type LoginBrandPanelProps = {
@@ -16,20 +17,7 @@ export function LoginBrandPanel({ theme }: LoginBrandPanelProps): JSX.Element {
       }}
     >
       <div className="flex h-full flex-col">
-        <div>
-          <p
-            className="text-[22px] font-bold leading-none tracking-[1px]"
-            style={{ color: theme.heroLogoPrimary }}
-          >
-            JAI
-          </p>
-          <p
-            className="mt-1 text-[9px] uppercase tracking-[1.5px]"
-            style={{ color: theme.heroLogoSecondary }}
-          >
-            BY DIAGONAL MATRIX
-          </p>
-        </div>
+        <JaiLogo className="h-[53px] w-[230px]" />
 
         <div className="mt-[120px] max-w-[680px] max-lg:mt-14">
           <span
