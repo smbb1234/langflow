@@ -130,10 +130,11 @@ export type GuardrailEvent = {
 
 export type EvidenceSource = {
   id: string;
-  label: string;
-  kind: "table" | "query" | "document" | "api";
+  name: string;
+  type: "table" | "query" | "document" | "api";
   freshness: string;
-  reference: string;
+  confidence: number;
+  freshnessScore: number;
 };
 
 export type TraceEvent = {
