@@ -35,13 +35,48 @@ export function WorkspaceTopBar({
 }: WorkspaceTopBarProps) {
   const tokenLabel = Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 1 }).format(run.metrics.tokenCount);
   const notificationCount = run.metrics.retryCount;
+  const stageLabelOrder = ["Plan", "Retrieve", "Reason", "Tool", "Validate", "Respond"];
+  const stagesByLabel = new Map(run.stages.map((stage) => [stage.label.toLowerCase(), stage]));
+
+  const normalizedStages = stageLabelOrder.map((label) => {
+    const mappedLabel = label === "Validate" ? "guardrails" : label;
+    const stage = stagesByLabel.get(mappedLabel.toLowerCase());
+
+    return {
+      id: stage?.id ?? `stage-${label.toLowerCase()}`,
+      label,
+      status: stage?.status ?? "PENDING",
+    };
+  });
+
+  const statusStyleByStage = {
+    DONE: { backgroundColor: theme.surfaceGreen, borderColor: theme.pillBorder, color: theme.success },
+    ACTIVE: { backgroundColor: theme.surfaceBlue, borderColor: theme.surfaceBlueBorder, color: theme.primaryStrong },
+    PENDING: { backgroundColor: theme.pillBg, borderColor: theme.pillBorder, color: theme.textSecondary },
+    BLOCKED: { backgroundColor: theme.surfaceWarning, borderColor: theme.warningBorder, color: theme.warning },
+  } as const;
+
+  const toSeconds = (value: string) => {
+    const [hh, mm, ss] = value.split(":").map(Number);
+    if ([hh, mm, ss].some(Number.isNaN)) return null;
+    return hh * 3600 + mm * 60 + ss;
+  };
+
+  const startedAtSeconds = toSeconds(run.startedAt);
+  const lastEventTimestamp = run.events.at(-1)?.timestamp;
+  const lastEventSeconds = lastEventTimestamp ? toSeconds(lastEventTimestamp) : null;
+  const elapsedSeconds = startedAtSeconds !== null && lastEventSeconds !== null ? Math.max(lastEventSeconds - startedAtSeconds, 0) : 0;
+  const elapsedLabel = new Date(elapsedSeconds * 1000).toISOString().slice(11, 19);
 
   return (
     <header
       className="grid h-[44px] grid-cols-[1fr_auto_1fr] items-center px-4"
       style={{ backgroundColor: theme.panelBg, borderBottom: `1px solid ${theme.panelBorder}` }}
     >
-      <div className="flex items-center justify-self-start gap-1.5">
+      <div className="flex items-center justify-self-start gap-1.5 min-w-0">
+        <div className="hidden min-w-0 items-center rounded-md border px-2 py-1 text-[10px] font-semibold tracking-[0.08em] md:inline-flex" style={{ borderColor: theme.pillBorder, color: theme.textPrimary }}>
+          JAI
+        </div>
         <TopBarPill theme={theme}>{run.environment}</TopBarPill>
         <TopBarPill
           theme={theme}
@@ -53,7 +88,7 @@ export function WorkspaceTopBar({
         <TopBarPill theme={theme}>tenant: {run.tenant}</TopBarPill>
       </div>
 
-      <div className="flex items-center justify-self-center gap-2 text-[11px]" style={{ color: theme.textSecondary }}>
+      <div className="flex min-w-0 flex-wrap items-center justify-self-center gap-2 text-[11px]" style={{ color: theme.textSecondary }}>
         <TopBarPill
           theme={theme}
           style={{ backgroundColor: theme.surfaceBlue, borderColor: theme.surfaceBlueBorder, color: theme.primaryStrong, fontWeight: 600 }}
@@ -62,6 +97,15 @@ export function WorkspaceTopBar({
           <StatusDot color={theme.primaryStrong} />
           {run.status}
         </TopBarPill>
+        <span className="truncate text-[11px]" style={{ color: theme.textPrimary }}>{run.title}</span>
+        <div className="hidden items-center gap-1.5 lg:flex">
+          {normalizedStages.map((stage) => (
+            <TopBarPill key={stage.id} theme={theme} style={statusStyleByStage[stage.status]} className="text-[10px]">
+              {stage.label}
+            </TopBarPill>
+          ))}
+        </div>
+        <span className="hidden xl:inline">step {run.currentStep}/{run.totalSteps} | {elapsedLabel}</span>
         <span>∞ {String(run.metrics.eventCount).padStart(2, "0")}</span>
         <span>p95 {run.metrics.p95Ms}ms</span>
         <span>tok {tokenLabel}</span>
