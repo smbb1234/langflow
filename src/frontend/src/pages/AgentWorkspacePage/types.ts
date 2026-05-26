@@ -17,7 +17,7 @@ export type RunGroup = {
 
 export type StepStatus = "DONE" | "ACTIVE" | "PENDING" | "BLOCKED";
 
-export type WorkspaceTab = "overview" | "guardrails" | "evidence" | "trace";
+export type WorkspaceTab = "overview" | "guardrails" | "evidence" | "trace" | "memory" | "ops";
 
 export type TraceTab = "timeline" | "raw" | "guardrails" | "retries";
 
@@ -111,6 +111,61 @@ export type TraceState = {
   segments: TraceSegment[];
 };
 
+
+
+export type GuardrailCheck = {
+  id: string;
+  name: string;
+  status: "pass" | "warning" | "failed";
+  detail: string;
+};
+
+export type GuardrailEvent = {
+  id: string;
+  timestamp: string;
+  checkId: string;
+  status: "pass" | "warning" | "failed";
+  message: string;
+};
+
+export type EvidenceSource = {
+  id: string;
+  label: string;
+  kind: "table" | "query" | "document" | "api";
+  freshness: string;
+  reference: string;
+};
+
+export type TraceEvent = {
+  id: string;
+  timestamp: string;
+  laneId: string;
+  level: "info" | "warning" | "error";
+  message: string;
+};
+
+export type MemoryLedgerItem = {
+  id: string;
+  scope: "run" | "session" | "agent";
+  key: string;
+  value: string;
+  updatedAt: string;
+};
+
+export type OpsEvalMetric = {
+  id: string;
+  name: string;
+  score: number;
+  threshold: number;
+  status: "pass" | "warning" | "failed";
+};
+
+export type LatencySample = {
+  timestamp: string;
+  p50Ms: number;
+  p95Ms: number;
+};
+
 export type AgentWorkspaceRun = {
   id: string;
   title: string;
@@ -135,4 +190,11 @@ export type AgentWorkspaceRun = {
   guardrails: GuardrailsState;
   trace: TraceState;
   events: WorkspaceEvent[];
+  guardrailChecks: GuardrailCheck[];
+  guardrailEvents: GuardrailEvent[];
+  evidenceSources: EvidenceSource[];
+  traceEvents: TraceEvent[];
+  memoryLedger: MemoryLedgerItem[];
+  opsEvalMetrics: OpsEvalMetric[];
+  latencySamples: LatencySample[];
 };
