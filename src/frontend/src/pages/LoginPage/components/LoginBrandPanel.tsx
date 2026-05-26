@@ -61,6 +61,19 @@ export function LoginBrandPanel({ theme }: LoginBrandPanelProps): JSX.Element {
         </div>
 
         <div className="mt-auto pt-16">
+          <div className="mb-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
+            {[
+              { label: "200+", caption: "enterprise teams" },
+              { label: "12.4M", caption: "agent runs" },
+              { label: "99.98%", caption: "platform uptime" },
+            ].map((item) => (
+              <div key={item.caption} className="rounded-[10px] border px-4 py-3" style={{ borderColor: theme.heroBadgeBorder, backgroundColor: theme.heroBadgeBg }}>
+                <p className="text-[18px] font-bold leading-none" style={{ color: theme.heroTitle }}>{item.label}</p>
+                <p className="mt-1 text-[11px] uppercase tracking-[0.08em]" style={{ color: theme.heroTrustedText }}>{item.caption}</p>
+              </div>
+            ))}
+          </div>
+
           <p className="text-[10px] font-semibold tracking-[0.08em]" style={{ color: theme.heroTrustedLabel }}>
             TRUSTED BY TEAMS AT
           </p>

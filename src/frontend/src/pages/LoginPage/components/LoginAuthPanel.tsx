@@ -129,7 +129,7 @@ export function LoginAuthPanel(props: LoginAuthPanelProps): JSX.Element {
           </Form.Submit>
 
           <CustomLink to="/signup" className="block w-full">
-            <Button type="button" className="mt-3 h-[50px] w-full rounded-[8px] border text-[15px] font-semibold" style={{ backgroundColor: props.theme.signUpBg, borderColor: props.theme.signUpBorder, color: props.theme.signUpText }}>
+            <Button type="button" className="mt-3 h-[44px] w-full rounded-[8px] border text-[13px] font-medium opacity-80" style={{ backgroundColor: props.theme.authBg, borderColor: props.theme.controlBorder, color: props.theme.authMuted }}>
               Sign up
             </Button>
           </CustomLink>
