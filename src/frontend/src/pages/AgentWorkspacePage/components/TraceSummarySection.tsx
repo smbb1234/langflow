@@ -39,7 +39,9 @@ export function TraceSummarySection({ run, theme }: { run: AgentWorkspaceRun; th
           className="mt-2 rounded border px-2 py-1 text-xs"
           style={{ borderColor: theme.panelBorder, color: theme.textPrimary }}
           type="button"
-          onClick={() => {}}
+          onClick={() => {
+            // TODO(no-op): connect replay button to audit timeline playback API.
+          }}
         >
           Replay
         </button>

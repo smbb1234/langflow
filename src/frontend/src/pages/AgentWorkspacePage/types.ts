@@ -147,9 +147,11 @@ export type TraceEvent = {
 
 export type MemoryLedgerItem = {
   id: string;
+  // scope controls badge color and helps users understand persistence ownership.
   scope: "run" | "session" | "agent";
   key: string;
   value: string;
+  // display-only timestamp used in the ledger card "expiry" row.
   updatedAt: string;
 };
 
