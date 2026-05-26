@@ -127,7 +127,7 @@ export function RunSidebar({
 
   return (
     <aside className="hidden h-full w-[265px] flex-col md:flex" style={{ backgroundColor: theme.panelBg, borderRight: `1px solid ${theme.panelBorder}` }}>
-      <div className="border-b px-4 pb-3 pt-3" style={{ borderColor: theme.panelBorder }}>
+      <div className="px-3 pt-3">
         <button
           aria-label="Create new run"
           className="h-[41px] w-full rounded-[8px] text-sm font-semibold"
