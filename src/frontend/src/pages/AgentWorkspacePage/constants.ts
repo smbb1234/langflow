@@ -178,10 +178,10 @@ export const MOCK_AGENT_WORKSPACE_RUN: AgentWorkspaceRun = {
     { id: "grev-2", timestamp: "14:22:27", checkId: "check-groundedness", status: "pass", message: "All claims linked to cited evidence" },
   ],
   evidenceSources: [
-    { id: "evsrc-1", label: "finance_curated.revenue_by_product_line_v2", kind: "table", freshness: "2m 11s", reference: "model://finance_curated/revenue_by_product_line_v2" },
-    { id: "evsrc-2", label: "q3_risk_delta_query", kind: "query", freshness: "2m 09s", reference: "sql://sql_b61e2c9f" },
-    { id: "evsrc-3", label: "pricing_policy_2026_q2", kind: "document", freshness: "1d", reference: "doc://policy/pricing_policy_2026_q2" },
-    { id: "evsrc-4", label: "exchange-rate-service", kind: "api", freshness: "5m", reference: "api://fx/latest?base=USD" },
+    { id: "evsrc-1", name: "finance_curated.revenue_by_product_line_v2", type: "table", freshness: "2m 11s", confidence: 0.98, freshnessScore: 96 },
+    { id: "evsrc-2", name: "q3_risk_delta_query", type: "query", freshness: "2m 09s", confidence: 0.94, freshnessScore: 94 },
+    { id: "evsrc-3", name: "pricing_policy_2026_q2", type: "document", freshness: "1d", confidence: 0.87, freshnessScore: 62 },
+    { id: "evsrc-4", name: "exchange-rate-service", type: "api", freshness: "5m", confidence: 0.92, freshnessScore: 90 },
   ],
   traceEvents: [
     { id: "tev-1", timestamp: "14:22:06", laneId: "lane-planner", level: "info", message: "Execution plan finalized" },
