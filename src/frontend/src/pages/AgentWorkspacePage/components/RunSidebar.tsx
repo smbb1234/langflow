@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { JaiLogo } from "@/components/jai/JaiLogo";
 import { CustomProfileIcon } from "@/customization/components/custom-profile-icon";
 import { MOCK_RUN_GROUPS } from "../constants";
 import type { WorkspaceTheme } from "../theme";
@@ -128,12 +129,7 @@ export function RunSidebar({
   return (
     <aside className="hidden h-full w-[265px] flex-col md:flex" style={{ backgroundColor: theme.panelBg, borderRight: `1px solid ${theme.panelBorder}` }}>
       <div className="px-4 pt-4">
-        <p className="text-[15px] font-bold" style={{ color: theme.textPrimary }}>
-          JAI
-        </p>
-        <p className="text-[8px] tracking-[1.3px]" style={{ color: theme.textSecondary }}>
-          BY DIAGONAL MATRIX
-        </p>
+        <JaiLogo className="h-10 w-[174px]" />
       </div>
       <div className="px-4 pt-4">
         <button
