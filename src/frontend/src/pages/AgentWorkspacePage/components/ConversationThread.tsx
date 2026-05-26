@@ -18,7 +18,7 @@ export function ConversationThread({ run, theme }: ConversationThreadProps) {
         <article className="flex items-start gap-3">
           <div
             className="flex h-8 w-8 items-center justify-center rounded-full text-[12px] font-semibold"
-            style={{ backgroundColor: theme.avatarBg, color: "#fff" }}
+            style={{ backgroundColor: theme.avatarBg, color: theme.surface }}
           >
             PM
           </div>

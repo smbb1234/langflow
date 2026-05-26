@@ -140,7 +140,7 @@ export function RunSidebar({
           aria-label="Create new run"
           className="h-[41px] w-full rounded-[8px] text-sm font-semibold"
           onClick={createRun}
-          style={{ backgroundColor: theme.primary, color: "#fff" }}
+          style={{ backgroundColor: theme.primary, color: theme.surface }}
           type="button"
         >
           + New run

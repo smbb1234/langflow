@@ -121,7 +121,7 @@ export function WorkspacePromptInput({
           </div>
           <div className="flex items-center gap-3">
             <span>⌘↵ to send</span>
-            <button className="rounded px-3 py-1.5 text-[12px]" style={{ backgroundColor: theme.primary, color: "#fff" }} type="submit">
+            <button className="rounded px-3 py-1.5 text-[12px]" style={{ backgroundColor: theme.primary, color: theme.surface }} type="submit">
               ↗ Send
             </button>
           </div>
