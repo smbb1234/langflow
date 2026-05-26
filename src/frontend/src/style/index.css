@@ -477,3 +477,15 @@
     --indigo-foreground: 234.5 89.5% 73.9%;
   }
 }
+
+
+.agent-workspace-hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.agent-workspace-hide-scrollbar::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
+  display: none !important;
+}
