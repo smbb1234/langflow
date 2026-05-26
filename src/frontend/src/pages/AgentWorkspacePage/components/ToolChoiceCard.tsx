@@ -6,14 +6,15 @@ import type { ToolChoice } from "../types";
 type ToolChoiceCardProps = {
   toolChoices: ToolChoice[];
   theme: WorkspaceTheme;
+  compact?: boolean;
 };
 
-export function ToolChoiceCard({ toolChoices, theme }: ToolChoiceCardProps) {
+export function ToolChoiceCard({ toolChoices, theme, compact = false }: ToolChoiceCardProps) {
   const [expanded, setExpanded] = useState(true);
   const selectedTool = useMemo(() => toolChoices.find((tool) => tool.selected) ?? toolChoices[0], [toolChoices]);
 
   return (
-    <section className="mt-2 rounded-lg border" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface }}>
+    <section className={compact ? "rounded-lg border" : "mt-2 rounded-lg border"} style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface }}>
       <button
         type="button"
         className="flex w-full items-center justify-between px-3 py-2 text-left"
@@ -31,7 +32,7 @@ export function ToolChoiceCard({ toolChoices, theme }: ToolChoiceCardProps) {
       </button>
 
       {expanded ? (
-        <div className="space-y-1 border-t px-3 py-2" style={{ borderColor: theme.panelBorder }}>
+        <div className={compact ? "space-y-1 border-t px-3 py-2" : "space-y-1 border-t px-3 py-2"} style={{ borderColor: theme.panelBorder }}>
           {/* TODO: replace with real tool-selection explanation API payload. */}
           {toolChoices.map((choice) => (
             <div
