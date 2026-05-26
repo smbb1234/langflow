@@ -31,6 +31,7 @@ export function MemorySection({ run, theme }: { run: AgentWorkspaceRun; theme: W
       </h3>
 
       <div className="space-y-2">
+        {/* memoryLedger entries are rendered as immutable snapshots for this static inspector view. */}
         {run.memoryLedger.map((item) => (
           <article key={item.id} className="rounded-md border p-2" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surfaceBase }}>
             <div className="flex items-start justify-between gap-2">
@@ -61,7 +62,7 @@ export function MemorySection({ run, theme }: { run: AgentWorkspaceRun; theme: W
           className="rounded-md border px-3 py-1.5 text-[11px]"
           style={{ borderColor: theme.pillBorder, backgroundColor: theme.surfaceBase, color: theme.textPrimary }}
           onClick={() => {
-            // TODO: connect rollback action to memory safety API.
+            // TODO(no-op): connect rollback action to memory safety API.
           }}
         >
           Rollback last
@@ -71,7 +72,7 @@ export function MemorySection({ run, theme }: { run: AgentWorkspaceRun; theme: W
           className="rounded-md border px-3 py-1.5 text-[11px]"
           style={{ borderColor: theme.pillBorder, backgroundColor: theme.surfaceBase, color: theme.textPrimary }}
           onClick={() => {
-            // TODO: connect export action to ledger export API.
+            // TODO(no-op): connect export action to ledger export API.
           }}
         >
           Export ledger
