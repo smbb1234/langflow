@@ -18,9 +18,16 @@ export function InspectorTabs({
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const onWheel: WheelEventHandler<HTMLDivElement> = (event) => {
-    if (!scrollRef.current || event.deltaY === 0) return;
+    const container = scrollRef.current;
+    if (!container) return;
+
+    const hasHorizontalIntent = Math.abs(event.deltaX) > Math.abs(event.deltaY);
+    const delta = hasHorizontalIntent ? event.deltaX : event.deltaY;
+
+    if (delta === 0) return;
+
     event.preventDefault();
-    scrollRef.current.scrollLeft += event.deltaY;
+    container.scrollLeft += delta;
   };
 
   return (
@@ -31,8 +38,7 @@ export function InspectorTabs({
       <div
         ref={scrollRef}
         onWheel={onWheel}
-        className="h-full overflow-x-auto overflow-y-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        className="agent-workspace-hide-scrollbar h-full min-w-0 overflow-x-auto overflow-y-hidden"
       >
         <div className="flex h-full min-w-max items-end gap-1">
           {WORKSPACE_TABS.map((tab) => {
