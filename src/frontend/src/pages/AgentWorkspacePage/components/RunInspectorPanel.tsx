@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
 import type { WorkspaceTheme } from "../theme";
 import type { AgentWorkspaceRun, WorkspaceTab } from "../types";
@@ -16,26 +16,18 @@ import { UncertaintySection } from "./UncertaintySection";
 type RunInspectorPanelProps = {
   run: AgentWorkspaceRun;
   theme: WorkspaceTheme;
-  activeTab?: WorkspaceTab;
-  onTabChange?: (tab: WorkspaceTab) => void;
+  activeTab: WorkspaceTab;
+  onTabChange: (tab: WorkspaceTab) => void;
   onReviewApproval?: (approvalId: string) => void;
 };
 
 export function RunInspectorPanel({ run, theme, activeTab, onTabChange }: RunInspectorPanelProps) {
-  const [localTab, setLocalTab] = useState<WorkspaceTab>("overview");
-  const resolvedTab = activeTab ?? localTab;
-
-  const handleTabChange = (tab: WorkspaceTab) => {
-    setLocalTab(tab);
-    onTabChange?.(tab);
-  };
-
   const content = useMemo(() => {
-    if (resolvedTab === "guardrails") return <GuardrailsSection run={run} theme={theme} />;
-    if (resolvedTab === "evidence") return <EvidenceSection run={run} theme={theme} />;
-    if (resolvedTab === "trace") return <TraceSummarySection run={run} theme={theme} />;
-    if (resolvedTab === "memory") return <MemorySection run={run} theme={theme} />;
-    if (resolvedTab === "ops") return <OpsSection run={run} theme={theme} />;
+    if (activeTab === "guardrails") return <GuardrailsSection run={run} theme={theme} />;
+    if (activeTab === "evidence") return <EvidenceSection run={run} theme={theme} />;
+    if (activeTab === "trace") return <TraceSummarySection run={run} theme={theme} />;
+    if (activeTab === "memory") return <MemorySection run={run} theme={theme} />;
+    if (activeTab === "ops") return <OpsSection run={run} theme={theme} />;
     return (
       <>
         <CurrentRunSection run={run} theme={theme} />
@@ -44,7 +36,7 @@ export function RunInspectorPanel({ run, theme, activeTab, onTabChange }: RunIns
         <ToolChoiceCard toolChoices={run.toolChoices} theme={theme} compact />
       </>
     );
-  }, [resolvedTab, run, theme]);
+  }, [activeTab, run, theme]);
 
   const tabDots = useMemo(
     () => ({
@@ -56,7 +48,7 @@ export function RunInspectorPanel({ run, theme, activeTab, onTabChange }: RunIns
 
   return (
     <aside className="h-full w-[380px] shrink-0 overflow-hidden border-l" style={{ borderColor: theme.panelBorder, backgroundColor: theme.panelBg }}>
-      <InspectorTabs activeTab={resolvedTab} onTabChange={handleTabChange} theme={theme} tabDots={tabDots} />
+      <InspectorTabs activeTab={activeTab} onTabChange={onTabChange} theme={theme} tabDots={tabDots} />
       <div className="h-[calc(100%-39px)] space-y-3 overflow-y-auto p-4">{content}</div>
     </aside>
   );

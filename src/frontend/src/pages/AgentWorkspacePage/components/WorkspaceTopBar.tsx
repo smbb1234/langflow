@@ -124,7 +124,7 @@ export function WorkspaceTopBar({
           <IconLock theme={theme} />
           {run.scope}
         </TopBarPill>
-        <TopBarPill theme={theme} className="hidden xl:inline-flex">
+        <TopBarPill theme={theme} className="hidden lg:inline-flex">
           tenant: {run.tenant}
         </TopBarPill>
       </div>
@@ -141,7 +141,7 @@ export function WorkspaceTopBar({
             color: theme.primaryStrong,
             fontWeight: 600,
           }}
-          className="text-[10px]"
+          className="text-[11px]"
         >
           <StatusDot color={theme.primaryStrong} />
           {run.status}
@@ -152,13 +152,13 @@ export function WorkspaceTopBar({
         >
           {run.title}
         </span>
-        <div className="hidden shrink-0 items-center gap-1.5 2xl:flex">
+        <div className="flex min-w-0 shrink items-center gap-1.5 overflow-x-auto overflow-y-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           {normalizedStages.map((stage) => (
             <TopBarPill
               key={stage.id}
               theme={theme}
               style={statusStyleByStage[stage.status]}
-              className="text-[10px]"
+              className="text-[11px]"
             >
               {stage.label}
             </TopBarPill>

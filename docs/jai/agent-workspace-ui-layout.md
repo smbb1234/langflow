@@ -64,3 +64,40 @@ The top bar controls run and execution context for the workspace content area, n
 
 ### Tests added
 - Added `RunSidebar` unit tests for branding, controls, filter count, no-wrap class, filter behavior, search behavior, and selected-run fallback state.
+
+## Phase 3: Header Hierarchy + Tab Synchronization
+
+### Header hierarchy refinement
+- `WorkspaceTopBar` remains the run-context/control strip and no longer reserves logo space.
+- `RunHeader` was compacted to a tighter height (`48px`) with preserved actions (Branch, Export, menu).
+- `WorkspaceTabs` remains directly below `RunHeader` and the layout no longer introduces any extra empty separator row between header/tabs/content.
+
+### Unwanted bar root cause and fix
+- The visual noise came from stacked header/tabs density and spacing, not a separate functional row.
+- The fix was an incremental compaction and overflow cleanup:
+  - compact `RunHeader` height and typography,
+  - preserve single tabs row with existing nav,
+  - keep conversation content immediately following tab navigation.
+
+### Top bar overflow strategy
+- Stage chips are no longer gated behind `2xl` visibility.
+- The stage-chip group now uses horizontal overflow behavior to preserve all critical stage states on narrower viewports.
+- Top-bar pills were increased from 10px text to 11px for readability; icon action buttons were increased from 24px to 28px hit size.
+
+### Tab synchronization model
+- `activeTab` is now owned by `AgentWorkspacePage`.
+- `RunMainPanel` and `RunInspectorPanel` both consume the same controlled `activeTab` and `onTabChange`.
+- `RunInspectorPanel` local fallback tab state was removed to avoid uncontrolled divergence.
+- Clicking tabs in either main or inspector updates the same state source.
+
+### Tests added
+- Added `src/frontend/src/pages/AgentWorkspacePage/__tests__/workspace-layout.test.tsx` to cover:
+  - top-bar context rendering (including stage chips and approvals/notifications),
+  - run-header key controls and compact structure,
+  - synchronized tab state between main tabs and inspector tabs.
+
+### Commands run and results
+- `cd src/frontend && npm run lint` ⚠️ failed due existing repository-wide lint violations outside `AgentWorkspacePage`.
+- `cd src/frontend && npm run type-check` ⚠️ command script includes `vite` after `tsc` and does not terminate in this non-interactive check workflow.
+- `cd src/frontend && npm run test -- src/pages/AgentWorkspacePage/__tests__/workspace-layout.test.tsx src/pages/AgentWorkspacePage/__tests__/index.test.tsx` ✅ passed.
+- `cd src/frontend && npm run build` ✅ passed.
