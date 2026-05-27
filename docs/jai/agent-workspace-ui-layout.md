@@ -29,3 +29,38 @@ The top bar controls run and execution context for the workspace content area, n
 - `npm run type-check` ⚠️ failed due pre-existing repository-wide TypeScript issues unrelated to this change.
 - `npm run test -- src/pages/AgentWorkspacePage/__tests__/index.test.tsx` ✅ passed.
 - `npm run build` ✅ passed.
+
+## Phase 2: RunSidebar JAI Layout Refactor
+
+### Sidebar anatomy
+- Full-height sidebar remains the first column in the workspace row.
+- Top branding block now lives in the sidebar and includes JAI logo + "Agentic Workspace" product label.
+- "New run" action sits directly below branding.
+- Search input remains local-state driven.
+- Filter row is single-line, with overflow fallback.
+- Run list remains scrollable (`min-h-0 flex-1 overflow-y-auto`).
+- User profile remains pinned at the bottom with a top border.
+
+### Width decision
+- Sidebar width changed from `w-[265px]` to `w-[288px]`.
+- `288px` is the smallest increment that keeps the larger filter tabs readable and one-row at standard desktop widths without forcing global style hacks.
+
+### Filter no-wrap rule
+- Filters now use `flex-nowrap` in an inner row.
+- Container adds `overflow-x-auto` as fallback only.
+- Wrapping behavior (`flex-wrap`) is intentionally removed to prevent "Failed" from dropping below "Pending".
+
+### Typography adjustments
+- New run button: `text-[13px]`, stable `h-11` height.
+- Search input: `text-[13px]`.
+- Filter tabs: `text-[12px]` and `h-[30px]`.
+- Run titles remain `text-[13px]`.
+- Run metadata remains `text-[11px]`.
+
+### Accessibility updates
+- Preserved `aria-label` on create button and search input.
+- Added `aria-pressed` on filter buttons.
+- Added `aria-current="true"` on selected run items.
+
+### Tests added
+- Added `RunSidebar` unit tests for branding, controls, filter count, no-wrap class, filter behavior, search behavior, and selected-run fallback state.
