@@ -6,9 +6,16 @@ on:
   workflow_dispatch:
     inputs:
       release_tag:
-        description: "GitHub Release tag that contains the Docker package."
+        description: "GitHub Release tag. Use 'latest' to auto-detect the newest tag from Git tags."
         required: true
         type: string
+        default: "latest"
+
+      release_tag_prefix:
+        description: "Tag prefix used when release_tag is 'latest'."
+        required: true
+        type: string
+        default: "package-main-"
 
       asset_name:
         description: "Docker package asset name in the GitHub Release."
@@ -74,7 +81,8 @@ jobs:
 
     env:
       REPO: ${{ github.repository }}
-      RELEASE_TAG: ${{ inputs.release_tag }}
+      INPUT_RELEASE_TAG: ${{ inputs.release_tag }}
+      RELEASE_TAG_PREFIX: ${{ inputs.release_tag_prefix }}
       ASSET_NAME: ${{ inputs.asset_name }}
       DEPLOY_DIR: ${{ inputs.deploy_dir }}
       IMAGE_FULL_NAME: ${{ inputs.image_name }}:${{ inputs.image_tag }}
@@ -85,13 +93,49 @@ jobs:
       RUN_COMPOSE_UP: ${{ inputs.run_compose_up }}
 
     steps:
-      - name: Validate deployment inputs
+      - name: Resolve release tag
+        id: resolve_release_tag
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -Eeuo pipefail
 
-          if [[ -z "${RELEASE_TAG}" ]]; then
-            echo "[ERROR] release_tag is required." >&2
+          if [[ -z "${INPUT_RELEASE_TAG}" || "${INPUT_RELEASE_TAG}" == "latest" ]]; then
+            echo "[INFO] release_tag is '${INPUT_RELEASE_TAG}'. Resolving latest tag by prefix: ${RELEASE_TAG_PREFIX}"
+
+            LATEST_TAG="$(
+              git ls-remote \
+                --tags \
+                --refs \
+                "https://x-access-token:${GH_TOKEN}@github.com/${REPO}.git" \
+                "refs/tags/${RELEASE_TAG_PREFIX}*" \
+              | awk -F'/' '{print $3}' \
+              | sort -V \
+              | tail -n 1
+            )"
+
+            if [[ -z "${LATEST_TAG}" ]]; then
+              echo "[ERROR] No tag found with prefix: ${RELEASE_TAG_PREFIX}" >&2
+              exit 1
+            fi
+
+            echo "[INFO] Latest resolved tag: ${LATEST_TAG}"
+            echo "release_tag=${LATEST_TAG}" >> "$GITHUB_OUTPUT"
+          else
+            echo "[INFO] Using manually provided release tag: ${INPUT_RELEASE_TAG}"
+            echo "release_tag=${INPUT_RELEASE_TAG}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Validate deployment inputs
+        shell: bash
+        env:
+          RESOLVED_RELEASE_TAG: ${{ steps.resolve_release_tag.outputs.release_tag }}
+        run: |
+          set -Eeuo pipefail
+
+          if [[ -z "${RESOLVED_RELEASE_TAG}" ]]; then
+            echo "[ERROR] Resolved release tag is empty." >&2
             exit 1
           fi
 
@@ -121,7 +165,7 @@ jobs:
           fi
 
           echo "[INFO] Repository: ${REPO}"
-          echo "[INFO] Release tag: ${RELEASE_TAG}"
+          echo "[INFO] Resolved release tag: ${RESOLVED_RELEASE_TAG}"
           echo "[INFO] Asset name: ${ASSET_NAME}"
           echo "[INFO] Deploy dir: ${DEPLOY_DIR}"
           echo "[INFO] Image: ${IMAGE_FULL_NAME}"
@@ -215,10 +259,12 @@ jobs:
 
       - name: Deploy on remote server
         shell: bash
+        env:
+          RESOLVED_RELEASE_TAG: ${{ steps.resolve_release_tag.outputs.release_tag }}
         run: |
           set -Eeuo pipefail
 
-          DOWNLOAD_URL="https://github.com/${REPO}/releases/download/${RELEASE_TAG}/${ASSET_NAME}"
+          DOWNLOAD_URL="https://github.com/${REPO}/releases/download/${RESOLVED_RELEASE_TAG}/${ASSET_NAME}"
 
           echo "[INFO] Download URL:"
           echo "${DOWNLOAD_URL}"
