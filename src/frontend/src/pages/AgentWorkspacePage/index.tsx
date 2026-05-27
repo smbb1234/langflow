@@ -16,6 +16,7 @@ import { RunSidebar } from "./components/RunSidebar";
 import { WorkspaceTopBar } from "./components/WorkspaceTopBar";
 import { MOCK_AGENT_WORKSPACE_RUN } from "./constants";
 import { workspaceDarkTheme, workspaceLightTheme } from "./theme";
+import type { WorkspaceTab } from "./types";
 
 export default function AgentWorkspacePage() {
   useGetConfig({});
@@ -28,6 +29,7 @@ export default function AgentWorkspacePage() {
   const isDark = useDarkStore((state) => state.dark);
   const theme = isDark ? workspaceDarkTheme : workspaceLightTheme;
   const workspaceRun = MOCK_AGENT_WORKSPACE_RUN;
+  const [activeTab, setActiveTab] = useState<WorkspaceTab>("overview");
   // TODO: derive workspaceRun from flow execution/session data.
   // TODO: wire to backend run stream.
   const requestRef = useRef(0);
@@ -83,8 +85,8 @@ export default function AgentWorkspacePage() {
         <div className="flex min-w-0 flex-1 flex-col" data-testid="agent-workspace-right-column">
           <WorkspaceTopBar run={workspaceRun} theme={theme} />
           <div className="flex min-h-0 flex-1" data-testid="agent-workspace-content-row">
-            <RunMainPanel run={workspaceRun} theme={theme} />
-            <RunInspectorPanel run={workspaceRun} theme={theme} />
+            <RunMainPanel run={workspaceRun} theme={theme} activeTab={activeTab} onTabChange={setActiveTab} />
+            <RunInspectorPanel run={workspaceRun} theme={theme} activeTab={activeTab} onTabChange={setActiveTab} />
           </div>
         </div>
       </div>
