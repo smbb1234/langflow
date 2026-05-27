@@ -20,6 +20,9 @@ export const useDarkStore = create<DarkStoreType>((set, get) => ({
     set(() => ({ dark: dark }));
     window.localStorage.setItem("isDark", dark.toString());
   },
+  setDarkFromSystem: (dark) => {
+    set(() => ({ dark }));
+  },
   refreshVersion: (v) => {
     set(() => ({ version: v }));
   },
