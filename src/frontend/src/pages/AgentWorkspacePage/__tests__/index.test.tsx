@@ -100,6 +100,18 @@ describe("AgentWorkspacePage", () => {
 
     expect(await screen.findByText("Alerts")).toBeInTheDocument();
     expect(document.title).toBe("Public Flow · Agent Workspace");
+
+    const layoutRow = screen.getByTestId("agent-workspace-layout-row");
+    const sidebar = layoutRow.querySelector("aside");
+    const rightColumn = screen.getByTestId("agent-workspace-right-column");
+    const topBar = rightColumn.querySelector("header");
+
+    expect(sidebar).toBeInTheDocument();
+    expect(rightColumn.parentElement).toBe(layoutRow);
+    expect(sidebar?.parentElement).toBe(layoutRow);
+    expect(topBar).toBeInTheDocument();
+    expect(topBar?.parentElement).toBe(rightColumn);
+    expect(layoutRow.firstElementChild).toBe(sidebar);
   });
 
   it("redirects to home when flow is private", async () => {
