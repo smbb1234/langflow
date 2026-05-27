@@ -116,7 +116,7 @@ export type TraceState = {
 export type GuardrailCheck = {
   id: string;
   name: string;
-  status: "pass" | "warning" | "failed";
+  status: "pass" | "warn" | "warning" | "failed";
   detail: string;
 };
 
@@ -148,11 +148,11 @@ export type TraceEvent = {
 export type MemoryLedgerItem = {
   id: string;
   // scope controls badge color and helps users understand persistence ownership.
-  scope: "run" | "session" | "agent";
+  scope: "user" | "session" | "tenant";
   key: string;
   value: string;
-  // display-only timestamp used in the ledger card "expiry" row.
-  updatedAt: string;
+  reason: string;
+  expiry: string;
 };
 
 export type OpsEvalMetric = {
@@ -168,6 +168,19 @@ export type LatencySample = {
   p50Ms: number;
   p95Ms: number;
 };
+
+export type GuardrailFeedItem = { id: string; timestamp: string; message: string };
+export type EvidenceSummaryMetric = { id: string; label: string; value: string };
+export type FreshnessMetric = { id: string; label: string; valueLabel: string; valueHours: number };
+export type TraceTimelineItem = {
+  id: string;
+  tone: "green" | "blue" | "amber";
+  time: string;
+  title: string;
+  detail: string;
+};
+export type KeyValueItem = { id: string; label: string; value: string; tone?: "default" | "success" | "warning" };
+export type OpsSignal = { id: string; label: string; value: string; tone?: "default" | "success" | "warning" };
 
 export type AgentWorkspaceRun = {
   id: string;

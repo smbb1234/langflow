@@ -1,44 +1,51 @@
+import { EVIDENCE_FRESHNESS, EVIDENCE_SUMMARY_METRICS } from "../constants";
 import type { AgentWorkspaceRun } from "../types";
 import type { WorkspaceTheme } from "../theme";
 
-function CounterCard({ label, value, theme }: { label: string; value: string; theme: WorkspaceTheme }) {
-  return (
-    <div className="rounded border p-3" style={{ borderColor: theme.panelBorder }}>
-      <p className="text-[11px] uppercase tracking-wide" style={{ color: theme.textTertiary }}>{label}</p>
-      <p className="mt-1 font-medium" style={{ color: theme.textPrimary }}>{value}</p>
-    </div>
-  );
-}
-
 export function EvidenceSection({ run, theme }: { run: AgentWorkspaceRun; theme: WorkspaceTheme }) {
+  const maxHours = Math.max(...EVIDENCE_FRESHNESS.map((item) => item.valueHours));
   return (
-    <section className="space-y-3 rounded-md border p-4 text-xs" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface }}>
-      <h3 className="text-xs font-semibold uppercase tracking-wide" style={{ color: theme.textSecondary }}>Evidence</h3>
-
-      <div className="grid grid-cols-2 gap-2">
-        <CounterCard label="provenance sources" value={String(run.evidenceSources.length)} theme={theme} />
-        <CounterCard label="rows scanned" value={run.evidence.rowsScanned} theme={theme} />
-        <CounterCard label="query hash" value={run.evidence.queryHash} theme={theme} />
-        <CounterCard label="warehouse" value={run.evidence.warehouse} theme={theme} />
-      </div>
-
-      <div className="space-y-2">
-        {run.evidenceSources.map((source) => (
-          <div key={source.id} className="rounded border p-3" style={{ borderColor: theme.panelBorder }}>
-            <div className="grid grid-cols-[1fr_auto] gap-2">
-              <p style={{ color: theme.textPrimary }}>{source.name}</p>
-              <p style={{ color: theme.textTertiary }}>{source.freshness}</p>
+    <section className="space-y-3 text-xs">
+      <article className="rounded-lg border p-4" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface }}>
+        <h3 className="text-[13px] font-semibold" style={{ color: theme.textPrimary }}>Provenance summary</h3>
+        <div className="mt-2 grid grid-cols-2 gap-2">
+          {EVIDENCE_SUMMARY_METRICS.map((item) => (
+            <div key={item.id} className="rounded-md border p-2" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surfaceMuted }}>
+              <p className="text-[11px]" style={{ color: theme.textTertiary }}>{item.label}</p><p className="text-[14px] font-semibold" style={{ color: theme.textPrimary }}>{item.value}</p>
             </div>
-            <div className="mt-1 grid grid-cols-[1fr_auto] gap-2">
-              <p style={{ color: theme.textTertiary }}>type: {source.type}</p>
-              <p style={{ color: theme.textPrimary }}>confidence: {Math.round(source.confidence * 100)}%</p>
+          ))}
+        </div>
+      </article>
+      <article className="rounded-lg border p-4" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface }}>
+        <h3 className="text-[13px] font-semibold" style={{ color: theme.textPrimary }}>Sources used</h3>
+        <div className="mt-2 h-px" style={{ backgroundColor: theme.panelBorder }} />
+        {run.evidenceSources.map((source, index) => (
+          <div key={source.id}>
+            <div className="py-2">
+              <p className="min-w-0 truncate text-[12px]" style={{ color: theme.textPrimary }}>{source.name}</p>
+              <p className="text-[11px]" style={{ color: theme.textTertiary }}>{source.type === "table" ? "snowflake table" : source.type === "document" ? "policy doc" : "user memory"} · fresh {source.freshness} · conf {source.confidence.toFixed(2)}</p>
             </div>
-            <div className="mt-2 h-1.5 overflow-hidden rounded" style={{ backgroundColor: theme.surfaceAlt }}>
-              <div className="h-full rounded" style={{ width: `${source.freshnessScore}%`, backgroundColor: theme.accent }} />
-            </div>
+            {index < run.evidenceSources.length - 1 ? <div className="h-px" style={{ backgroundColor: theme.panelBorder }} /> : null}
           </div>
         ))}
-      </div>
+      </article>
+      <article className="rounded-lg border p-4" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface }}>
+        <h3 className="text-[13px] font-semibold" style={{ color: theme.textPrimary }}>Freshness</h3>
+        <p className="text-[11px]" style={{ color: theme.textTertiary }}>Hours since each source was last refreshed</p>
+        <div className="mt-2 space-y-2">
+          {EVIDENCE_FRESHNESS.map((item) => (
+            <div key={item.id} className="grid grid-cols-[1fr_70px] items-center gap-2">
+              <div className="min-w-0">
+                <p className="text-[11px]" style={{ color: theme.textSecondary }}>{item.label}</p>
+                <div className="mt-1 h-1 overflow-hidden rounded-full" style={{ backgroundColor: theme.surfaceMuted }}>
+                  <div className="h-full" style={{ width: `${100 - (item.valueHours / maxHours) * 100}%`, backgroundColor: theme.success }} />
+                </div>
+              </div>
+              <span className="text-right text-[11px]" style={{ color: theme.textTertiary }}>{item.valueLabel}</span>
+            </div>
+          ))}
+        </div>
+      </article>
     </section>
   );
 }

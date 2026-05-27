@@ -1,51 +1,40 @@
-import type { AgentWorkspaceRun, TraceEvent } from "../types";
+import { TRACE_HANDOFF_ITEMS, TRACE_TIMELINE_ITEMS } from "../constants";
+import type { AgentWorkspaceRun } from "../types";
 import type { WorkspaceTheme } from "../theme";
 
-function eventColor(level: TraceEvent["level"], theme: WorkspaceTheme) {
-  if (level === "error") return theme.error;
-  if (level === "warning") return theme.warning;
-  return theme.success;
-}
-
-export function TraceSummarySection({ run, theme }: { run: AgentWorkspaceRun; theme: WorkspaceTheme }) {
+export function TraceSummarySection({ theme }: { run: AgentWorkspaceRun; theme: WorkspaceTheme }) {
+  const toneColor = (tone: "green" | "blue" | "amber") => (tone === "green" ? theme.success : tone === "amber" ? theme.warning : theme.traceBlue);
   return (
-    <section className="space-y-3 rounded-md border p-4 text-xs" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface }}>
-      <h3 className="text-xs font-semibold uppercase tracking-wide" style={{ color: theme.textSecondary }}>Trace</h3>
-
-      <div className="space-y-2">
-        {run.traceEvents.map((event) => (
-          <div key={event.id} className="grid grid-cols-[10px_64px_1fr] items-start gap-2">
-            <div className="relative flex h-full justify-center">
-              <span className="mt-1.5 h-2.5 w-2.5 rounded-full" style={{ backgroundColor: eventColor(event.level, theme) }} />
-              <span className="absolute top-4 h-[calc(100%+8px)] w-px" style={{ backgroundColor: theme.panelBorder }} />
+    <section className="space-y-3 text-xs">
+      <article className="rounded-lg border p-4" style={{ borderColor: theme.successBorder, backgroundColor: theme.surface }}>
+        <h3 className="text-[13px] font-semibold" style={{ color: theme.textPrimary }}>Trace · stage timeline</h3>
+        <div className="mt-2 h-px" style={{ backgroundColor: theme.panelBorder }} />
+        <div className="relative mt-2 space-y-2 pl-4">
+          <span className="absolute left-[5px] top-0 h-full w-px" style={{ backgroundColor: theme.panelBorder }} />
+          {TRACE_TIMELINE_ITEMS.map((item) => (
+            <div key={item.id} className="relative">
+              <span className="absolute -left-[14px] top-1.5 h-2.5 w-2.5 rounded-full border" style={{ backgroundColor: toneColor(item.tone), borderColor: toneColor(item.tone) }} />
+              <p className="text-[10px]" style={{ color: theme.textTertiary }}>{item.time}</p>
+              <p className="text-[12px] font-medium" style={{ color: theme.textPrimary }}>{item.title}</p>
+              <p className="text-[11px]" style={{ color: theme.textTertiary }}>{item.detail}</p>
             </div>
-            <span style={{ color: theme.textTertiary }}>{event.timestamp}</span>
-            <p style={{ color: theme.textPrimary }}>{event.message}</p>
-          </div>
-        ))}
-      </div>
-
-      <div className="rounded border p-3" style={{ borderColor: theme.panelBorder }}>
-        <p className="text-[11px] uppercase tracking-wide" style={{ color: theme.textTertiary }}>Handoff verification</p>
-        <p style={{ color: theme.textPrimary }}>From finance_sql_agent</p>
-        <p style={{ color: theme.textPrimary }}>To chart_agent</p>
-        <p style={{ color: theme.textPrimary }}>Contract ChartSpecV1</p>
-        <p style={{ color: theme.success }}>Verified: payload valid</p>
-      </div>
-
-      <div className="rounded border p-3" style={{ borderColor: theme.panelBorder }}>
-        <p className="text-[11px] uppercase tracking-wide" style={{ color: theme.textTertiary }}>Audit replay</p>
-        <button
-          className="mt-2 rounded border px-2 py-1 text-xs"
-          style={{ borderColor: theme.panelBorder, color: theme.textPrimary }}
-          type="button"
-          onClick={() => {
+          ))}
+        </div>
+      </article>
+      <article className="rounded-lg border p-4" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface }}>
+        <h3 className="text-[13px] font-semibold" style={{ color: theme.textPrimary }}>Handoff verification</h3>
+        <div className="mt-2 h-px" style={{ backgroundColor: theme.panelBorder }} />
+        <div className="mt-2 space-y-1.5">
+          {TRACE_HANDOFF_ITEMS.map((item) => <div key={item.id} className="flex justify-between gap-3"><span style={{ color: theme.textTertiary }}>{item.label}</span><span style={{ color: item.tone === "success" ? theme.success : theme.textPrimary }}>{item.value}</span></div>)}
+        </div>
+      </article>
+      <article className="rounded-lg border p-4" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface }}>
+        <div className="flex items-center justify-between gap-2"><h3 className="text-[13px] font-semibold" style={{ color: theme.textPrimary }}>Audit replay</h3>
+          <button type="button" className="rounded border px-2 py-0.5 text-[11px]" style={{ borderColor: theme.panelBorder, color: theme.textSecondary }} onClick={() => {
             // TODO(no-op): connect replay button to audit timeline playback API.
-          }}
-        >
-          Replay
-        </button>
-      </div>
+          }}>▷ Replay</button></div>
+        <p className="mt-2 text-[11px]" style={{ color: theme.textTertiary }}>Step-through the run deterministically — same prompts, same tools, same output. Useful for incident review and reproducibility.</p>
+      </article>
     </section>
   );
 }
