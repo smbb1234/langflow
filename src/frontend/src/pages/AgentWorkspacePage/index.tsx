@@ -78,11 +78,15 @@ export default function AgentWorkspacePage() {
 
   return (
     <div className="h-screen w-screen overflow-hidden" style={{ backgroundColor: theme.pageBg, color: theme.textPrimary }}>
-      <WorkspaceTopBar run={workspaceRun} theme={theme} />
-      <div className="flex h-[calc(100vh-44px)] w-full min-h-0" style={{ borderTop: `1px solid ${theme.panelBorder}` }}>
+      <div className="flex h-full w-full" data-testid="agent-workspace-layout-row">
         <RunSidebar run={workspaceRun} theme={theme} />
-        <RunMainPanel run={workspaceRun} theme={theme} />
-        <RunInspectorPanel run={workspaceRun} theme={theme} />
+        <div className="flex min-w-0 flex-1 flex-col" data-testid="agent-workspace-right-column">
+          <WorkspaceTopBar run={workspaceRun} theme={theme} />
+          <div className="flex min-h-0 flex-1" data-testid="agent-workspace-content-row">
+            <RunMainPanel run={workspaceRun} theme={theme} />
+            <RunInspectorPanel run={workspaceRun} theme={theme} />
+          </div>
+        </div>
       </div>
       <div className="fixed bottom-4 left-4 z-[999]">
         <AlertDisplayArea />
