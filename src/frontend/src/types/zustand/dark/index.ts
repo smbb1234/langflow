@@ -4,6 +4,7 @@ export type DarkStoreType = {
   version: string;
   latestVersion: string;
   setDark: (dark: boolean) => void;
+  setDarkFromSystem: (dark: boolean) => void;
   refreshVersion: (v: string) => void;
   refreshLatestVersion: (v: string) => void;
   refreshStars: () => void;

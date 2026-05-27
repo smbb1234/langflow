@@ -11,7 +11,7 @@ type PillProps = {
 export function TopBarPill({ children, theme, style, className }: PillProps) {
   return (
     <span
-      className={`inline-flex h-6 items-center rounded-md px-2 text-[10px] ${className ?? ""}`}
+      className={`inline-flex h-6 shrink-0 items-center whitespace-nowrap rounded-md px-2 text-[10px] ${className ?? ""}`}
       style={{
         border: `1px solid ${theme.pillBorder}`,
         color: theme.textSecondary,
@@ -58,7 +58,7 @@ export function IconButton({
       type="button"
       aria-label={label}
       onClick={onClick}
-      className="inline-flex h-6 w-6 items-center justify-center rounded-md border text-[12px]"
+      className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md border text-[12px]"
       style={{ borderColor: theme.pillBorder, backgroundColor: theme.pillBg, color: theme.textSecondary }}
     >
       {children}

@@ -71,11 +71,12 @@ export function WorkspaceTopBar({
 
   return (
     <header
-      className="grid h-[44px] grid-cols-[1fr_auto_1fr] items-center px-4"
+      className="flex h-[44px] min-w-0 items-center gap-3 overflow-hidden px-4"
       style={{ backgroundColor: theme.panelBg, borderBottom: `1px solid ${theme.panelBorder}` }}
     >
-      <div className="flex items-center justify-self-start gap-1.5 min-w-0">
+      <div className="flex min-w-0 shrink-0 items-center gap-1.5">
         <JaiLogo className="hidden h-8 w-[139px] shrink-0 md:block lg:h-10 lg:w-[174px]" />
+        <div className="hidden h-6 w-2 shrink-0 md:block" aria-hidden="true" />
         <TopBarPill theme={theme}>{run.environment}</TopBarPill>
         <TopBarPill
           theme={theme}
@@ -84,10 +85,10 @@ export function WorkspaceTopBar({
           <IconLock theme={theme} />
           {run.scope}
         </TopBarPill>
-        <TopBarPill theme={theme}>tenant: {run.tenant}</TopBarPill>
+        <TopBarPill theme={theme} className="hidden xl:inline-flex">tenant: {run.tenant}</TopBarPill>
       </div>
 
-      <div className="flex min-w-0 flex-wrap items-center justify-self-center gap-2 text-[11px]" style={{ color: theme.textSecondary }}>
+      <div className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden text-[11px]" style={{ color: theme.textSecondary }}>
         <TopBarPill
           theme={theme}
           style={{ backgroundColor: theme.surfaceBlue, borderColor: theme.surfaceBlueBorder, color: theme.primaryStrong, fontWeight: 600 }}
@@ -96,22 +97,22 @@ export function WorkspaceTopBar({
           <StatusDot color={theme.primaryStrong} />
           {run.status}
         </TopBarPill>
-        <span className="truncate text-[11px]" style={{ color: theme.textPrimary }}>{run.title}</span>
-        <div className="hidden items-center gap-1.5 lg:flex">
+        <span className="min-w-0 flex-1 truncate text-[11px]" style={{ color: theme.textPrimary }}>{run.title}</span>
+        <div className="hidden shrink-0 items-center gap-1.5 2xl:flex">
           {normalizedStages.map((stage) => (
             <TopBarPill key={stage.id} theme={theme} style={statusStyleByStage[stage.status]} className="text-[10px]">
               {stage.label}
             </TopBarPill>
           ))}
         </div>
-        <span className="hidden xl:inline">step {run.currentStep}/{run.totalSteps} | {elapsedLabel}</span>
-        <span>∞ {String(run.metrics.eventCount).padStart(2, "0")}</span>
-        <span>p95 {run.metrics.p95Ms}ms</span>
-        <span>tok {tokenLabel}</span>
-        <span>$ {run.metrics.costUsd.toFixed(3)}</span>
+        <span className="hidden shrink-0 xl:inline">step {run.currentStep}/{run.totalSteps} | {elapsedLabel}</span>
+        <span className="hidden shrink-0 lg:inline">∞ {String(run.metrics.eventCount).padStart(2, "0")}</span>
+        <span className="hidden shrink-0 xl:inline">p95 {run.metrics.p95Ms}ms</span>
+        <span className="hidden shrink-0 2xl:inline">tok {tokenLabel}</span>
+        <span className="hidden shrink-0 2xl:inline">$ {run.metrics.costUsd.toFixed(3)}</span>
       </div>
 
-      <div className="flex items-center justify-self-end gap-1.5 text-[11px]" style={{ color: theme.textSecondary }}>
+      <div className="flex shrink-0 items-center gap-1.5 text-[11px]" style={{ color: theme.textSecondary }}>
         <IconButton label="Create run" onClick={onCreateRun ?? NOOP} theme={theme}>⊞</IconButton>
         <IconButton label="Refresh run" onClick={onRefresh ?? NOOP} theme={theme}>↻</IconButton>
         <IconButton label="Toggle scope lock" onClick={onToggleLock ?? NOOP} theme={theme}><IconLock theme={theme} /></IconButton>
@@ -121,7 +122,7 @@ export function WorkspaceTopBar({
           type="button"
           aria-label="Open approvals"
           onClick={onOpenApprovals ?? NOOP}
-          className="inline-flex h-6 items-center rounded-md px-2 text-[10px]"
+          className="hidden h-6 shrink-0 items-center whitespace-nowrap rounded-md px-2 text-[10px] lg:inline-flex"
           style={{
             backgroundColor: theme.surfaceWarning,
             border: `1px solid ${theme.warningBorder}`,
@@ -136,7 +137,7 @@ export function WorkspaceTopBar({
           type="button"
           aria-label="Open notifications"
           onClick={onOpenNotifications ?? NOOP}
-          className="relative inline-flex h-6 w-6 items-center justify-center rounded-md border"
+          className="relative inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md border"
           style={{ borderColor: theme.pillBorder, backgroundColor: theme.pillBg }}
         >
           <IconBell theme={theme} />
