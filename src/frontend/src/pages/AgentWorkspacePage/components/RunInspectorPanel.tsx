@@ -47,9 +47,9 @@ export function RunInspectorPanel({ run, theme, activeTab, onTabChange }: RunIns
   );
 
   return (
-    <aside className="h-full w-[380px] shrink-0 overflow-hidden border-l" style={{ borderColor: theme.panelBorder, backgroundColor: theme.panelBg }}>
+    <aside className="h-full w-[360px] shrink-0 overflow-hidden border-l" style={{ borderColor: theme.panelBorder, backgroundColor: theme.panelBg }}>
       <InspectorTabs activeTab={activeTab} onTabChange={onTabChange} theme={theme} tabDots={tabDots} />
-      <div className="h-[calc(100%-39px)] space-y-3 overflow-y-auto p-4">{content}</div>
+      <div className="h-[calc(100%-39px)] min-h-0 space-y-3 overflow-y-auto p-4 text-sm">{content}</div>
     </aside>
   );
 }

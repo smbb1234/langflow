@@ -158,3 +158,58 @@ The top bar controls run and execution context for the workspace content area, n
 - `cd src/frontend && npm run lint` ⚠️ failed due existing repository-wide lint violations outside `AgentWorkspacePage` scope.
 - `cd src/frontend && npm run type-check` ⚠️ script runs `tsc` followed by `vite` and does not produce a finite non-interactive completion signal for this workflow.
 - `cd src/frontend && npm run build` ✅ passed.
+
+## Phase 5: Trace Console + Right Inspector Readability/Scroll Refinement
+
+### Trace Console structure and tab behavior
+- Trace console header typography was raised to readable 12px-equivalent (`text-xs`) and split into two horizontal regions: tabs on the left and run stats on the right.
+- Tabs and stats now each have horizontal overflow fallback (`overflow-x-auto`) to preserve one-line readability instead of wrapping/compressing text.
+- Collapse/expand control remains in place and unchanged in behavior.
+- Trace tab fallback behavior remains unchanged when `run.trace.tabs` is empty.
+
+### Trace Console height and overflow strategy
+- Replaced fixed `41/162` assumptions at the main panel level with clearer compact/expanded sizing:
+  - collapsed container: `h-[56px]`
+  - expanded container: `h-[208px]`
+- Trace console body now uses `min-h-0 flex-1 overflow-auto` so content scrolling remains internal.
+- View-level content (`Timeline`, `Raw events`, `Guardrails`, `Retries`) now fills available trace body height and scrolls internally when needed.
+
+### Trace views refinements
+- **Timeline**:
+  - Improved lane/axis readability (`text-xs`) and lane spacing.
+  - Added horizontal overflow fallback with a minimum timeline canvas width for narrow viewports.
+  - Preserved lane/segment alignment model while preventing bottom clipping.
+- **Raw events**:
+  - Improved row/header spacing and readability.
+  - Kept monospace where useful (time/lane columns), normal text for detail.
+  - Added badge-like status treatment (`ok`, `warning`, `error`) with theme-consistent surface/border colors.
+  - Added minimum table width to keep columns readable with horizontal overflow on narrow layouts.
+- **Guardrails**:
+  - Metric grid made responsive (`2 / 3 / 6` columns at narrow/medium/wide).
+  - Improved metric text hierarchy for labels and values.
+- **Retries / latency**:
+  - Refined bar row spacing and timestamp/value alignment.
+  - Preserved metric cards (`p50/p95/max/retries`).
+  - Added explicit empty state for no latency samples.
+
+### Right inspector width and scroll strategy
+- Inspector width adjusted to `360px` to balance readability and preserve central workspace width.
+- Maintained `shrink-0` and `overflow-hidden` on panel shell.
+- Internal content remains scrollable via `overflow-y-auto` with `min-h-0` to avoid page-level overflow.
+- Increased inspector tab/section typography for readability while preserving current data behavior and strict typing.
+
+### Tests added
+- Added `src/frontend/src/pages/AgentWorkspacePage/__tests__/trace-console-inspector.test.tsx` covering:
+  - `TraceConsoleHeader` controls, labels, tabs, stats, tab click callback.
+  - `TraceConsoleBar` collapsed/expanded behavior and fallback tabs.
+  - `TraceTimeline` lane and axis rendering checks.
+  - `TraceRawEvents` table/header/status mapping visibility checks.
+  - `TraceGuardrailsView` card rendering.
+  - `TraceRetriesView` metrics and empty-state handling.
+  - `RunInspectorPanel` overview rendering, tab switching callback, and compact `ToolChoiceCard` rendering.
+
+### Commands run and results
+- `cd src/frontend && npm run test -- src/pages/AgentWorkspacePage/__tests__/trace-console-inspector.test.tsx src/pages/AgentWorkspacePage/__tests__/conversation-components.test.tsx src/pages/AgentWorkspacePage/__tests__/workspace-layout.test.tsx src/pages/AgentWorkspacePage/__tests__/index.test.tsx` ✅ passed.
+- `cd src/frontend && npm run lint` ⚠️ failed due pre-existing repository-wide Biome issues outside `AgentWorkspacePage` scope.
+- `cd src/frontend && npm run type-check` ⚠️ project script runs `tsc` followed by `vite`; in this non-interactive workflow it does not provide a finite completion signal for this validation step.
+- `cd src/frontend && npm run build` ✅ passed.

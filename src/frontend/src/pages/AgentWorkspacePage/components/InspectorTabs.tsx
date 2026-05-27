@@ -48,7 +48,7 @@ export function InspectorTabs({
               <button
                 key={tab}
                 type="button"
-                className="h-full shrink-0 rounded-t-md px-3 text-xs font-medium"
+                className="h-full shrink-0 rounded-t-md px-3 text-sm font-medium"
                 style={{
                   color: isActive ? theme.textPrimary : theme.textSecondary,
                   borderBottom: isActive
