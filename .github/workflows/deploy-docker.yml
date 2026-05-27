@@ -27,7 +27,7 @@ on:
         description: "Remote deployment directory that contains compose.sh."
         required: true
         type: string
-        default: "~/Repo/langflow-deploy"
+        default: "/home/lab/Repo/langflow-deploy"
 
       image_name:
         description: "Docker image name to remove before loading the new image."
