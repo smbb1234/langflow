@@ -199,6 +199,12 @@ export type AgentWorkspaceRun = {
   stages: RunStage[];
   plan: RunPlanStep[];
   toolChoices: ToolChoice[];
+  mockResult?: {
+    headline: string;
+    summary: string;
+    insight: string;
+    comparison: Array<{ id: string; label: string; q2: number; q3: number }>;
+  };
   metrics: RunMetrics;
   approval: ApprovalState;
   uncertainty: UncertaintyState;

@@ -32,26 +32,31 @@ export function ToolChoiceCard({ toolChoices, theme, compact = false }: ToolChoi
       </button>
 
       {expanded ? (
-        <div className={compact ? "space-y-1 border-t px-3 py-2" : "space-y-1 border-t px-3 py-2"} style={{ borderColor: theme.panelBorder }}>
+        <div className={compact ? "space-y-1 border-t px-3 py-2" : "space-y-2 border-t px-3 py-2"} style={{ borderColor: theme.panelBorder }}>
           {/* TODO: replace with real tool-selection explanation API payload. */}
-          {toolChoices.map((choice) => (
+          <div
+            className={compact ? "space-y-1" : "grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3"}
+            data-testid={compact ? "tool-choice-layout-compact" : "tool-choice-layout-main"}
+          >
+            {toolChoices.map((choice) => (
             <div
               key={choice.id}
-              className="rounded-md border px-2 py-1.5"
+              className={compact ? "rounded-md border px-2 py-1.5" : "rounded-md border px-3 py-2"}
               style={{
                 borderColor: choice.selected ? theme.surfaceBlueBorder : theme.panelBorder,
                 backgroundColor: choice.selected ? theme.surfaceBlue : theme.surface,
               }}
             >
-              <div className="flex items-center justify-between text-[12px]">
-                <span style={{ color: theme.textPrimary }}>{choice.name}</span>
+              <div className="flex items-center justify-between text-xs">
+                <span className="truncate" style={{ color: theme.textPrimary }}>{choice.name}</span>
                 <span style={{ color: theme.textSecondary }}>{choice.score.toFixed(2)}</span>
               </div>
               <p className="mt-0.5 text-[11px]" style={{ color: theme.textSecondary }}>
                 {choice.reason}
               </p>
             </div>
-          ))}
+            ))}
+          </div>
           {!toolChoices.length ? (
             <p className="text-[11px]" style={{ color: theme.textTertiary }}>
               No tool candidates available.

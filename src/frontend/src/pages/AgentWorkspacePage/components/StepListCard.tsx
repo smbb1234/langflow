@@ -39,12 +39,12 @@ export function StepListCard({ plan, theme }: StepListCardProps) {
       {plan.map((step, idx) => (
         <div
           key={step.id}
-          className="flex h-[30px] items-center justify-between px-3 text-[12px]"
+          className="flex h-[35px] items-center justify-between px-3 text-[13px]"
           style={{ borderBottom: idx === plan.length - 1 ? "none" : `1px solid ${theme.panelBorder}` }}
         >
-          <div className="flex min-w-0 items-center gap-2">
+          <div className="flex min-w-0 flex-1 items-center gap-2">
             <StepMarker status={step.status} index={step.index} theme={theme} />
-            <span className="truncate" style={{ color: theme.textPrimary }}>
+            <span className="min-w-0 truncate" style={{ color: theme.textPrimary }}>
               {step.label}
             </span>
           </div>

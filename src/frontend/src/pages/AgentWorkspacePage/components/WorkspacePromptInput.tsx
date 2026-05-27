@@ -78,6 +78,7 @@ export function WorkspacePromptInput({
 
   return (
     <div className="h-full border-t px-4 py-2" style={{ borderColor: theme.panelBorder }}>
+      <div className="mx-auto h-full w-full max-w-[760px]" data-testid="workspace-composer-centered-wrapper">
       <form
         className="flex h-full min-h-0 flex-col rounded-[10px] border px-3 py-2"
         style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface }}
@@ -85,15 +86,15 @@ export function WorkspacePromptInput({
       >
         <textarea
           aria-label="Continue run prompt"
-          className="min-h-0 flex-1 w-full resize-none bg-transparent text-[13px] leading-[1.35] outline-none"
+          className="min-h-0 flex-1 w-full resize-none bg-transparent text-sm leading-[1.35] outline-none"
           style={{ color: theme.textPrimary }}
           placeholder="Ask the agent, refine the analysis, or paste a URL…"
           value={prompt}
           onChange={(event) => setPrompt(event.target.value)}
           onKeyDown={handleKeyboardSubmit}
         />
-        <div className="mt-auto flex items-center justify-between text-[11px]" style={{ color: theme.textTertiary }}>
-          <div className="flex flex-wrap gap-2">
+        <div className="mt-auto flex items-center justify-between gap-2 text-xs" style={{ color: theme.textTertiary }}>
+          <div className="flex min-w-0 flex-1 gap-2 overflow-x-auto pb-1">
             <button
               className="rounded-[8px] border px-3 py-1.5 text-[12px]"
               style={{ borderColor: theme.panelBorder, backgroundColor: theme.surfaceMuted, color: theme.textSecondary }}
@@ -119,7 +120,7 @@ export function WorkspacePromptInput({
               ⚙ {agentLabel}
             </button>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex shrink-0 items-center gap-3">
             <span>⌘↵ to send</span>
             <button className="rounded px-3 py-1.5 text-[12px]" style={{ backgroundColor: theme.primary, color: theme.surface }} type="submit">
               ↗ Send
@@ -127,6 +128,7 @@ export function WorkspacePromptInput({
           </div>
         </div>
       </form>
+      </div>
     </div>
   );
 }
