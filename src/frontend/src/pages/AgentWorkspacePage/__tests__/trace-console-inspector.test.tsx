@@ -106,7 +106,7 @@ describe("RunInspectorPanel", () => {
 
     expect(screen.getByText("Current run")).toBeInTheDocument();
     expect(screen.getByTestId("tool-choice-layout-compact")).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: "Guardrails" }));
+    await user.click(screen.getByRole("tab", { name: "Guardrails" }));
     expect(onTabChange).toHaveBeenCalledWith("guardrails");
   });
 });

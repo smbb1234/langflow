@@ -83,6 +83,8 @@ describe("WorkspacePromptInput", () => {
 
     fireEvent.keyDown(textarea, { key: "Enter", ctrlKey: true });
     expect(onSubmitPrompt).toHaveBeenCalledWith("Check Q3 deltas");
+    fireEvent.keyDown(textarea, { key: "Enter", metaKey: true });
+    expect(onSubmitPrompt).toHaveBeenCalledTimes(2);
 
     fireEvent.click(screen.getByRole("button", { name: /attach/i }));
     fireEvent.click(screen.getByRole("button", { name: /finance_curated/i }));

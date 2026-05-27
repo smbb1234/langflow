@@ -25,8 +25,9 @@ describe("RunSidebar", () => {
     ).toBeInTheDocument();
 
     const filters = screen.getByTestId("run-sidebar-filters");
-    const filterButtons = within(filters).getAllByRole("button");
+    const filterButtons = within(filters).getAllByRole("tab");
     expect(filterButtons).toHaveLength(4);
+    expect(screen.getByRole("tab", { name: "All" })).toHaveAttribute("aria-selected", "true");
 
     const nowrapRow = filters.querySelector("div.flex-nowrap");
     expect(nowrapRow).toBeInTheDocument();
@@ -38,7 +39,7 @@ describe("RunSidebar", () => {
       <RunSidebar run={MOCK_AGENT_WORKSPACE_RUN} theme={workspaceLightTheme} />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Active" }));
+    fireEvent.click(screen.getByRole("tab", { name: "Active" }));
 
     expect(screen.getByText("Q3 revenue analysis")).toBeInTheDocument();
     expect(screen.getByText("Compliance scan · EU-DSA")).toBeInTheDocument();
@@ -50,7 +51,7 @@ describe("RunSidebar", () => {
       <RunSidebar run={MOCK_AGENT_WORKSPACE_RUN} theme={workspaceLightTheme} />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Pending" }));
+    fireEvent.click(screen.getByRole("tab", { name: "Pending" }));
 
     expect(screen.getByText("Vendor invoice triage")).toBeInTheDocument();
     expect(screen.getByText("Weekly KPI digest")).toBeInTheDocument();
@@ -64,7 +65,7 @@ describe("RunSidebar", () => {
       <RunSidebar run={MOCK_AGENT_WORKSPACE_RUN} theme={workspaceLightTheme} />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Failed" }));
+    fireEvent.click(screen.getByRole("tab", { name: "Failed" }));
 
     expect(screen.getByText("Customer escalation #4821")).toBeInTheDocument();
     expect(screen.queryByText("Q3 revenue analysis")).not.toBeInTheDocument();

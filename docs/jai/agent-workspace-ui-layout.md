@@ -213,3 +213,45 @@ The top bar controls run and execution context for the workspace content area, n
 - `cd src/frontend && npm run lint` ⚠️ failed due pre-existing repository-wide Biome issues outside `AgentWorkspacePage` scope.
 - `cd src/frontend && npm run type-check` ⚠️ project script runs `tsc` followed by `vite`; in this non-interactive workflow it does not provide a finite completion signal for this validation step.
 - `cd src/frontend && npm run build` ✅ passed.
+
+## Phase 6: Final Regression Pass
+
+### Final component hierarchy
+- `AgentWorkspacePage`
+  - `RunSidebar` (left, full height)
+  - right column (`WorkspaceTopBar` + content row)
+    - `RunMainPanel` (`RunHeader` + `WorkspaceTabs` + `ConversationThread` + `WorkspacePromptInput` + `TraceConsoleBar`)
+    - `RunInspectorPanel` (`InspectorTabs` + synchronized tab content)
+
+### Final layout rules
+- Sidebar remains fixed-width (`w-[288px]`) and full-height (`h-full`) in page row.
+- Main workspace column is `flex-1 min-w-0 flex-col`; top bar is scoped to this column.
+- Main content row remains `flex min-h-0 flex-1` to preserve internal scroll areas.
+- Filter controls remain no-wrap (`flex-nowrap`) with horizontal overflow fallback.
+- Conversation and composer remain centered via shared max-width wrapper.
+
+### Header / unwanted-bar fix status
+- No extra header bar is rendered between `RunHeader` and `WorkspaceTabs`.
+- Header compactness and tab continuity remain preserved.
+
+### Trace Console and Inspector scroll strategy
+- Trace console keeps collapsed/expanded fixed heights with internal overflow.
+- Trace views (`Timeline`, `Raw events`, `Guardrails`, `Retries`) keep internal scroll behavior.
+- Inspector remains fixed-width with internal vertical scrolling.
+
+### Accessibility regression checks
+- Filter controls expose selected state with `role="tab"` + `aria-selected` (and keep `aria-pressed`).
+- Main and inspector tabs expose selected state with `role="tab"` + `aria-selected`.
+- Prompt composer submit shortcut supports both Ctrl+Enter and Cmd+Enter.
+
+### Final test plan and commands run
+- `cd src/frontend && npm run check-format` (fails due unrelated repository-wide Biome diagnostics).
+- `cd src/frontend && npm run lint` (same unrelated repository-wide diagnostics).
+- `cd src/frontend && npm run test -- src/pages/AgentWorkspacePage/__tests__/index.test.tsx src/pages/AgentWorkspacePage/__tests__/RunSidebar.test.tsx src/pages/AgentWorkspacePage/__tests__/workspace-layout.test.tsx src/pages/AgentWorkspacePage/__tests__/conversation-components.test.tsx src/pages/AgentWorkspacePage/__tests__/trace-console-inspector.test.tsx` (pass).
+- `cd src/frontend && npm run build` (pass).
+
+### Known limitations
+- UI still uses `MOCK_AGENT_WORKSPACE_RUN` for workspace run payloads.
+- Backend stream/run control wiring remains TODO.
+- Result visualization card remains mock/static until backend result APIs are connected.
+- This pass validates layout behavior via unit/integration tests; viewport matrix smoke and full e2e require dedicated Playwright coverage for this page route.

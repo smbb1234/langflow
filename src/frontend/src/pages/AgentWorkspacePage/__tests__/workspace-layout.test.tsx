@@ -58,10 +58,12 @@ describe("Agent workspace header and tabs", () => {
     const user = userEvent.setup();
     render(<SynchronizedPanels />);
 
-    await user.click(screen.getAllByRole("button", { name: "Guardrails" })[0]);
+    await user.click(screen.getAllByRole("tab", { name: "Guardrails" })[0]);
     expect(screen.getByText("Prompt Security Center")).toBeInTheDocument();
 
-    await user.click(screen.getAllByRole("button", { name: "Evidence" })[1]);
+    await user.click(screen.getAllByRole("tab", { name: "Evidence" })[1]);
     expect(screen.getByText("Provenance summary")).toBeInTheDocument();
+    expect(screen.getAllByRole("tab", { name: "Evidence" })[0]).toHaveAttribute("aria-selected", "true");
+    expect(screen.getAllByRole("tab", { name: "Evidence" })[1]).toHaveAttribute("aria-selected", "true");
   });
 });

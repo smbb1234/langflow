@@ -47,6 +47,8 @@ export function InspectorTabs({
             return (
               <button
                 key={tab}
+                aria-selected={isActive}
+                role="tab"
                 type="button"
                 className="h-full shrink-0 rounded-t-md px-3 text-sm font-medium"
                 style={{
