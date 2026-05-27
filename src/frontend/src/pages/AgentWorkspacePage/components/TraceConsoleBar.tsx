@@ -56,7 +56,7 @@ export function TraceConsoleBar({
   };
 
   return (
-    <footer className="h-full border-t" style={{ borderColor: theme.panelBorder, backgroundColor: theme.panelBg }}>
+    <footer className="flex h-full min-h-0 flex-col border-t" style={{ borderColor: theme.panelBorder, backgroundColor: theme.panelBg }}>
       <TraceConsoleHeader
         activeTab={activeTab}
         collapsed={collapsed}
@@ -65,10 +65,14 @@ export function TraceConsoleBar({
         run={run}
         theme={theme}
       />
-      {!collapsed && activeTab === "timeline" && <TraceTimeline run={run} theme={theme} />}
-      {!collapsed && activeTab === "raw" && <TraceRawEvents run={run} theme={theme} />}
-      {!collapsed && activeTab === "guardrails" && <TraceGuardrailsView run={run} theme={theme} />}
-      {!collapsed && activeTab === "retries" && <TraceRetriesView run={run} theme={theme} />}
+      {!collapsed ? (
+        <div className="min-h-0 flex-1 overflow-auto">
+          {activeTab === "timeline" && <TraceTimeline run={run} theme={theme} />}
+          {activeTab === "raw" && <TraceRawEvents run={run} theme={theme} />}
+          {activeTab === "guardrails" && <TraceGuardrailsView run={run} theme={theme} />}
+          {activeTab === "retries" && <TraceRetriesView run={run} theme={theme} />}
+        </div>
+      ) : null}
     </footer>
   );
 }

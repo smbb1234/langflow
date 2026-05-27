@@ -4,13 +4,13 @@ import type { AgentWorkspaceRun } from "../types";
 export function UncertaintySection({ run, theme }: { run: AgentWorkspaceRun; theme: WorkspaceTheme }) {
   return (
     <section className="rounded-md border p-4" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface }}>
-      <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide" style={{ color: theme.textSecondary }}>Uncertainty</h3>
+      <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide" style={{ color: theme.textSecondary }}>Uncertainty</h3>
       <div className="flex items-center justify-between gap-3">
         <div>
           <div className="text-3xl font-semibold leading-none" style={{ color: theme.textPrimary }}>
             {run.uncertainty.confidence.toFixed(2)}
           </div>
-          <div className="mt-1 text-xs" style={{ color: theme.textTertiary }}>answer confidence</div>
+          <div className="mt-1 text-sm" style={{ color: theme.textTertiary }}>answer confidence</div>
         </div>
         <svg width="120" height="36" viewBox="0 0 120 36" aria-label="uncertainty sparkline">
           <polyline

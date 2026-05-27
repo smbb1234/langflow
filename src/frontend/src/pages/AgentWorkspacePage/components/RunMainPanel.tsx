@@ -43,7 +43,7 @@ export function RunMainPanel({
       <div className="h-[128px] shrink-0">
         <WorkspacePromptInput run={run} theme={theme} />
       </div>
-      <div className={traceCollapsed ? "h-[41px] shrink-0" : "h-[162px] shrink-0"}>
+      <div className={traceCollapsed ? "h-[56px] shrink-0 min-h-0" : "h-[208px] shrink-0 min-h-0"}>
         <TraceConsoleBar run={run} theme={theme} collapsed={traceCollapsed} onToggleCollapsed={setTraceCollapsed} />
       </div>
     </main>
