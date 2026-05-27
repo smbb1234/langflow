@@ -1,4 +1,14 @@
-import type { AgentWorkspaceRun, RunGroup, WorkspaceTab } from "./types";
+import type {
+  AgentWorkspaceRun,
+  EvidenceSummaryMetric,
+  FreshnessMetric,
+  GuardrailFeedItem,
+  KeyValueItem,
+  OpsSignal,
+  RunGroup,
+  TraceTimelineItem,
+  WorkspaceTab,
+} from "./types";
 
 export const WORKSPACE_TABS: WorkspaceTab[] = ["overview", "guardrails", "evidence", "trace", "memory", "ops"];
 
@@ -170,20 +180,24 @@ export const MOCK_AGENT_WORKSPACE_RUN: AgentWorkspaceRun = {
     { id: "event-3", actor: "tool", timestamp: "14:22:19", summary: "snowflake.run_sql completed (48,231 rows scanned)" },
   ],
   guardrailChecks: [
-    { id: "check-groundedness", name: "answer.groundedness", status: "pass", detail: "0.94 >= 0.85" },
-    { id: "check-pii", name: "pii.redaction", status: "pass", detail: "No sensitive identifiers in output" },
-    { id: "check-tone", name: "tone.formal", status: "warning", detail: "0.77 below 0.80" },
-    { id: "check-action", name: "actionability", status: "pass", detail: "3 actionable recommendations found" },
+    { id: "check-1", name: "Prompt injection scan", status: "pass", detail: "0 patterns matched" },
+    { id: "check-2", name: "Policy: warehouse_scope", status: "pass", detail: "finance_curated only" },
+    { id: "check-3", name: "Pre-action structural check", status: "pass", detail: "SQL parsed, read-only" },
+    { id: "check-4", name: "DLP — PII", status: "pass", detail: "no PII in output" },
+    { id: "check-5", name: "DLP — secrets", status: "pass", detail: "0 secret regex hits" },
+    { id: "check-6", name: "Intent enforcement", status: "pass", detail: "matches user goal (0.94)" },
+    { id: "check-7", name: "Output schema validation", status: "warn", detail: "chart_spec missing `unit`" },
+    { id: "check-8", name: "Cost ceiling", status: "pass", detail: "$0.014 / $1.00 budget" },
   ],
   guardrailEvents: [
     { id: "grev-1", timestamp: "14:22:24", checkId: "check-tone", status: "warning", message: "Informal phrase flagged in paragraph 2" },
     { id: "grev-2", timestamp: "14:22:27", checkId: "check-groundedness", status: "pass", message: "All claims linked to cited evidence" },
   ],
   evidenceSources: [
-    { id: "evsrc-1", name: "finance_curated.revenue_by_product_line_v2", type: "table", freshness: "2m 11s", confidence: 0.98, freshnessScore: 96 },
-    { id: "evsrc-2", name: "q3_risk_delta_query", type: "query", freshness: "2m 09s", confidence: 0.94, freshnessScore: 94 },
-    { id: "evsrc-3", name: "pricing_policy_2026_q2", type: "document", freshness: "1d", confidence: 0.87, freshnessScore: 62 },
-    { id: "evsrc-4", name: "exchange-rate-service", type: "api", freshness: "5m", confidence: 0.92, freshnessScore: 90 },
+    { id: "evsrc-1", name: "finance_curated.revenue_lines", type: "table", freshness: "4m", confidence: 0.98, freshnessScore: 99 },
+    { id: "evsrc-2", name: "finance_curated.test_accounts", type: "table", freshness: "1h", confidence: 0.95, freshnessScore: 98 },
+    { id: "evsrc-3", name: "policy/qoq_flag_threshold.md", type: "document", freshness: "—", confidence: 1, freshnessScore: 72 },
+    { id: "evsrc-4", name: "memory://priya/preferred_currency", type: "api", freshness: "12d", confidence: 0.86, freshnessScore: 64 },
   ],
   traceEvents: [
     { id: "tev-1", timestamp: "14:22:06", laneId: "lane-planner", level: "info", message: "Execution plan finalized" },
@@ -192,15 +206,17 @@ export const MOCK_AGENT_WORKSPACE_RUN: AgentWorkspaceRun = {
     { id: "tev-4", timestamp: "14:22:31", laneId: "lane-slack", level: "error", message: "Post blocked awaiting approval checkpoint" },
   ],
   memoryLedger: [
-    { id: "mem-1", scope: "session", key: "preferred_tone", value: "formal, concise", updatedAt: "14:22:03" },
-    { id: "mem-2", scope: "run", key: "target_channel", value: "#finance-leadership", updatedAt: "14:22:05" },
-    { id: "mem-3", scope: "agent", key: "last_successful_template", value: "leadership_brief_v5", updatedAt: "14:22:26" },
+    { id: "mem-1", scope: "user", key: "preferred_currency", value: "USD", reason: "user stated 2026-05-08", expiry: "exp 12m" },
+    { id: "mem-2", scope: "user", key: "default_warehouse", value: "curated", reason: "set in onboarding", expiry: "exp —" },
+    { id: "mem-3", scope: "session", key: "exclude_test_accounts", value: "true", reason: "this conversation", expiry: "exp session" },
+    { id: "mem-4", scope: "session", key: "q3_flagged_lines", value: "", reason: "agent inferred this run", expiry: "exp session" },
+    { id: "mem-5", scope: "tenant", key: "slack#finance-review handle", value: "", reason: "approval target", expiry: "exp —" },
   ],
   opsEvalMetrics: [
-    { id: "ops-1", name: "groundedness", score: 0.94, threshold: 0.85, status: "pass" },
-    { id: "ops-2", name: "tone.formal", score: 0.77, threshold: 0.8, status: "warning" },
-    { id: "ops-3", name: "latency.p95_budget", score: 0.84, threshold: 0.8, status: "pass" },
-    { id: "ops-4", name: "approval.readiness", score: 0.62, threshold: 0.75, status: "warning" },
+    { id: "ops-1", name: "answer.faithfulness", score: 0.94, threshold: 0.85, status: "pass" },
+    { id: "ops-2", name: "answer.completeness", score: 0.89, threshold: 0.85, status: "pass" },
+    { id: "ops-3", name: "tone.formal", score: 0.71, threshold: 0.8, status: "warning" },
+    { id: "ops-4", name: "latency_p95", score: 0.96, threshold: 0.9, status: "pass" },
   ],
   latencySamples: [
     { timestamp: "14:22:08", p50Ms: 210, p95Ms: 370 },
@@ -209,3 +225,54 @@ export const MOCK_AGENT_WORKSPACE_RUN: AgentWorkspaceRun = {
     { timestamp: "14:22:32", p50Ms: 232, p95Ms: 415 },
   ],
 };
+
+export const GUARDRAIL_EVENT_FEED: GuardrailFeedItem[] = [
+  { id: "gf-1", timestamp: "14:22:09", message: "dlp.scan output → ok" },
+  { id: "gf-2", timestamp: "14:22:08", message: "schema.chart_spec → missing `unit`" },
+  { id: "gf-3", timestamp: "14:22:07", message: "policy.warehouse_scope → finance_curated" },
+  { id: "gf-4", timestamp: "14:22:05", message: "injection.scan → 0 matches" },
+  { id: "gf-5", timestamp: "14:22:03", message: "run.start by priya@acme" },
+];
+
+export const EVIDENCE_SUMMARY_METRICS: EvidenceSummaryMetric[] = [
+  { id: "es-1", label: "Sources", value: "4" },
+  { id: "es-2", label: "Retrieved docs", value: "7" },
+  { id: "es-3", label: "Memory items", value: "2" },
+  { id: "es-4", label: "Tool outputs", value: "3" },
+];
+
+export const EVIDENCE_FRESHNESS: FreshnessMetric[] = [
+  { id: "fr-1", label: "revenue_lines", valueLabel: "0.1h", valueHours: 0.1 },
+  { id: "fr-2", label: "test_accounts", valueLabel: "1h", valueHours: 1 },
+  { id: "fr-3", label: "qoq_threshold", valueLabel: "312.0h", valueHours: 312 },
+];
+
+export const TRACE_TIMELINE_ITEMS: TraceTimelineItem[] = [
+  { id: "tt-1", tone: "blue", time: "14:21.420", title: "respond.compose", detail: "chart_agent merged" },
+  { id: "tt-2", tone: "amber", time: "14:20.912", title: "validate.schema", detail: "chart_spec missing unit" },
+  { id: "tt-3", tone: "blue", time: "14:20.810", title: "handoff", detail: "finance_sql_agent → chart_agent" },
+  { id: "tt-4", tone: "green", time: "14:20.642", title: "tool.run_sql.complete", detail: "1284 rows · 412ms" },
+  { id: "tt-5", tone: "green", time: "14:20.001", title: "policy_check", detail: "scope=finance_curated" },
+  { id: "tt-6", tone: "green", time: "14:20.320", title: "plan.compile", detail: "4 steps · est $0.018" },
+  { id: "tt-7", tone: "blue", time: "14:21.094", title: "run.start", detail: "by priya@acme" },
+];
+
+export const TRACE_HANDOFF_ITEMS: KeyValueItem[] = [
+  { id: "hv-1", label: "From", value: "finance_sql_agent" },
+  { id: "hv-2", label: "To", value: "chart_agent" },
+  { id: "hv-3", label: "Contract", value: "ChartSpecV1" },
+  { id: "hv-4", label: "Verified", value: "✓ payload valid", tone: "success" },
+];
+
+export const MEMORY_SAFETY_ITEMS: KeyValueItem[] = [
+  { id: "ms-1", label: "Writes this run", value: "2" },
+  { id: "ms-2", label: "Sensitive PII", value: "none stored", tone: "success" },
+  { id: "ms-3", label: "Rollback window", value: "7 days" },
+];
+
+export const OPS_SIGNALS: OpsSignal[] = [
+  { id: "op-1", label: "Tool retries", value: "0" },
+  { id: "op-2", label: "Loop detector", value: "quiet", tone: "success" },
+  { id: "op-3", label: "Cost trajectory", value: "+0.01% vs avg", tone: "success" },
+  { id: "op-4", label: "Latency spike (5m)", value: "1 outlier (812ms)", tone: "warning" },
+];
