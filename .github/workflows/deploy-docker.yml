@@ -1,0 +1,312 @@
+name: Deploy Langflow Docker Package
+
+run-name: Deploy Langflow ${{ inputs.release_tag }} by @${{ github.actor }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "GitHub Release tag that contains the Docker package."
+        required: true
+        type: string
+
+      asset_name:
+        description: "Docker package asset name in the GitHub Release."
+        required: true
+        type: string
+        default: "langflow-custom_latest_main_amd64.tar.zst"
+
+      deploy_dir:
+        description: "Remote deployment directory that contains compose.sh."
+        required: true
+        type: string
+        default: "~/Repo/langflow-deploy"
+
+      image_name:
+        description: "Docker image name to remove before loading the new image."
+        required: true
+        type: string
+        default: "langflow-custom"
+
+      image_tag:
+        description: "Docker image tag to remove before loading the new image."
+        required: true
+        type: string
+        default: "latest"
+
+      ssh_retry_count:
+        description: "How many times to retry SSH connectivity test before failing."
+        required: true
+        type: string
+        default: "5"
+
+      ssh_retry_interval_seconds:
+        description: "Seconds to wait between SSH connectivity retries."
+        required: true
+        type: string
+        default: "10"
+
+      run_compose_down:
+        description: "Run ./compose.sh down before loading the new image."
+        required: true
+        type: boolean
+        default: true
+
+      remove_old_image:
+        description: "Run docker rmi before loading the new image."
+        required: true
+        type: boolean
+        default: true
+
+      run_compose_up:
+        description: "Run ./compose.sh up after loading the new image."
+        required: true
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: SSH deploy on remote server
+    runs-on: ubuntu-latest
+
+    env:
+      REPO: ${{ github.repository }}
+      RELEASE_TAG: ${{ inputs.release_tag }}
+      ASSET_NAME: ${{ inputs.asset_name }}
+      DEPLOY_DIR: ${{ inputs.deploy_dir }}
+      IMAGE_FULL_NAME: ${{ inputs.image_name }}:${{ inputs.image_tag }}
+      SSH_RETRY_COUNT: ${{ inputs.ssh_retry_count }}
+      SSH_RETRY_INTERVAL_SECONDS: ${{ inputs.ssh_retry_interval_seconds }}
+      RUN_COMPOSE_DOWN: ${{ inputs.run_compose_down }}
+      REMOVE_OLD_IMAGE: ${{ inputs.remove_old_image }}
+      RUN_COMPOSE_UP: ${{ inputs.run_compose_up }}
+
+    steps:
+      - name: Validate deployment inputs
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          if [[ -z "${RELEASE_TAG}" ]]; then
+            echo "[ERROR] release_tag is required." >&2
+            exit 1
+          fi
+
+          if [[ -z "${ASSET_NAME}" ]]; then
+            echo "[ERROR] asset_name is required." >&2
+            exit 1
+          fi
+
+          if [[ -z "${DEPLOY_DIR}" ]]; then
+            echo "[ERROR] deploy_dir is required." >&2
+            exit 1
+          fi
+
+          if ! [[ "${SSH_RETRY_COUNT}" =~ ^[0-9]+$ ]]; then
+            echo "[ERROR] ssh_retry_count must be a positive integer." >&2
+            exit 1
+          fi
+
+          if ! [[ "${SSH_RETRY_INTERVAL_SECONDS}" =~ ^[0-9]+$ ]]; then
+            echo "[ERROR] ssh_retry_interval_seconds must be a positive integer." >&2
+            exit 1
+          fi
+
+          if [[ "${SSH_RETRY_COUNT}" -lt 1 ]]; then
+            echo "[ERROR] ssh_retry_count must be greater than or equal to 1." >&2
+            exit 1
+          fi
+
+          echo "[INFO] Repository: ${REPO}"
+          echo "[INFO] Release tag: ${RELEASE_TAG}"
+          echo "[INFO] Asset name: ${ASSET_NAME}"
+          echo "[INFO] Deploy dir: ${DEPLOY_DIR}"
+          echo "[INFO] Image: ${IMAGE_FULL_NAME}"
+          echo "[INFO] SSH retry count: ${SSH_RETRY_COUNT}"
+          echo "[INFO] SSH retry interval seconds: ${SSH_RETRY_INTERVAL_SECONDS}"
+
+      - name: Validate required secrets
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          if [[ -z "${{ secrets.DEPLOY_HOST }}" ]]; then
+            echo "[ERROR] Missing GitHub Secret: DEPLOY_HOST" >&2
+            exit 1
+          fi
+
+          if [[ -z "${{ secrets.DEPLOY_PORT }}" ]]; then
+            echo "[ERROR] Missing GitHub Secret: DEPLOY_PORT" >&2
+            exit 1
+          fi
+
+          if [[ -z "${{ secrets.DEPLOY_USER }}" ]]; then
+            echo "[ERROR] Missing GitHub Secret: DEPLOY_USER" >&2
+            exit 1
+          fi
+
+          if [[ -z "${{ secrets.DEPLOY_KEY }}" ]]; then
+            echo "[ERROR] Missing GitHub Secret: DEPLOY_KEY" >&2
+            exit 1
+          fi
+
+          echo "[INFO] Required secrets exist."
+
+      - name: Install SSH key and known_hosts
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+
+          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+          echo "[INFO] Scanning SSH host key..."
+          ssh-keyscan \
+            -p "${{ secrets.DEPLOY_PORT }}" \
+            -H "${{ secrets.DEPLOY_HOST }}" \
+            >> ~/.ssh/known_hosts
+
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Test SSH connectivity with retries
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          SSH_TARGET="${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}"
+          SSH_PORT="${{ secrets.DEPLOY_PORT }}"
+
+          echo "[INFO] Testing SSH connectivity to ${SSH_TARGET}:${SSH_PORT}"
+
+          for attempt in $(seq 1 "${SSH_RETRY_COUNT}"); do
+            echo "[INFO] SSH connectivity attempt ${attempt}/${SSH_RETRY_COUNT}"
+
+            if ssh \
+              -i ~/.ssh/deploy_key \
+              -p "${SSH_PORT}" \
+              -o BatchMode=yes \
+              -o StrictHostKeyChecking=yes \
+              -o ConnectTimeout=15 \
+              -o ServerAliveInterval=10 \
+              -o ServerAliveCountMax=2 \
+              "${SSH_TARGET}" \
+              "echo '[INFO] SSH connection successful.' && hostname && whoami"; then
+
+              echo "[INFO] SSH connectivity test passed."
+              exit 0
+            fi
+
+            echo "[WARN] SSH connectivity attempt ${attempt} failed." >&2
+
+            if [[ "${attempt}" -lt "${SSH_RETRY_COUNT}" ]]; then
+              echo "[INFO] Waiting ${SSH_RETRY_INTERVAL_SECONDS} seconds before retry..."
+              sleep "${SSH_RETRY_INTERVAL_SECONDS}"
+            fi
+          done
+
+          echo "[ERROR] SSH connectivity test failed after ${SSH_RETRY_COUNT} attempts. Stop workflow." >&2
+          exit 1
+
+      - name: Deploy on remote server
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          DOWNLOAD_URL="https://github.com/${REPO}/releases/download/${RELEASE_TAG}/${ASSET_NAME}"
+
+          echo "[INFO] Download URL:"
+          echo "${DOWNLOAD_URL}"
+
+          ssh \
+            -i ~/.ssh/deploy_key \
+            -p "${{ secrets.DEPLOY_PORT }}" \
+            -o BatchMode=yes \
+            -o StrictHostKeyChecking=yes \
+            -o ConnectTimeout=15 \
+            "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" \
+            "DOWNLOAD_URL='${DOWNLOAD_URL}' \
+             DEPLOY_DIR='${DEPLOY_DIR}' \
+             IMAGE_FULL_NAME='${IMAGE_FULL_NAME}' \
+             RUN_COMPOSE_DOWN='${RUN_COMPOSE_DOWN}' \
+             REMOVE_OLD_IMAGE='${REMOVE_OLD_IMAGE}' \
+             RUN_COMPOSE_UP='${RUN_COMPOSE_UP}' \
+             bash -s" <<'REMOTE_SCRIPT'
+          set -Eeuo pipefail
+
+          log() {
+            echo "[INFO] $*"
+          }
+
+          warn() {
+            echo "[WARN] $*" >&2
+          }
+
+          error() {
+            echo "[ERROR] $*" >&2
+          }
+
+          log "Remote host: $(hostname)"
+          log "Remote user: $(whoami)"
+          log "Deploy directory: ${DEPLOY_DIR}"
+          log "Image: ${IMAGE_FULL_NAME}"
+          log "Download URL: ${DOWNLOAD_URL}"
+
+          if ! command -v docker >/dev/null 2>&1; then
+            error "docker command not found on remote server."
+            exit 1
+          fi
+
+          if ! command -v zstd >/dev/null 2>&1; then
+            error "zstd command not found on remote server."
+            exit 1
+          fi
+
+          if ! command -v curl >/dev/null 2>&1; then
+            error "curl command not found on remote server."
+            exit 1
+          fi
+
+          cd "${DEPLOY_DIR}"
+
+          if [[ ! -f "./compose.sh" ]]; then
+            error "compose.sh not found in ${DEPLOY_DIR}"
+            exit 1
+          fi
+
+          chmod +x ./compose.sh
+
+          if [[ "${RUN_COMPOSE_DOWN}" == "true" ]]; then
+            log "Stopping containers..."
+            ./compose.sh down
+          else
+            warn "Skipping ./compose.sh down"
+          fi
+
+          if [[ "${REMOVE_OLD_IMAGE}" == "true" ]]; then
+            log "Removing old Docker image: ${IMAGE_FULL_NAME}"
+            docker rmi "${IMAGE_FULL_NAME}" || true
+          else
+            warn "Skipping docker rmi ${IMAGE_FULL_NAME}"
+          fi
+
+          log "Downloading and loading Docker image..."
+          curl -fL "${DOWNLOAD_URL}" | zstd -d | docker load
+
+          if [[ "${RUN_COMPOSE_UP}" == "true" ]]; then
+            log "Starting containers..."
+            ./compose.sh up
+          else
+            warn "Skipping ./compose.sh up"
+          fi
+
+          log "Deployment completed."
+
+          log "Current Docker containers:"
+          docker ps
+          REMOTE_SCRIPT
