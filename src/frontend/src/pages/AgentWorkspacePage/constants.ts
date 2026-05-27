@@ -134,6 +134,16 @@ export const MOCK_AGENT_WORKSPACE_RUN: AgentWorkspaceRun = {
     { id: "tool-2", name: "dbt.docs_lookup", reason: "Column lineage and model semantics", score: 0.74, selected: false },
     { id: "tool-3", name: "slack.post_message", reason: "Blocked until approval checkpoint", score: 0.63, selected: false },
   ],
+  mockResult: {
+    headline: "Analyzed result · Q3 versus Q2 by product line",
+    summary: "Q3 revenue increased 8.4% overall versus Q2, led by Enterprise and Mid-Market growth.",
+    insight: "SMB softened quarter-over-quarter; keep anomaly-capped accounts excluded before sharing externally.",
+    comparison: [
+      { id: "cmp-ent", label: "Enterprise", q2: 74, q3: 83 },
+      { id: "cmp-mm", label: "Mid-Market", q2: 51, q3: 57 },
+      { id: "cmp-smb", label: "SMB", q2: 36, q3: 32 },
+    ],
+  },
   metrics: { p95Ms: 438, tokenCount: 4821, costUsd: 0.093, eventCount: 128, retryCount: 4, spikeCount: 2, budgetUsedLabel: "$0.093 / $1.000" },
   approval: {
     id: "approval_slack_exec_brief",

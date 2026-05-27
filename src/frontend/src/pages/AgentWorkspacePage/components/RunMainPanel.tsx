@@ -40,10 +40,10 @@ export function RunMainPanel({
       <WorkspaceTabs theme={theme} activeTab={activeTab} onTabChange={onTabChange} />
       {/* TODO: render non-overview panels once each tab gets dedicated content. */}
       <ConversationThread run={run} theme={theme} />
-      <div className="h-[100px]">
+      <div className="h-[128px] shrink-0">
         <WorkspacePromptInput run={run} theme={theme} />
       </div>
-      <div className={traceCollapsed ? "h-[41px]" : "h-[162px]"}>
+      <div className={traceCollapsed ? "h-[41px] shrink-0" : "h-[162px] shrink-0"}>
         <TraceConsoleBar run={run} theme={theme} collapsed={traceCollapsed} onToggleCollapsed={setTraceCollapsed} />
       </div>
     </main>
