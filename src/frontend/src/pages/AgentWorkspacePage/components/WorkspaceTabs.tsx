@@ -34,6 +34,8 @@ export function WorkspaceTabs({ theme, activeTab = "overview", onTabChange }: Wo
             return (
               <button
                 key={tab}
+                aria-selected={isActive}
+                role="tab"
                 className="inline-flex shrink-0 items-center gap-1.5"
                 style={{ color: isActive ? theme.textPrimary : theme.textTertiary, fontWeight: isActive ? 600 : 400 }}
                 type="button"

@@ -200,6 +200,8 @@ export function RunSidebar({
               <button
                 key={filter.value}
                 aria-pressed={activeFilter === filter.value}
+                aria-selected={activeFilter === filter.value}
+                role="tab"
                 className="h-[30px] shrink-0 rounded px-2.5 text-[12px]"
                 onClick={() => updateFilter(filter.value)}
                 style={{
