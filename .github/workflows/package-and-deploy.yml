@@ -1,0 +1,75 @@
+name: Package and Deploy Langflow
+
+run-name: Package and Deploy ${{ inputs.release_type }} from ${{ inputs.ref }} by @${{ github.actor }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: "Package type."
+        required: true
+        type: choice
+        options:
+          - main
+          - main-backend
+          - main-frontend
+          - main-ep
+          - base
+          - main-all
+        default: main
+
+      ref:
+        description: "Branch, tag, or commit to build."
+        required: true
+        type: string
+        default: dx_dev
+
+      arch:
+        description: "Target architecture."
+        required: true
+        type: choice
+        options:
+          - amd64
+          - arm64
+        default: amd64
+
+      deploy_dir:
+        description: "Remote deployment directory that contains compose.sh."
+        required: true
+        type: string
+        default: "/home/lab/Repo/langflow-deploy"
+
+jobs:
+  package:
+    name: Build Docker package
+    uses: ./.github/workflows/docker-build.yml
+    with:
+      release_type: ${{ inputs.release_type }}
+      ref: ${{ inputs.ref }}
+      arch: ${{ inputs.arch }}
+      pre_release: false
+      push_to_registry: false
+      upload_release_asset: true
+      create_latest_alias: true
+      no_export: false
+      image_name: langflow-custom
+      image_tag: latest
+    secrets: inherit
+
+  deploy:
+    name: Deploy Docker package
+    needs: package
+    uses: ./.github/workflows/deploy-docker.yml
+    with:
+      release_tag: ${{ needs.package.outputs.release_tag }}
+      release_tag_prefix: package-main-
+      asset_name: ${{ needs.package.outputs.alias_file }}
+      deploy_dir: ${{ inputs.deploy_dir }}
+      image_name: langflow-custom
+      image_tag: latest
+      ssh_retry_count: "5"
+      ssh_retry_interval_seconds: "10"
+      run_compose_down: true
+      remove_old_image: true
+      run_compose_up: true
+    secrets: inherit
