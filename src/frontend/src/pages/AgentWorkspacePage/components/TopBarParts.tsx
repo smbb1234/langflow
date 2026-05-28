@@ -36,12 +36,32 @@ export function StatusDot({ color }: { color: string }) {
   return <span className="mr-1.5 inline-block size-[7px] rounded-full" style={{ backgroundColor: color }} aria-hidden="true" />;
 }
 
-export function IconLock({ theme }: { theme: WorkspaceTheme }) {
+export function IconLock({
+  theme,
+  className = "",
+}: {
+  theme: WorkspaceTheme;
+  className?: string;
+}) {
   return (
-    <span className="relative mr-1.5 inline-block h-3 w-[9px]" style={{ color: theme.textSecondary }} aria-hidden="true" data-testid="icon-lock">
-      <span className="absolute bottom-0 block h-[7px] w-[9px] rounded-sm border" style={{ borderColor: "currentColor" }} />
-      <span className="absolute left-[1px] top-[-4px] block h-[6px] w-[7px] rounded-t-full border border-b-0" style={{ borderColor: "currentColor" }} />
-    </span>
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.8}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      data-testid="icon-lock"
+      className={`mr-1.5 h-3.5 w-3.5 shrink-0 ${className}`}
+      style={{ color: theme.textSecondary }}
+    >
+      <path d="M8 11V7a4 4 0 1 1 8 0v4" />
+      <rect x="5" y="11" width="14" height="9" rx="2" />
+      <path d="M12 15v2" />
+    </svg>
   );
 }
 
