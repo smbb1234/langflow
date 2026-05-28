@@ -32,16 +32,29 @@ describe("WorkspaceTopBar", () => {
     expect(actionLockIcon.tagName.toLowerCase()).toBe("svg");
 
     const financeLabel = within(front).getByText("finance_ro");
-    expect(financeLabel.previousElementSibling).toHaveAttribute("data-testid", "icon-lock");
+    expect(financeLabel.closest("span")).toContainElement(within(front).getAllByTestId("icon-lock")[0]);
     expect(buttons[3]).toHaveAccessibleName("Stop run");
     expect(within(buttons[3]).getByTestId("icon-stop-outline")).toBeInTheDocument();
     const stopButton = within(actions).getByRole("button", { name: "Stop run" });
     const approvalsButton = within(actions).getByRole("button", { name: "Open approvals" });
+    const notificationsButton = within(actions).getByRole("button", { name: "Open notifications, 3 unread" });
     const actionDividers = within(actions).getAllByTestId("topbar-divider");
     expect(actionDividers).toHaveLength(1);
     const divider = actionDividers[0];
     expect(divider).toHaveStyle({ backgroundColor: workspaceLightTheme.panelBorder });
     expect(stopButton.nextElementSibling).toBe(divider);
     expect(divider.nextElementSibling).toBe(approvalsButton);
+
+    const bellIcon = within(notificationsButton).getByTestId("icon-bell");
+    expect(bellIcon.tagName.toLowerCase()).toBe("svg");
+    expect(bellIcon).toHaveAttribute("viewBox", "0 0 24 24");
+    expect(bellIcon).toHaveAttribute("width", "14");
+    expect(bellIcon).toHaveAttribute("height", "14");
+    expect(bellIcon).toHaveAttribute("aria-hidden", "true");
+    expect(bellIcon).toHaveClass("h-3.5", "w-3.5", "shrink-0");
+    expect(bellIcon).not.toHaveClass("mr-1.5");
+    expect(bellIcon.querySelector(`path[d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2H4.5L6 16Z"]`)).toBeInTheDocument();
+    expect(bellIcon.querySelector(`path[d="M10 20a2 2 0 0 0 4 0"]`)).toBeInTheDocument();
+    expect(within(notificationsButton).getByText("3")).toBeInTheDocument();
   });
 });

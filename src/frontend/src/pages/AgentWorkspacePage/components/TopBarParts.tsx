@@ -77,13 +77,31 @@ export function IconButton({ label, onClick, children, theme, style }: { label: 
   );
 }
 
-export function IconBell({ theme }: { theme: WorkspaceTheme }) {
+export function IconBell({
+  theme,
+  className = "",
+}: {
+  theme: WorkspaceTheme;
+  className?: string;
+}) {
   return (
-    <span className="relative inline-block h-3.5 w-3" style={{ color: theme.textSecondary }} aria-hidden="true">
-      <span className="absolute left-0 right-0 top-[1px] h-[8px] rounded-t-full border border-b-0" style={{ borderColor: "currentColor" }} />
-      <span className="absolute left-[1px] right-[1px] top-[8px] h-[2px] border-t" style={{ borderColor: "currentColor" }} />
-      <span className="absolute left-[4px] top-[11px] h-[2px] w-[2px] rounded-full" style={{ backgroundColor: "currentColor" }} />
-    </span>
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.6}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      data-testid="icon-bell"
+      className={`h-3.5 w-3.5 shrink-0 ${className}`}
+      style={{ color: theme.textSecondary }}
+    >
+      <path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2H4.5L6 16Z" />
+      <path d="M10 20a2 2 0 0 0 4 0" />
+    </svg>
   );
 }
 
