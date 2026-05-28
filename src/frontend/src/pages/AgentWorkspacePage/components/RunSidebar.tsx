@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { JaiLogo } from "@/components/jai/JaiLogo";
 import { CustomProfileIcon } from "@/customization/components/custom-profile-icon";
-import { MOCK_RUN_GROUPS } from "../constants";
+import { DEFAULT_SIDEBAR_WIDTH, MOCK_RUN_GROUPS } from "../constants";
 import type { WorkspaceTheme } from "../theme";
 import type {
   AgentWorkspaceRun,
@@ -20,6 +20,7 @@ type RunSidebarProps = {
   onCreateRun?: () => void;
   onSearchChange?: (query: string) => void;
   onFilterChange?: (filter: RunFilter) => void;
+  width?: number;
 };
 
 const FILTERS: { label: string; value: RunFilter }[] = [
@@ -62,6 +63,7 @@ export function RunSidebar({
   onCreateRun,
   onSearchChange,
   onFilterChange,
+  width,
 }: RunSidebarProps) {
   void run;
   const [query, setQuery] = useState("");
@@ -135,10 +137,11 @@ export function RunSidebar({
 
   return (
     <aside
-      className="hidden h-full w-[288px] flex-col md:flex"
+      className="hidden h-full shrink-0 flex-col md:flex"
       style={{
         backgroundColor: theme.panelBg,
         borderRight: `1px solid ${theme.panelBorder}`,
+        width: width ?? DEFAULT_SIDEBAR_WIDTH,
       }}
     >
       <div
