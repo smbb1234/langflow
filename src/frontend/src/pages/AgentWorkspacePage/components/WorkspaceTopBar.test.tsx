@@ -32,11 +32,14 @@ describe("WorkspaceTopBar", () => {
     expect(actionLockIcon.tagName.toLowerCase()).toBe("svg");
 
     const financeLabel = within(front).getByText("finance_ro");
-    expect(financeLabel.closest("span")).toContainElement(within(front).getAllByTestId("icon-lock")[0]);
+    const financePill = financeLabel.closest("span") as HTMLElement;
+    const financeLockIcon = within(financePill).getByTestId("icon-lock");
+    expect(financeLockIcon.getAttribute("class") ?? "").toContain("mr-1.5");
     expect(buttons[3]).toHaveAccessibleName("Stop run");
     expect(within(buttons[3]).getByTestId("icon-stop-outline")).toBeInTheDocument();
     const stopButton = within(actions).getByRole("button", { name: "Stop run" });
     const approvalsButton = within(actions).getByRole("button", { name: "Open approvals" });
+    expect(approvalsButton).toHaveTextContent("1 approval pending");
     const notificationsButton = within(actions).getByRole("button", { name: "Open notifications, 3 unread" });
     const actionDividers = within(actions).getAllByTestId("topbar-divider");
     expect(actionDividers).toHaveLength(1);
