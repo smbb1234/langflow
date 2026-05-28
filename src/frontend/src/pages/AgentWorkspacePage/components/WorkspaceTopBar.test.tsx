@@ -42,6 +42,7 @@ describe("WorkspaceTopBar", () => {
     const stopButton = within(actions).getByRole("button", { name: "Stop run" });
     const approvalsButton = within(actions).getByRole("button", { name: "Open approvals" });
     expect(approvalsButton).toHaveTextContent("1 approval pending");
+    const notificationsButton = within(actions).getByRole("button", { name: "Open notifications, 3 unread" });
     const shieldIcon = within(approvalsButton).getByTestId("icon-shield");
     expect(shieldIcon.tagName.toLowerCase()).toBe("svg");
     expect(shieldIcon).toHaveAttribute("viewBox", "0 0 24 24");
@@ -55,5 +56,17 @@ describe("WorkspaceTopBar", () => {
     expect(divider).toHaveStyle({ backgroundColor: workspaceLightTheme.panelBorder });
     expect(stopButton.nextElementSibling).toBe(divider);
     expect(divider.nextElementSibling).toBe(approvalsButton);
+
+    const bellIcon = within(notificationsButton).getByTestId("icon-bell");
+    expect(bellIcon.tagName.toLowerCase()).toBe("svg");
+    expect(bellIcon).toHaveAttribute("viewBox", "0 0 24 24");
+    expect(bellIcon).toHaveAttribute("width", "14");
+    expect(bellIcon).toHaveAttribute("height", "14");
+    expect(bellIcon).toHaveAttribute("aria-hidden", "true");
+    expect(bellIcon).toHaveClass("h-3.5", "w-3.5", "shrink-0");
+    expect(bellIcon).not.toHaveClass("mr-1.5");
+    expect(bellIcon.querySelector(`path[d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2H4.5L6 16Z"]`)).toBeInTheDocument();
+    expect(bellIcon.querySelector(`path[d="M10 20a2 2 0 0 0 4 0"]`)).toBeInTheDocument();
+    expect(within(notificationsButton).getByText("3")).toBeInTheDocument();
   });
 });
