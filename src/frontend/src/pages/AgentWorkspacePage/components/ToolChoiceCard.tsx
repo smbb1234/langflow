@@ -14,7 +14,7 @@ export function ToolChoiceCard({ toolChoices, theme, compact = false }: ToolChoi
   const selectedTool = useMemo(() => toolChoices.find((tool) => tool.selected) ?? toolChoices[0], [toolChoices]);
 
   return (
-    <section className={compact ? "rounded-lg border" : "mt-2 rounded-lg border"} style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface }}>
+    <section className={compact ? "rounded-lg border" : "mt-2 rounded-lg border"} style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface, boxShadow: theme.shadowSoft }}>
       <button
         type="button"
         className="flex w-full items-center justify-between px-3 py-2 text-left"

@@ -6,7 +6,7 @@ export function EvidenceSection({ run, theme }: { run: AgentWorkspaceRun; theme:
   const maxHours = Math.max(...EVIDENCE_FRESHNESS.map((item) => item.valueHours));
   return (
     <section className="space-y-3 text-xs">
-      <article className="rounded-lg border p-4" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface }}>
+      <article className="rounded-lg border p-4" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface, boxShadow: theme.shadowSoft }}>
         <h3 className="text-[13px] font-semibold" style={{ color: theme.textPrimary }}>Provenance summary</h3>
         <div className="mt-2 grid grid-cols-2 gap-2">
           {EVIDENCE_SUMMARY_METRICS.map((item) => (
@@ -16,7 +16,7 @@ export function EvidenceSection({ run, theme }: { run: AgentWorkspaceRun; theme:
           ))}
         </div>
       </article>
-      <article className="rounded-lg border p-4" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface }}>
+      <article className="rounded-lg border p-4" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface, boxShadow: theme.shadowSoft }}>
         <h3 className="text-[13px] font-semibold" style={{ color: theme.textPrimary }}>Sources used</h3>
         <div className="mt-2 h-px" style={{ backgroundColor: theme.panelBorder }} />
         {run.evidenceSources.map((source, index) => (
@@ -29,7 +29,7 @@ export function EvidenceSection({ run, theme }: { run: AgentWorkspaceRun; theme:
           </div>
         ))}
       </article>
-      <article className="rounded-lg border p-4" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface }}>
+      <article className="rounded-lg border p-4" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface, boxShadow: theme.shadowSoft }}>
         <h3 className="text-[13px] font-semibold" style={{ color: theme.textPrimary }}>Freshness</h3>
         <p className="text-[11px]" style={{ color: theme.textTertiary }}>Hours since each source was last refreshed</p>
         <div className="mt-2 space-y-2">

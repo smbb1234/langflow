@@ -88,7 +88,7 @@ describe("WorkspacePromptInput", () => {
 
     fireEvent.click(screen.getByRole("button", { name: /attach/i }));
     fireEvent.click(screen.getByRole("button", { name: /finance_curated/i }));
-    fireEvent.click(screen.getByRole("button", { name: /finance_risk_orchestrator/i }));
+    fireEvent.click(screen.getByRole("button", { name: /finance_sql_agent/i }));
     fireEvent.click(screen.getByRole("button", { name: /send/i }));
 
     expect(onAttach).toHaveBeenCalled();

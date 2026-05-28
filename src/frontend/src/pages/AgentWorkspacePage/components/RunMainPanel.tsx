@@ -5,7 +5,6 @@ import { ConversationThread } from "./ConversationThread";
 import { RunHeader } from "./RunHeader";
 import { TraceConsoleBar } from "./TraceConsoleBar";
 import { WorkspacePromptInput } from "./WorkspacePromptInput";
-import { WorkspaceTabs } from "./WorkspaceTabs";
 
 type RunMainPanelProps = {
   run: AgentWorkspaceRun;
@@ -27,6 +26,8 @@ export function RunMainPanel({
   onOpenRunMenu,
 }: RunMainPanelProps) {
   const [traceCollapsed, setTraceCollapsed] = useState(false);
+  void activeTab;
+  void onTabChange;
 
   return (
     <main className="flex min-h-0 min-w-0 flex-1 flex-col" style={{ backgroundColor: theme.pageBg }}>
@@ -37,7 +38,6 @@ export function RunMainPanel({
         onExportRun={onExportRun}
         onOpenRunMenu={onOpenRunMenu}
       />
-      <WorkspaceTabs theme={theme} activeTab={activeTab} onTabChange={onTabChange} />
       {/* TODO: render non-overview panels once each tab gets dedicated content. */}
       <ConversationThread run={run} theme={theme} />
       <div className="h-[128px] shrink-0">

@@ -6,7 +6,7 @@ export function TraceSummarySection({ theme }: { run: AgentWorkspaceRun; theme: 
   const toneColor = (tone: "green" | "blue" | "amber") => (tone === "green" ? theme.success : tone === "amber" ? theme.warning : theme.traceBlue);
   return (
     <section className="space-y-3 text-xs">
-      <article className="rounded-lg border p-4" style={{ borderColor: theme.successBorder, backgroundColor: theme.surface }}>
+      <article className="rounded-lg border p-4" style={{ borderColor: theme.successBorder, backgroundColor: theme.surface, boxShadow: theme.shadowSoft }}>
         <h3 className="text-[13px] font-semibold" style={{ color: theme.textPrimary }}>Trace · stage timeline</h3>
         <div className="mt-2 h-px" style={{ backgroundColor: theme.panelBorder }} />
         <div className="relative mt-2 space-y-2 pl-4">
@@ -21,14 +21,14 @@ export function TraceSummarySection({ theme }: { run: AgentWorkspaceRun; theme: 
           ))}
         </div>
       </article>
-      <article className="rounded-lg border p-4" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface }}>
+      <article className="rounded-lg border p-4" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface, boxShadow: theme.shadowSoft }}>
         <h3 className="text-[13px] font-semibold" style={{ color: theme.textPrimary }}>Handoff verification</h3>
         <div className="mt-2 h-px" style={{ backgroundColor: theme.panelBorder }} />
         <div className="mt-2 space-y-1.5">
           {TRACE_HANDOFF_ITEMS.map((item) => <div key={item.id} className="flex justify-between gap-3"><span style={{ color: theme.textTertiary }}>{item.label}</span><span style={{ color: item.tone === "success" ? theme.success : theme.textPrimary }}>{item.value}</span></div>)}
         </div>
       </article>
-      <article className="rounded-lg border p-4" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface }}>
+      <article className="rounded-lg border p-4" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface, boxShadow: theme.shadowSoft }}>
         <div className="flex items-center justify-between gap-2"><h3 className="text-[13px] font-semibold" style={{ color: theme.textPrimary }}>Audit replay</h3>
           <button type="button" className="rounded border px-2 py-0.5 text-[11px]" style={{ borderColor: theme.panelBorder, color: theme.textSecondary }} onClick={() => {
             // TODO(no-op): connect replay button to audit timeline playback API.
