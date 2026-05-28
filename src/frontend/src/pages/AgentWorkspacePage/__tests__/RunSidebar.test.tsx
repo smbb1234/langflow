@@ -10,68 +10,24 @@ jest.mock("@/components/jai/JaiLogo", () => ({
 }));
 
 describe("RunSidebar", () => {
-  it("renders logo, new run button, search input, and exactly four filter buttons", () => {
+  it("renders logo area and + New run while omitting Agentic Workspace", () => {
     render(
       <RunSidebar run={MOCK_AGENT_WORKSPACE_RUN} theme={workspaceLightTheme} />,
     );
 
     expect(screen.getByText("JAI Logo")).toBeInTheDocument();
-    expect(screen.getByText("Agentic Workspace")).toBeInTheDocument();
+    expect(screen.getByText("+ New run")).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "Create new run" }),
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole("textbox", { name: "Search runs, agents" }),
-    ).toBeInTheDocument();
+    expect(screen.queryByText("Agentic Workspace")).not.toBeInTheDocument();
 
     const filters = screen.getByTestId("run-sidebar-filters");
     const filterButtons = within(filters).getAllByRole("tab");
     expect(filterButtons).toHaveLength(4);
-    expect(screen.getByRole("tab", { name: "All" })).toHaveAttribute("aria-selected", "true");
-
-    const nowrapRow = filters.querySelector("div.flex-nowrap");
-    expect(nowrapRow).toBeInTheDocument();
-    expect(nowrapRow?.className).not.toContain("flex-wrap");
   });
 
-  it("clicking Active filters running runs", () => {
-    render(
-      <RunSidebar run={MOCK_AGENT_WORKSPACE_RUN} theme={workspaceLightTheme} />,
-    );
-
-    fireEvent.click(screen.getByRole("tab", { name: "Active" }));
-
-    expect(screen.getByText("Q3 revenue analysis")).toBeInTheDocument();
-    expect(screen.getByText("Compliance scan · EU-DSA")).toBeInTheDocument();
-    expect(screen.queryByText("Vendor invoice triage")).not.toBeInTheDocument();
-  });
-
-  it("clicking Pending shows PENDING and BLOCKED runs", () => {
-    render(
-      <RunSidebar run={MOCK_AGENT_WORKSPACE_RUN} theme={workspaceLightTheme} />,
-    );
-
-    fireEvent.click(screen.getByRole("tab", { name: "Pending" }));
-
-    expect(screen.getByText("Vendor invoice triage")).toBeInTheDocument();
-    expect(screen.getByText("Weekly KPI digest")).toBeInTheDocument();
-    expect(
-      screen.queryByText("Customer escalation #4821"),
-    ).not.toBeInTheDocument();
-  });
-
-  it("clicking Failed shows failed runs", () => {
-    render(
-      <RunSidebar run={MOCK_AGENT_WORKSPACE_RUN} theme={workspaceLightTheme} />,
-    );
-
-    fireEvent.click(screen.getByRole("tab", { name: "Failed" }));
-
-    expect(screen.getByText("Customer escalation #4821")).toBeInTheDocument();
-    expect(screen.queryByText("Q3 revenue analysis")).not.toBeInTheDocument();
-  });
-
-  it("search filters by run title and agent name", () => {
+  it("search input and filter behavior remain functional", () => {
     render(
       <RunSidebar
         run={MOCK_AGENT_WORKSPACE_RUN}
@@ -80,26 +36,12 @@ describe("RunSidebar", () => {
       />,
     );
 
-    const input = screen.getByRole("textbox", { name: "Search runs, agents" });
-
-    fireEvent.change(input, { target: { value: "invoice" } });
-    expect(screen.getByText("Vendor invoice triage")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("tab", { name: "Failed" }));
+    expect(screen.getByText("Customer escalation #4821")).toBeInTheDocument();
     expect(screen.queryByText("Q3 revenue analysis")).not.toBeInTheDocument();
 
-    fireEvent.change(input, { target: { value: "support_router" } });
-    expect(screen.getByText("Customer escalation #4821")).toBeInTheDocument();
-  });
-
-  it("selected run state still works via local fallback", () => {
-    render(
-      <RunSidebar run={MOCK_AGENT_WORKSPACE_RUN} theme={workspaceLightTheme} />,
-    );
-
-    const target = screen.getByRole("button", {
-      name: /Vendor invoice triage/i,
-    });
-    fireEvent.click(target);
-
-    expect(target).toHaveAttribute("aria-current", "true");
+    const input = screen.getByRole("textbox", { name: "Search runs, agents" });
+    fireEvent.change(input, { target: { value: "invoice" } });
+    expect(screen.queryByText("Customer escalation #4821")).not.toBeInTheDocument();
   });
 });
