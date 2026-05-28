@@ -1,6 +1,6 @@
 import { useRef, type WheelEventHandler } from "react";
 
-import { MAIN_WORKSPACE_TABS, WORKSPACE_TAB_LABELS } from "../constants";
+import { WORKSPACE_TABS, WORKSPACE_TAB_LABELS } from "../constants";
 import type { WorkspaceTheme } from "../theme";
 import type { WorkspaceTab } from "../types";
 
@@ -28,7 +28,7 @@ export function WorkspaceTabs({ theme, activeTab = "overview", onTabChange }: Wo
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         <div className="flex h-full min-w-max items-center gap-5 text-[12px]">
-          {MAIN_WORKSPACE_TABS.map((tab) => {
+          {WORKSPACE_TABS.map((tab) => {
             const isActive = activeTab === tab;
 
             return (
