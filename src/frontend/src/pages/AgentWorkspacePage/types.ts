@@ -182,6 +182,30 @@ export type TraceTimelineItem = {
 export type KeyValueItem = { id: string; label: string; value: string; tone?: "default" | "success" | "warning" };
 export type OpsSignal = { id: string; label: string; value: string; tone?: "default" | "success" | "warning" };
 
+export type RunDisplayInfo = {
+  environmentChipText?: string;
+  scopeChipText?: string;
+  scopeLocked?: boolean;
+  tenantChipText?: string;
+  topBarTitle?: string;
+  statusText?: RunStatus;
+  progressLetters?: string[];
+  metricsText?: {
+    step?: string;
+    elapsed?: string;
+    events?: string;
+    p95?: string;
+    tokens?: string;
+    cost?: string;
+  };
+  approvalsText?: string;
+  unreadNotificationsCount?: number;
+  runHeaderChipValues?: {
+    runId?: string;
+    path?: string;
+  };
+};
+
 export type AgentWorkspaceRun = {
   id: string;
   title: string;
@@ -191,6 +215,7 @@ export type AgentWorkspaceRun = {
   environment: string;
   scope: string;
   tenant: string;
+  display?: RunDisplayInfo;
   startedAt: string;
   initiatedBy: string;
   status: RunStatus;

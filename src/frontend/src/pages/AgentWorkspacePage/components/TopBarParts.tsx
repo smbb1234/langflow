@@ -47,11 +47,13 @@ export function IconButton({
   onClick,
   children,
   theme,
+  style,
 }: {
   label: string;
   onClick: () => void;
   children: ReactNode;
   theme: WorkspaceTheme;
+  style?: CSSProperties;
 }) {
   return (
     <button
@@ -59,7 +61,7 @@ export function IconButton({
       aria-label={label}
       onClick={onClick}
       className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md border text-[12px]"
-      style={{ borderColor: theme.pillBorder, backgroundColor: theme.pillBg, color: theme.textSecondary }}
+      style={{ borderColor: theme.pillBorder, backgroundColor: theme.pillBg, color: theme.textSecondary, ...style }}
     >
       {children}
     </button>
@@ -72,6 +74,18 @@ export function IconBell({ theme }: { theme: WorkspaceTheme }) {
       <span className="absolute left-0 right-0 top-[1px] h-[8px] rounded-t-full border border-b-0" style={{ borderColor: "currentColor" }} />
       <span className="absolute left-[1px] right-[1px] top-[8px] h-[2px] border-t" style={{ borderColor: "currentColor" }} />
       <span className="absolute left-[4px] top-[11px] h-[2px] w-[2px] rounded-full" style={{ backgroundColor: "currentColor" }} />
+    </span>
+  );
+}
+
+export function IconShield({ theme }: { theme: WorkspaceTheme }) {
+  return (
+    <span className="relative mr-1.5 inline-block h-3.5 w-3" style={{ color: theme.warning }} aria-hidden="true">
+      <span className="absolute left-0 top-0 h-[10px] w-3 rounded-t-[3px] border border-b-0" style={{ borderColor: "currentColor" }} />
+      <span
+        className="absolute left-0 top-[6px] h-[7px] w-3 border"
+        style={{ borderColor: "currentColor", clipPath: "polygon(0 0, 100% 0, 50% 100%)" }}
+      />
     </span>
   );
 }
