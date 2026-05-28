@@ -14,6 +14,8 @@ export const WORKSPACE_TABS: WorkspaceTab[] = ["overview", "guardrails", "eviden
 
 export const MAIN_WORKSPACE_TABS: WorkspaceTab[] = ["overview", "guardrails", "evidence", "trace"];
 
+export const INSPECTOR_VISIBLE_TABS: WorkspaceTab[] = ["overview", "guardrails", "evidence", "trace"];
+
 export const WORKSPACE_TAB_LABELS: Record<WorkspaceTab, string> = {
   overview: "Overview",
   guardrails: "Guardrails",
@@ -99,13 +101,36 @@ export const MOCK_RUN_GROUPS: RunGroup[] = [
 
 export const MOCK_AGENT_WORKSPACE_RUN: AgentWorkspaceRun = {
   id: "A-2026-0526",
-  title: "Q3 Revenue Risk · Guardrail + Evidence Review",
-  runDisplayId: "run_prod_use1_8f2c14a",
-  agentName: "finance_risk_orchestrator",
-  agentPath: "planner_agent → finance_sql_agent → validator_agent → narrator_agent",
+  title: "Q3 revenue analysis",
+  runDisplayId: "run · _8f2c14a",
+  agentName: "finance_sql_agent",
+  agentPath: "finance_sql_agent → chart_agent",
   environment: "PROD · us-east-1",
-  scope: "finance_ro + slack_post_limited",
-  tenant: "acme-enterprise",
+  scope: "finance_ro",
+  tenant: "tenant: acme",
+  display: {
+    environmentChipText: "PROD · us-east-1",
+    scopeChipText: "finance_ro",
+    scopeLocked: true,
+    tenantChipText: "tenant: acme",
+    topBarTitle: "Q3 revenue analysis",
+    statusText: "RUNNING",
+    progressLetters: ["a", "r", "a", "s", "d", "p"],
+    metricsText: {
+      step: "step 4/6",
+      elapsed: "00:00:14",
+      events: "∞ 128",
+      p95: "p95 412ms",
+      tokens: "tok 1.2k",
+      cost: "$ 0.014",
+    },
+    approvalsText: "1 approval pending",
+    unreadNotificationsCount: 3,
+    runHeaderChipValues: {
+      runId: "run · _8f2c14a",
+      path: "finance_sql_agent → chart_agent",
+    },
+  },
   startedAt: "14:22:01",
   initiatedBy: "priya.menon@acme-enterprise.com",
   status: "RUNNING",
