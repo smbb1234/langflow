@@ -53,6 +53,17 @@ on:
         type: string
         default: latest
         description: "Final local image tag."
+  
+    outputs:
+        release_tag:
+          description: "GitHub Release tag created by the package workflow."
+          value: ${{ jobs.package-image.outputs.release_tag }}
+        archive_file:
+          description: "Timestamped Docker package file."
+          value: ${{ jobs.package-image.outputs.archive_file }}
+        alias_file:
+          description: "Stable alias Docker package file."
+          value: ${{ jobs.package-image.outputs.alias_file }}
 
   workflow_dispatch:
     inputs:
