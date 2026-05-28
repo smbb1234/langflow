@@ -1,4 +1,4 @@
-name: Package and Deploy Langflow
+name: Package and Deploy
 
 run-name: Package and Deploy ${{ inputs.release_type }} from ${{ inputs.ref }} by @${{ github.actor }}
 
