@@ -41,9 +41,8 @@ export function RunInspectorPanel({ run, theme, activeTab, onTabChange }: RunIns
   const tabDots = useMemo(
     () => ({
       guardrails: run.guardrailChecks.some((check) => check.status === "warning" || check.status === "failed"),
-      ops: run.opsEvalMetrics.some((metric) => metric.score < metric.threshold),
     }),
-    [run.guardrailChecks, run.opsEvalMetrics],
+    [run.guardrailChecks],
   );
 
   return (
