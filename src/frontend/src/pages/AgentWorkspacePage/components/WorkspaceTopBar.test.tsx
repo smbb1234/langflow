@@ -35,5 +35,13 @@ describe("WorkspaceTopBar", () => {
     expect(financeLabel.previousElementSibling).toHaveAttribute("data-testid", "icon-lock");
     expect(buttons[3]).toHaveAccessibleName("Stop run");
     expect(within(buttons[3]).getByTestId("icon-stop-outline")).toBeInTheDocument();
+    const stopButton = within(actions).getByRole("button", { name: "Stop run" });
+    const approvalsButton = within(actions).getByRole("button", { name: "Open approvals" });
+    const actionDividers = within(actions).getAllByTestId("topbar-divider");
+    expect(actionDividers).toHaveLength(1);
+    const divider = actionDividers[0];
+    expect(divider).toHaveStyle({ backgroundColor: workspaceLightTheme.panelBorder });
+    expect(stopButton.nextElementSibling).toBe(divider);
+    expect(divider.nextElementSibling).toBe(approvalsButton);
   });
 });

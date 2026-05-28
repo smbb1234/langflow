@@ -46,6 +46,7 @@ export function WorkspaceTopBar({ run, theme, onCreateRun, onRefresh, onToggleLo
         <IconButton label="Refresh run" onClick={onRefresh ?? NOOP} theme={theme}>↻</IconButton>
         <IconButton label="Toggle scope lock" onClick={onToggleLock ?? NOOP} theme={theme}><IconLock theme={theme} /></IconButton>
         <IconButton label="Stop run" onClick={onToggleLayout ?? NOOP} theme={theme} style={{ backgroundColor: "#ffe4e6", borderColor: "#fecdd3", color: "#be123c" }}><IconStopOutline theme={theme} /></IconButton>
+        <TopBarDivider theme={theme} />
         <button type="button" aria-label="Open approvals" onClick={onOpenApprovals ?? NOOP} className="hidden h-6 shrink-0 items-center whitespace-nowrap rounded-md px-2 text-[10px] lg:inline-flex" style={{ backgroundColor: theme.surfaceWarning, border: `1px solid ${theme.warningBorder}`, color: theme.warning }}><IconShield theme={theme} />1 approval pending</button>
         <button type="button" aria-label="Open notifications, 3 unread" onClick={onOpenNotifications ?? NOOP} className="relative inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md border" style={{ borderColor: theme.pillBorder, backgroundColor: "#ffffff" }}><IconBell theme={theme} /><span className="absolute -right-1 -top-1 inline-flex min-w-4 items-center justify-center rounded-full px-1 text-[9px] font-semibold" style={{ backgroundColor: "#ef4444", color: theme.panelBg }}>{notificationCount}</span></button>
       </div>
