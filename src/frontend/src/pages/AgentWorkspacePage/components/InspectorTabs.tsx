@@ -1,6 +1,6 @@
 import { useRef, type WheelEventHandler } from "react";
 
-import { WORKSPACE_TABS, WORKSPACE_TAB_LABELS } from "../constants";
+import { INSPECTOR_VISIBLE_TABS, WORKSPACE_TAB_LABELS } from "../constants";
 import type { WorkspaceTheme } from "../theme";
 import type { WorkspaceTab } from "../types";
 
@@ -41,7 +41,7 @@ export function InspectorTabs({
         className="agent-workspace-hide-scrollbar h-full min-w-0 overflow-x-auto overflow-y-hidden"
       >
         <div className="flex h-full min-w-max items-end gap-1">
-          {WORKSPACE_TABS.map((tab) => {
+          {INSPECTOR_VISIBLE_TABS.map((tab) => {
             const isActive = tab === activeTab;
 
             return (
