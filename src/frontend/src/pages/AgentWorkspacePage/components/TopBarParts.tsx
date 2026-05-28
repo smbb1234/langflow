@@ -29,7 +29,7 @@ export function TopBarPill({ children, theme, style, className, ariaLabel, ariaC
 }
 
 export function TopBarDivider({ theme }: { theme: WorkspaceTheme }) {
-  return <span className="h-5 w-px shrink-0" style={{ backgroundColor: theme.panelBorder }} aria-hidden="true" data-testid="topbar-divider" />;
+  return <span className="mx-1 h-5 w-px shrink-0" style={{ backgroundColor: theme.panelBorder }} aria-hidden="true" data-testid="topbar-divider" />;
 }
 
 export function StatusDot({ color }: { color: string }) {
