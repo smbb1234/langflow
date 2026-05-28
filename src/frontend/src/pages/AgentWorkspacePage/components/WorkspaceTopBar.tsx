@@ -1,10 +1,4 @@
-import {
-  IconBell,
-  IconButton,
-  IconLock,
-  StatusDot,
-  TopBarPill,
-} from "./TopBarParts";
+import { IconBell, IconButton, IconLock, IconShield, StatusDot, TopBarPill } from "./TopBarParts";
 import type { WorkspaceTheme } from "../theme";
 import type { AgentWorkspaceRun } from "../types";
 
@@ -33,75 +27,8 @@ export function WorkspaceTopBar({
   onOpenApprovals,
   onOpenNotifications,
 }: WorkspaceTopBarProps) {
-  const tokenLabel = Intl.NumberFormat("en-US", {
-    notation: "compact",
-    maximumFractionDigits: 1,
-  }).format(run.metrics.tokenCount);
-  const notificationCount = run.metrics.retryCount;
-  const stageLabelOrder = [
-    "Plan",
-    "Retrieve",
-    "Reason",
-    "Tool",
-    "Validate",
-    "Respond",
-  ];
-  const stagesByLabel = new Map(
-    run.stages.map((stage) => [stage.label.toLowerCase(), stage]),
-  );
-
-  const normalizedStages = stageLabelOrder.map((label) => {
-    const mappedLabel = label === "Validate" ? "guardrails" : label;
-    const stage = stagesByLabel.get(mappedLabel.toLowerCase());
-
-    return {
-      id: stage?.id ?? `stage-${label.toLowerCase()}`,
-      label,
-      status: stage?.status ?? "PENDING",
-    };
-  });
-
-  const statusStyleByStage = {
-    DONE: {
-      backgroundColor: theme.surfaceGreen,
-      borderColor: theme.pillBorder,
-      color: theme.success,
-    },
-    ACTIVE: {
-      backgroundColor: theme.surfaceBlue,
-      borderColor: theme.surfaceBlueBorder,
-      color: theme.primaryStrong,
-    },
-    PENDING: {
-      backgroundColor: theme.pillBg,
-      borderColor: theme.pillBorder,
-      color: theme.textSecondary,
-    },
-    BLOCKED: {
-      backgroundColor: theme.surfaceWarning,
-      borderColor: theme.warningBorder,
-      color: theme.warning,
-    },
-  } as const;
-
-  const toSeconds = (value: string) => {
-    const [hh, mm, ss] = value.split(":").map(Number);
-    if ([hh, mm, ss].some(Number.isNaN)) return null;
-    return hh * 3600 + mm * 60 + ss;
-  };
-
-  const startedAtSeconds = toSeconds(run.startedAt);
-  const lastEventTimestamp = run.events.at(-1)?.timestamp;
-  const lastEventSeconds = lastEventTimestamp
-    ? toSeconds(lastEventTimestamp)
-    : null;
-  const elapsedSeconds =
-    startedAtSeconds !== null && lastEventSeconds !== null
-      ? Math.max(lastEventSeconds - startedAtSeconds, 0)
-      : 0;
-  const elapsedLabel = new Date(elapsedSeconds * 1000)
-    .toISOString()
-    .slice(11, 19);
+  const notificationCount = 3;
+  const agentProgress = ["a", "r", "a", "s", "d", "p"];
 
   return (
     <header
@@ -112,7 +39,12 @@ export function WorkspaceTopBar({
       }}
     >
       <div className="flex min-w-0 shrink-0 items-center gap-1.5">
-        <TopBarPill theme={theme}>{run.environment}</TopBarPill>
+        <TopBarPill
+          theme={theme}
+          style={{ backgroundColor: theme.surfaceBlue, borderColor: theme.surfaceBlueBorder, color: theme.primaryStrong }}
+        >
+          PROD · us-east-1
+        </TopBarPill>
         <TopBarPill
           theme={theme}
           style={{
@@ -122,10 +54,10 @@ export function WorkspaceTopBar({
           }}
         >
           <IconLock theme={theme} />
-          {run.scope}
+          finance_ro
         </TopBarPill>
         <TopBarPill theme={theme} className="hidden lg:inline-flex">
-          tenant: {run.tenant}
+          tenant: acme
         </TopBarPill>
       </div>
 
@@ -144,39 +76,31 @@ export function WorkspaceTopBar({
           className="text-[11px]"
         >
           <StatusDot color={theme.primaryStrong} />
-          {run.status}
+          RUNNING
         </TopBarPill>
         <span
-          className="min-w-0 flex-1 truncate text-[11px]"
+          className="shrink-0 text-[11px] font-medium"
           style={{ color: theme.textPrimary }}
         >
-          {run.title}
+          Q3 revenue analysis
         </span>
-        <div className="flex min-w-0 shrink items-center gap-1.5 overflow-x-auto overflow-y-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-          {normalizedStages.map((stage) => (
+        <div className="flex items-center gap-1" aria-label="Agent progress">
+          {agentProgress.map((stage, index) => (
             <TopBarPill
-              key={stage.id}
+              key={`${stage}-${index}`}
               theme={theme}
-              style={statusStyleByStage[stage.status]}
-              className="text-[11px]"
+              className="h-5 rounded px-1.5 text-[10px]"
             >
-              {stage.label}
+              {stage}
             </TopBarPill>
           ))}
         </div>
-        <span className="hidden shrink-0 xl:inline">
-          step {run.currentStep}/{run.totalSteps} | {elapsedLabel}
-        </span>
-        <span className="hidden shrink-0 lg:inline">
-          ∞ {String(run.metrics.eventCount).padStart(2, "0")}
-        </span>
-        <span className="hidden shrink-0 xl:inline">
-          p95 {run.metrics.p95Ms}ms
-        </span>
-        <span className="hidden shrink-0 2xl:inline">tok {tokenLabel}</span>
-        <span className="hidden shrink-0 2xl:inline">
-          $ {run.metrics.costUsd.toFixed(3)}
-        </span>
+        <TopBarPill theme={theme} className="h-5 rounded px-1.5 text-[10px]">step 4/6</TopBarPill>
+        <TopBarPill theme={theme} className="h-5 rounded px-1.5 text-[10px]">00:00:14</TopBarPill>
+        <TopBarPill theme={theme} className="h-5 rounded px-1.5 text-[10px]">∞ 128</TopBarPill>
+        <TopBarPill theme={theme} className="h-5 rounded px-1.5 text-[10px]">p95 412ms</TopBarPill>
+        <TopBarPill theme={theme} className="h-5 rounded px-1.5 text-[10px]">tok 1.2k</TopBarPill>
+        <TopBarPill theme={theme} className="h-5 rounded px-1.5 text-[10px]">$ 0.014</TopBarPill>
       </div>
 
       <div
@@ -184,11 +108,12 @@ export function WorkspaceTopBar({
         style={{ color: theme.textSecondary }}
       >
         <IconButton
-          label="Create run"
+          label="Pause run"
           onClick={onCreateRun ?? NOOP}
           theme={theme}
+          style={{ backgroundColor: theme.surfaceBlue, borderColor: theme.surfaceBlueBorder, color: theme.primaryStrong }}
         >
-          ⊞
+          ⏸
         </IconButton>
         <IconButton
           label="Refresh run"
@@ -205,11 +130,12 @@ export function WorkspaceTopBar({
           <IconLock theme={theme} />
         </IconButton>
         <IconButton
-          label="Toggle layout"
+          label="Stop run"
           onClick={onToggleLayout ?? NOOP}
           theme={theme}
+          style={{ backgroundColor: "#ffe4e6", borderColor: "#fecdd3", color: "#be123c" }}
         >
-          ◫
+          ■
         </IconButton>
 
         <button
@@ -223,25 +149,24 @@ export function WorkspaceTopBar({
             color: theme.warning,
           }}
         >
-          <StatusDot color={theme.warning} />
-          {run.approval.pendingCount} approval pending
+          <IconShield theme={theme} />1 approval pending
         </button>
 
         <button
           type="button"
-          aria-label="Open notifications"
+          aria-label="Open notifications, 3 unread"
           onClick={onOpenNotifications ?? NOOP}
           className="relative inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md border"
           style={{
             borderColor: theme.pillBorder,
-            backgroundColor: theme.pillBg,
+            backgroundColor: "#ffffff",
           }}
         >
           <IconBell theme={theme} />
           <span
             className="absolute -right-1 -top-1 inline-flex min-w-4 items-center justify-center rounded-full px-1 text-[9px] font-semibold"
             style={{
-              backgroundColor: theme.primaryStrong,
+              backgroundColor: "#ef4444",
               color: theme.panelBg,
             }}
           >
