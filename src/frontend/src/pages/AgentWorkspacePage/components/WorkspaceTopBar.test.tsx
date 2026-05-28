@@ -1,18 +1,28 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+
 import { render, screen, within } from "@testing-library/react";
 
 import { MOCK_AGENT_WORKSPACE_RUN } from "../constants";
-import { workspaceLightTheme } from "../theme";
+import { workspaceDarkTheme, workspaceLightTheme } from "../theme";
 import { WorkspaceTopBar } from "./WorkspaceTopBar";
 
 describe("WorkspaceTopBar", () => {
   it("uses one front scroll container and preserves icons/dividers", () => {
-    render(<WorkspaceTopBar run={MOCK_AGENT_WORKSPACE_RUN} theme={workspaceLightTheme} />);
+    render(
+      <WorkspaceTopBar
+        run={MOCK_AGENT_WORKSPACE_RUN}
+        theme={workspaceLightTheme}
+      />,
+    );
 
     const front = screen.getByLabelText("Top bar run context");
     expect(front).toBeInTheDocument();
     expect(within(front).getByText("PROD · us-east-1")).toBeInTheDocument();
     expect(within(front).getByText("$ 0.014")).toBeInTheDocument();
-    ["Plan", "Retrieve", "Reason", "Tool", "Validate", "Respond"].forEach((label) => expect(within(front).getByText(label)).toBeInTheDocument());
+    ["Plan", "Retrieve", "Reason", "Tool", "Validate", "Respond"].forEach(
+      (label) => expect(within(front).getByText(label)).toBeInTheDocument(),
+    );
     const topbarLockIcons = within(front).getAllByTestId("icon-lock");
     expect(topbarLockIcons.length).toBeGreaterThanOrEqual(1);
     const topbarLockIcon = topbarLockIcons[0];
@@ -20,11 +30,18 @@ describe("WorkspaceTopBar", () => {
     expect(topbarLockIcon).toHaveAttribute("viewBox", "0 0 24 24");
     expect(topbarLockIcon).toHaveAttribute("aria-hidden", "true");
     expect(topbarLockIcon).toHaveClass("h-3.5", "w-3.5", "shrink-0");
-    expect(topbarLockIcon.querySelector(`path[d="M8 11V7a4 4 0 1 1 8 0v4"]`)).toBeInTheDocument();
-    expect(topbarLockIcon.querySelector(`rect[x="5"][y="11"][width="14"][height="9"][rx="2"]`)).toBeInTheDocument();
+    expect(
+      topbarLockIcon.querySelector(`path[d="M8 11V7a4 4 0 1 1 8 0v4"]`),
+    ).toBeInTheDocument();
+    expect(
+      topbarLockIcon.querySelector(
+        `rect[x="5"][y="11"][width="14"][height="9"][rx="2"]`,
+      ),
+    ).toBeInTheDocument();
     expect(within(front).getAllByTestId("topbar-divider")).toHaveLength(2);
 
-    const actions = screen.getByRole("button", { name: "Pause run" }).parentElement as HTMLElement;
+    const actions = screen.getByRole("button", { name: "Pause run" })
+      .parentElement as HTMLElement;
     const buttons = within(actions).getAllByRole("button");
     expect(buttons[0]).toHaveAccessibleName("Pause run");
     expect(buttons[1]).toHaveAccessibleName("Refresh run");
@@ -38,22 +55,36 @@ describe("WorkspaceTopBar", () => {
     const financeLockIcon = within(financePill).getByTestId("icon-lock");
     expect(financeLockIcon.getAttribute("class") ?? "").toContain("mr-1.5");
     expect(buttons[3]).toHaveAccessibleName("Stop run");
-    expect(within(buttons[3]).getByTestId("icon-stop-outline")).toBeInTheDocument();
-    const stopButton = within(actions).getByRole("button", { name: "Stop run" });
-    const approvalsButton = within(actions).getByRole("button", { name: "Open approvals" });
+    expect(
+      within(buttons[3]).getByTestId("icon-stop-outline"),
+    ).toBeInTheDocument();
+    const stopButton = within(actions).getByRole("button", {
+      name: "Stop run",
+    });
+    const approvalsButton = within(actions).getByRole("button", {
+      name: "Open approvals",
+    });
     expect(approvalsButton).toHaveTextContent("1 approval pending");
-    const notificationsButton = within(actions).getByRole("button", { name: "Open notifications, 3 unread" });
+    const notificationsButton = within(actions).getByRole("button", {
+      name: "Open notifications, 3 unread",
+    });
     const shieldIcon = within(approvalsButton).getByTestId("icon-shield");
     expect(shieldIcon.tagName.toLowerCase()).toBe("svg");
     expect(shieldIcon).toHaveAttribute("viewBox", "0 0 24 24");
     expect(shieldIcon).toHaveAttribute("width", "11");
     expect(shieldIcon).toHaveAttribute("height", "11");
-    expect(shieldIcon.querySelector('path[d="M12 3 4 6v6c0 5 3.5 8.5 8 9 4.5-.5 8-4 8-9V6l-8-3Z"]')).toBeInTheDocument();
+    expect(
+      shieldIcon.querySelector(
+        'path[d="M12 3 4 6v6c0 5 3.5 8.5 8 9 4.5-.5 8-4 8-9V6l-8-3Z"]',
+      ),
+    ).toBeInTheDocument();
     expect(approvalsButton.firstElementChild).toBe(shieldIcon);
     const actionDividers = within(actions).getAllByTestId("topbar-divider");
     expect(actionDividers).toHaveLength(1);
     const divider = actionDividers[0];
-    expect(divider).toHaveStyle({ backgroundColor: workspaceLightTheme.panelBorder });
+    expect(divider).toHaveStyle({
+      backgroundColor: workspaceLightTheme.panelBorder,
+    });
     expect(stopButton.nextElementSibling).toBe(divider);
     expect(divider.nextElementSibling).toBe(approvalsButton);
 
@@ -65,8 +96,61 @@ describe("WorkspaceTopBar", () => {
     expect(bellIcon).toHaveAttribute("aria-hidden", "true");
     expect(bellIcon).toHaveClass("h-3.5", "w-3.5", "shrink-0");
     expect(bellIcon).not.toHaveClass("mr-1.5");
-    expect(bellIcon.querySelector(`path[d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2H4.5L6 16Z"]`)).toBeInTheDocument();
-    expect(bellIcon.querySelector(`path[d="M10 20a2 2 0 0 0 4 0"]`)).toBeInTheDocument();
+    expect(
+      bellIcon.querySelector(
+        `path[d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2H4.5L6 16Z"]`,
+      ),
+    ).toBeInTheDocument();
+    expect(
+      bellIcon.querySelector(`path[d="M10 20a2 2 0 0 0 4 0"]`),
+    ).toBeInTheDocument();
     expect(within(notificationsButton).getByText("3")).toBeInTheDocument();
+  });
+
+  it.each([
+    ["light", workspaceLightTheme],
+    ["dark", workspaceDarkTheme],
+  ])(
+    "uses adaptive theme colors for trailing action buttons in %s mode",
+    (_mode, theme) => {
+      render(<WorkspaceTopBar run={MOCK_AGENT_WORKSPACE_RUN} theme={theme} />);
+
+      const stopButton = screen.getByRole("button", { name: "Stop run" });
+      expect(stopButton).toHaveStyle({
+        backgroundColor: theme.surfaceError,
+        borderColor: theme.surfaceErrorBorder,
+        color: theme.error,
+      });
+      expect(stopButton).not.toHaveStyle({ backgroundColor: "#ffe4e6" });
+      expect(stopButton).not.toHaveStyle({ color: "#be123c" });
+
+      const notificationsButton = screen.getByRole("button", {
+        name: "Open notifications, 3 unread",
+      });
+      expect(notificationsButton).toHaveStyle({
+        backgroundColor: theme.pillBg,
+        borderColor: theme.pillBorder,
+        color: theme.textSecondary,
+      });
+      expect(notificationsButton).not.toHaveStyle({
+        backgroundColor: "#ffffff",
+      });
+
+      const notificationBadge = within(notificationsButton).getByText("3");
+      expect(notificationBadge).toBeInTheDocument();
+      expect(notificationBadge).toHaveStyle({
+        backgroundColor: "#ef4444",
+        color: "#ffffff",
+      });
+    },
+  );
+
+  it("does not hardcode the trailing action light-mode colors in WorkspaceTopBar", () => {
+    const source = readFileSync(join(__dirname, "WorkspaceTopBar.tsx"), "utf8");
+
+    expect(source).not.toContain('backgroundColor: "#ffe4e6"');
+    expect(source).not.toContain('borderColor: "#fecdd3"');
+    expect(source).not.toContain('color: "#be123c"');
+    expect(source).not.toContain('backgroundColor: "#ffffff"');
   });
 });
