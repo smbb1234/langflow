@@ -142,16 +142,10 @@ export function RunSidebar({
       }}
     >
       <div
-        className="border-b px-4 py-3"
+        className="border-b px-4 py-2"
         style={{ borderColor: theme.panelBorder }}
       >
         <JaiLogo className="h-8 w-[140px]" />
-        <p
-          className="mt-1 text-[12px] font-medium"
-          style={{ color: theme.textSecondary }}
-        >
-          Agentic Workspace
-        </p>
       </div>
       <div className="px-4 pt-3">
         <button
