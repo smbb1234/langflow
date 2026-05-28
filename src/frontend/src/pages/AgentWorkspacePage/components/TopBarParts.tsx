@@ -55,7 +55,7 @@ export function IconLock({
       strokeLinejoin="round"
       aria-hidden="true"
       data-testid="icon-lock"
-      className={`mr-1.5 h-3.5 w-3.5 shrink-0 ${className}`}
+      className={`h-3.5 w-3.5 shrink-0 ${className}`}
       style={{ color: theme.textSecondary }}
     >
       <path d="M8 11V7a4 4 0 1 1 8 0v4" />
@@ -87,11 +87,29 @@ export function IconBell({ theme }: { theme: WorkspaceTheme }) {
   );
 }
 
-export function IconShield({ theme }: { theme: WorkspaceTheme }) {
+export function IconShield({
+  theme,
+  className = "",
+}: {
+  theme: WorkspaceTheme;
+  className?: string;
+}) {
   return (
-    <span className="relative mr-1.5 inline-block h-3.5 w-3" style={{ color: theme.warning }} aria-hidden="true">
-      <span className="absolute left-0 top-0 h-[10px] w-3 rounded-t-[3px] border border-b-0" style={{ borderColor: "currentColor" }} />
-      <span className="absolute left-0 top-[6px] h-[7px] w-3 border" style={{ borderColor: "currentColor", clipPath: "polygon(0 0, 100% 0, 50% 100%)" }} />
-    </span>
+    <svg
+      width="11"
+      height="11"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.6}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      data-testid="icon-shield"
+      className={`mr-1.5 h-[11px] w-[11px] shrink-0 ${className}`}
+      style={{ color: theme.warning }}
+    >
+      <path d="M12 3 4 6v6c0 5 3.5 8.5 8 9 4.5-.5 8-4 8-9V6l-8-3Z" />
+    </svg>
   );
 }

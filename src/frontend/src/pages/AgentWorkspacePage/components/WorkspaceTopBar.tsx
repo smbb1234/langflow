@@ -26,7 +26,7 @@ export function WorkspaceTopBar({ run, theme, onCreateRun, onRefresh, onToggleLo
     <header className="flex h-[44px] min-w-0 items-center gap-3 overflow-hidden px-4" style={{ backgroundColor: theme.panelBg, borderBottom: `1px solid ${theme.panelBorder}` }}>
       <div className="hide-scrollbar flex min-w-0 flex-1 items-center gap-2 overflow-x-auto text-[11px]" style={{ color: theme.textSecondary }} aria-label="Top bar run context">
         <TopBarPill theme={theme} style={{ backgroundColor: theme.surfaceBlue, borderColor: theme.surfaceBlueBorder, color: theme.primaryStrong }} className="shrink-0 whitespace-nowrap">PROD · us-east-1</TopBarPill>
-        <TopBarPill theme={theme} style={{ backgroundColor: theme.surfaceGreen, borderColor: theme.pillBorder, color: theme.success }} className="shrink-0 whitespace-nowrap"><IconLock theme={theme} />finance_ro</TopBarPill>
+        <TopBarPill theme={theme} style={{ backgroundColor: theme.surfaceGreen, borderColor: theme.pillBorder, color: theme.success }} className="shrink-0 whitespace-nowrap"><IconLock theme={theme} className="mr-1.5" />finance_ro</TopBarPill>
         <TopBarPill theme={theme} className="shrink-0 whitespace-nowrap">tenant: acme</TopBarPill>
         <TopBarDivider theme={theme} />
         <TopBarPill theme={theme} style={{ backgroundColor: theme.surfaceBlue, borderColor: theme.surfaceBlueBorder, color: theme.primaryStrong, fontWeight: 600 }} className="shrink-0 whitespace-nowrap text-[11px]"><StatusDot color={theme.primaryStrong} />RUNNING</TopBarPill>
