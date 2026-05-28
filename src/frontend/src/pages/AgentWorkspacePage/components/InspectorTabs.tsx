@@ -1,8 +1,18 @@
-import { useRef, type WheelEventHandler } from "react";
+import { useRef, type ComponentType, type WheelEventHandler } from "react";
+import { Activity, FileText, Info, Shield } from "lucide-react";
 
-import { WORKSPACE_TABS, WORKSPACE_TAB_LABELS } from "../constants";
+import { INSPECTOR_VISIBLE_TABS, WORKSPACE_TAB_LABELS } from "../constants";
 import type { WorkspaceTheme } from "../theme";
 import type { WorkspaceTab } from "../types";
+
+const INSPECTOR_TAB_ICONS: Record<WorkspaceTab, ComponentType<{ className?: string }>> = {
+  overview: Info,
+  guardrails: Shield,
+  evidence: FileText,
+  trace: Activity,
+  memory: FileText,
+  ops: Activity,
+};
 
 export function InspectorTabs({
   activeTab,
@@ -41,8 +51,9 @@ export function InspectorTabs({
         className="agent-workspace-hide-scrollbar h-full min-w-0 overflow-x-auto overflow-y-hidden"
       >
         <div className="flex h-full min-w-max items-end gap-1">
-          {WORKSPACE_TABS.map((tab) => {
+          {INSPECTOR_VISIBLE_TABS.map((tab) => {
             const isActive = tab === activeTab;
+            const Icon = INSPECTOR_TAB_ICONS[tab];
 
             return (
               <button
@@ -63,11 +74,12 @@ export function InspectorTabs({
                 onClick={() => onTabChange(tab)}
               >
                 <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
+                  <Icon className="h-3.5 w-3.5" />
                   {WORKSPACE_TAB_LABELS[tab]}
                   {tabDots?.[tab] ? (
                     <span
                       className="h-1.5 w-1.5 rounded-full"
-                      style={{ backgroundColor: theme.error }}
+                      style={{ backgroundColor: tab === "guardrails" ? "#f97316" : theme.error }}
                     />
                   ) : null}
                 </span>

@@ -13,6 +13,7 @@ import type {
 export const WORKSPACE_TABS: WorkspaceTab[] = ["overview", "guardrails", "evidence", "trace", "memory", "ops"];
 
 export const MAIN_WORKSPACE_TABS: WorkspaceTab[] = ["overview", "guardrails", "evidence", "trace"];
+export const INSPECTOR_VISIBLE_TABS: WorkspaceTab[] = ["overview", "guardrails", "evidence", "trace"];
 
 export const WORKSPACE_TAB_LABELS: Record<WorkspaceTab, string> = {
   overview: "Overview",
