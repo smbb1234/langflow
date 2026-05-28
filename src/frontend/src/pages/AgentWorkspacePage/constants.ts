@@ -10,6 +10,29 @@ import type {
   WorkspaceTab,
 } from "./types";
 
+
+export const DEFAULT_SIDEBAR_WIDTH = 288;
+export const MIN_SIDEBAR_WIDTH = 240;
+export const MAX_SIDEBAR_WIDTH = 480;
+
+export const DEFAULT_INSPECTOR_WIDTH = 360;
+export const MIN_INSPECTOR_WIDTH = 300;
+export const MAX_INSPECTOR_WIDTH = 560;
+
+export const DEFAULT_TRACE_HEIGHT = 208;
+export const COLLAPSED_TRACE_HEIGHT = 56;
+export const MIN_TRACE_HEIGHT = 120;
+export const MAX_TRACE_HEIGHT = 520;
+export const MAX_TRACE_HEIGHT_RATIO = 0.55;
+
+export const RESIZER_SIZE = 6;
+
+export const STORAGE_KEYS = {
+  sidebarWidth: "agentWorkspace.sidebarWidth",
+  inspectorWidth: "agentWorkspace.inspectorWidth",
+  traceHeight: "agentWorkspace.traceHeight",
+};
+
 export const WORKSPACE_TABS: WorkspaceTab[] = ["overview", "guardrails", "evidence", "trace", "memory", "ops"];
 
 export const MAIN_WORKSPACE_TABS: WorkspaceTab[] = ["overview", "guardrails", "evidence", "trace"];
