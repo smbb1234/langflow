@@ -19,6 +19,7 @@ describe("WorkspaceTopBar", () => {
     expect(topbarLockIcon.tagName.toLowerCase()).toBe("svg");
     expect(topbarLockIcon).toHaveAttribute("viewBox", "0 0 24 24");
     expect(topbarLockIcon).toHaveAttribute("aria-hidden", "true");
+    expect(topbarLockIcon).toHaveClass("h-3.5", "w-3.5", "shrink-0");
     expect(topbarLockIcon.querySelector(`path[d="M8 11V7a4 4 0 1 1 8 0v4"]`)).toBeInTheDocument();
     expect(topbarLockIcon.querySelector(`rect[x="5"][y="11"][width="14"][height="9"][rx="2"]`)).toBeInTheDocument();
     expect(within(front).getAllByTestId("topbar-divider")).toHaveLength(2);
@@ -30,6 +31,7 @@ describe("WorkspaceTopBar", () => {
     expect(buttons[2]).toHaveAccessibleName("Toggle scope lock");
     const actionLockIcon = within(buttons[2]).getByTestId("icon-lock");
     expect(actionLockIcon.tagName.toLowerCase()).toBe("svg");
+    expect(actionLockIcon.getAttribute("class") ?? "").not.toContain("mr-1.5");
 
     const financeLabel = within(front).getByText("finance_ro");
     const financePill = financeLabel.closest("span") as HTMLElement;
@@ -41,6 +43,13 @@ describe("WorkspaceTopBar", () => {
     const approvalsButton = within(actions).getByRole("button", { name: "Open approvals" });
     expect(approvalsButton).toHaveTextContent("1 approval pending");
     const notificationsButton = within(actions).getByRole("button", { name: "Open notifications, 3 unread" });
+    const shieldIcon = within(approvalsButton).getByTestId("icon-shield");
+    expect(shieldIcon.tagName.toLowerCase()).toBe("svg");
+    expect(shieldIcon).toHaveAttribute("viewBox", "0 0 24 24");
+    expect(shieldIcon).toHaveAttribute("width", "11");
+    expect(shieldIcon).toHaveAttribute("height", "11");
+    expect(shieldIcon.querySelector('path[d="M12 3 4 6v6c0 5 3.5 8.5 8 9 4.5-.5 8-4 8-9V6l-8-3Z"]')).toBeInTheDocument();
+    expect(approvalsButton.firstElementChild).toBe(shieldIcon);
     const actionDividers = within(actions).getAllByTestId("topbar-divider");
     expect(actionDividers).toHaveLength(1);
     const divider = actionDividers[0];
