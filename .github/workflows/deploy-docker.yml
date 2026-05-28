@@ -3,6 +3,50 @@ name: Deploy Langflow Docker Package
 run-name: Deploy Langflow ${{ inputs.release_tag }} by @${{ github.actor }}
 
 on:
+  workflow_call:
+    inputs:
+      release_tag:
+        required: true
+        type: string
+      release_tag_prefix:
+        required: true
+        type: string
+        default: "package-main-"
+      asset_name:
+        required: true
+        type: string
+      deploy_dir:
+        required: true
+        type: string
+      image_name:
+        required: true
+        type: string
+        default: "langflow-custom"
+      image_tag:
+        required: true
+        type: string
+        default: "latest"
+      ssh_retry_count:
+        required: true
+        type: string
+        default: "5"
+      ssh_retry_interval_seconds:
+        required: true
+        type: string
+        default: "10"
+      run_compose_down:
+        required: true
+        type: boolean
+        default: true
+      remove_old_image:
+        required: true
+        type: boolean
+        default: true
+      run_compose_up:
+        required: true
+        type: boolean
+        default: true
+  
   workflow_dispatch:
     inputs:
       release_tag:
