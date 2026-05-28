@@ -1,6 +1,6 @@
 import { IconBell, IconButton, IconLock, IconShield, StatusDot, TopBarPill } from "./TopBarParts";
 import type { WorkspaceTheme } from "../theme";
-import type { AgentWorkspaceRun } from "../types";
+import type { AgentWorkspaceRun, RunStage, StepStatus } from "../types";
 
 type WorkspaceTopBarProps = {
   run: AgentWorkspaceRun;
@@ -17,6 +17,53 @@ const NOOP = () => {
   // TODO: wire this action to real run controls when backend actions are available.
 };
 
+const STAGE_LABEL_ORDER = ["Plan", "Retrieve", "Reason", "Tool", "Validate", "Respond"] as const;
+const TOP_BAR_STAGE_TO_INTERNAL: Record<(typeof STAGE_LABEL_ORDER)[number], string[]> = {
+  Plan: ["Plan", "Intake"],
+  Retrieve: ["Retrieve"],
+  Reason: ["Reason"],
+  Tool: ["Tool", "Actions"],
+  Validate: ["Guardrails", "Validate"],
+  Respond: ["Respond", "Approval"],
+};
+
+function getStageStatus(stages: RunStage[], candidates: string[]): StepStatus {
+  const match = stages.find((stage) => candidates.includes(stage.label));
+  return match?.status ?? "PENDING";
+}
+
+function getStageTone(theme: WorkspaceTheme, status: StepStatus) {
+  if (status === "DONE") {
+    return {
+      backgroundColor: theme.surfaceGreen,
+      borderColor: "#a7f3d0",
+      color: theme.success,
+    };
+  }
+
+  if (status === "ACTIVE") {
+    return {
+      backgroundColor: theme.surfaceBlue,
+      borderColor: theme.surfaceBlueBorder,
+      color: theme.primaryStrong,
+    };
+  }
+
+  if (status === "BLOCKED") {
+    return {
+      backgroundColor: theme.surfaceWarning,
+      borderColor: theme.warningBorder,
+      color: theme.warning,
+    };
+  }
+
+  return {
+    backgroundColor: theme.pillBg,
+    borderColor: theme.pillBorder,
+    color: theme.textSecondary,
+  };
+}
+
 export function WorkspaceTopBar({
   run,
   theme,
@@ -28,7 +75,10 @@ export function WorkspaceTopBar({
   onOpenNotifications,
 }: WorkspaceTopBarProps) {
   const notificationCount = 3;
-  const agentProgress = ["a", "r", "a", "s", "d", "p"];
+  const normalizedStages = STAGE_LABEL_ORDER.map((stageLabel) => ({
+    label: stageLabel,
+    status: getStageStatus(run.stages, TOP_BAR_STAGE_TO_INTERNAL[stageLabel]),
+  }));
 
   return (
     <header
@@ -78,20 +128,20 @@ export function WorkspaceTopBar({
           <StatusDot color={theme.primaryStrong} />
           RUNNING
         </TopBarPill>
-        <span
-          className="shrink-0 text-[11px] font-medium"
-          style={{ color: theme.textPrimary }}
-        >
+        <span className="truncate text-[11px] font-medium" style={{ color: theme.textPrimary }}>
           Q3 revenue analysis
         </span>
-        <div className="flex items-center gap-1" aria-label="Agent progress">
-          {agentProgress.map((stage, index) => (
+        <div className="flex min-w-0 items-center gap-1 overflow-x-auto" aria-label="Run progress stages">
+          {normalizedStages.map(({ label, status }) => (
             <TopBarPill
-              key={`${stage}-${index}`}
+              key={label}
               theme={theme}
               className="h-5 rounded px-1.5 text-[10px]"
+              ariaLabel={`${label} stage, ${status.toLowerCase()}`}
+              ariaCurrent={status === "ACTIVE" ? "step" : undefined}
+              style={getStageTone(theme, status)}
             >
-              {stage}
+              {label}
             </TopBarPill>
           ))}
         </div>

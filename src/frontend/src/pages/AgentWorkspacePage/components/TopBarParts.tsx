@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from "react";
+import type { AriaAttributes, CSSProperties, ReactNode } from "react";
 import type { WorkspaceTheme } from "../theme";
 
 type PillProps = {
@@ -6,11 +6,15 @@ type PillProps = {
   theme: WorkspaceTheme;
   style?: CSSProperties;
   className?: string;
+  ariaLabel?: string;
+  ariaCurrent?: AriaAttributes["aria-current"];
 };
 
-export function TopBarPill({ children, theme, style, className }: PillProps) {
+export function TopBarPill({ children, theme, style, className, ariaLabel, ariaCurrent }: PillProps) {
   return (
     <span
+      aria-label={ariaLabel}
+      aria-current={ariaCurrent}
       className={`inline-flex h-6 shrink-0 items-center whitespace-nowrap rounded-md px-2 text-[11px] ${className ?? ""}`}
       style={{
         border: `1px solid ${theme.pillBorder}`,
