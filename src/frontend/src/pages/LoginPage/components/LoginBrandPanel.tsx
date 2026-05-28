@@ -17,7 +17,7 @@ export function LoginBrandPanel({ theme }: LoginBrandPanelProps): JSX.Element {
       }}
     >
       <div className="flex h-full flex-col">
-        <JaiLogo className="h-[53px] w-[230px]" />
+        <JaiLogo variant="dark" className="h-[53px] w-[230px]" />
 
         <div className="mt-[120px] max-w-[680px] max-lg:mt-14">
           <span

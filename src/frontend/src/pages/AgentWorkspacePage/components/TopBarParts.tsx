@@ -28,45 +28,30 @@ export function TopBarPill({ children, theme, style, className, ariaLabel, ariaC
   );
 }
 
+export function TopBarDivider({ theme }: { theme: WorkspaceTheme }) {
+  return <span className="h-5 w-px shrink-0" style={{ backgroundColor: theme.panelBorder }} aria-hidden="true" data-testid="topbar-divider" />;
+}
+
 export function StatusDot({ color }: { color: string }) {
   return <span className="mr-1.5 inline-block size-[7px] rounded-full" style={{ backgroundColor: color }} aria-hidden="true" />;
 }
 
 export function IconLock({ theme }: { theme: WorkspaceTheme }) {
-  // TODO: replace with project icon component if available.
   return (
-    <span
-      className="relative mr-1.5 inline-block h-3 w-[9px]"
-      style={{ color: theme.textSecondary }}
-      aria-hidden="true"
-    >
+    <span className="relative mr-1.5 inline-block h-3 w-[9px]" style={{ color: theme.textSecondary }} aria-hidden="true" data-testid="icon-lock">
       <span className="absolute bottom-0 block h-[7px] w-[9px] rounded-sm border" style={{ borderColor: "currentColor" }} />
       <span className="absolute left-[1px] top-[-4px] block h-[6px] w-[7px] rounded-t-full border border-b-0" style={{ borderColor: "currentColor" }} />
     </span>
   );
 }
 
-export function IconButton({
-  label,
-  onClick,
-  children,
-  theme,
-  style,
-}: {
-  label: string;
-  onClick: () => void;
-  children: ReactNode;
-  theme: WorkspaceTheme;
-  style?: CSSProperties;
-}) {
+export function IconStopOutline({ theme }: { theme: WorkspaceTheme }) {
+  return <span className="inline-block h-[10px] w-[10px] border" style={{ borderColor: theme.error }} aria-hidden="true" data-testid="icon-stop-outline" />;
+}
+
+export function IconButton({ label, onClick, children, theme, style }: { label: string; onClick: () => void; children: ReactNode; theme: WorkspaceTheme; style?: CSSProperties }) {
   return (
-    <button
-      type="button"
-      aria-label={label}
-      onClick={onClick}
-      className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md border text-[12px]"
-      style={{ borderColor: theme.pillBorder, backgroundColor: theme.pillBg, color: theme.textSecondary, ...style }}
-    >
+    <button type="button" aria-label={label} onClick={onClick} className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md border text-[12px]" style={{ borderColor: theme.pillBorder, backgroundColor: theme.pillBg, color: theme.textSecondary, ...style }}>
       {children}
     </button>
   );
@@ -86,10 +71,7 @@ export function IconShield({ theme }: { theme: WorkspaceTheme }) {
   return (
     <span className="relative mr-1.5 inline-block h-3.5 w-3" style={{ color: theme.warning }} aria-hidden="true">
       <span className="absolute left-0 top-0 h-[10px] w-3 rounded-t-[3px] border border-b-0" style={{ borderColor: "currentColor" }} />
-      <span
-        className="absolute left-0 top-[6px] h-[7px] w-3 border"
-        style={{ borderColor: "currentColor", clipPath: "polygon(0 0, 100% 0, 50% 100%)" }}
-      />
+      <span className="absolute left-0 top-[6px] h-[7px] w-3 border" style={{ borderColor: "currentColor", clipPath: "polygon(0 0, 100% 0, 50% 100%)" }} />
     </span>
   );
 }

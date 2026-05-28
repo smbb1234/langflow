@@ -3,7 +3,7 @@ import type { AgentWorkspaceRun } from "../types";
 
 export function UncertaintySection({ run, theme }: { run: AgentWorkspaceRun; theme: WorkspaceTheme }) {
   return (
-    <section className="rounded-md border p-4" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface }}>
+    <section className="rounded-md border p-4" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface, boxShadow: theme.shadowSoft }}>
       <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide" style={{ color: theme.textSecondary }}>Uncertainty</h3>
       <div className="flex items-center justify-between gap-3">
         <div>

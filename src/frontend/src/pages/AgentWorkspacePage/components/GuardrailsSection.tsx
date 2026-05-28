@@ -19,7 +19,7 @@ function StatusPill({ status, theme }: { status: "pass" | "warn" | "warning" | "
 export function GuardrailsSection({ run, theme }: { run: AgentWorkspaceRun; theme: WorkspaceTheme }) {
   return (
     <section className="space-y-3 text-xs">
-      <article className="rounded-lg border p-4" style={{ borderColor: theme.successBorder, backgroundColor: theme.surface }}>
+      <article className="rounded-lg border p-4" style={{ borderColor: theme.successBorder, backgroundColor: theme.surface, boxShadow: theme.shadowSoft }}>
         <div className="flex items-start justify-between gap-3">
           <div>
             <h3 className="text-[14px] font-semibold" style={{ color: theme.textPrimary }}>Prompt Security Center</h3>
@@ -33,7 +33,7 @@ export function GuardrailsSection({ run, theme }: { run: AgentWorkspaceRun; them
         </div>
       </article>
 
-      <article className="rounded-lg border p-4" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface }}>
+      <article className="rounded-lg border p-4" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface, boxShadow: theme.shadowSoft }}>
         <h4 className="text-[13px] font-semibold" style={{ color: theme.textPrimary }}>Pre-action checks</h4>
         <div className="mt-2 h-px" style={{ backgroundColor: theme.panelBorder }} />
         {run.guardrailChecks.map((check, index) => {
@@ -56,7 +56,7 @@ export function GuardrailsSection({ run, theme }: { run: AgentWorkspaceRun; them
         })}
       </article>
 
-      <article className="rounded-lg border p-4" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface }}>
+      <article className="rounded-lg border p-4" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface, boxShadow: theme.shadowSoft }}>
         <div className="mb-2 flex items-center justify-between">
           <h4 className="text-[13px] font-semibold" style={{ color: theme.textPrimary }}>Guardrail event feed</h4>
           <span className="text-[11px] uppercase" style={{ color: theme.textTertiary }}>live</span>

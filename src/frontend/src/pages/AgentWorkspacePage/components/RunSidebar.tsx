@@ -145,7 +145,7 @@ export function RunSidebar({
         className="border-b px-4 py-2"
         style={{ borderColor: theme.panelBorder }}
       >
-        <JaiLogo className="h-8 w-[140px]" />
+        <JaiLogo className="h-11 w-full" />
       </div>
       <div className="px-4 pt-3">
         <button

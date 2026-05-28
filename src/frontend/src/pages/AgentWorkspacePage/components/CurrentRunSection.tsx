@@ -15,7 +15,7 @@ export function CurrentRunSection({ run, theme }: { run: AgentWorkspaceRun; them
   const nextStage = run.stages.find((stage) => stage.status === "PENDING");
 
   return (
-    <section className="space-y-3 rounded-md border p-4" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface }}>
+    <section className="space-y-3 rounded-md border p-4" style={{ borderColor: theme.panelBorder, backgroundColor: theme.surface, boxShadow: theme.shadowSoft }}>
       <h3 className="text-sm font-semibold uppercase tracking-wide" style={{ color: theme.textSecondary }}>Current run</h3>
       <div className="space-y-2 text-sm">
         <Row label="Run ID" value={run.runDisplayId || "—"} theme={theme} />
