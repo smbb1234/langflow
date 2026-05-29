@@ -29,6 +29,7 @@ jobs:
         run: |
           git remote add upstream https://github.com/langflow-ai/langflow.git
           git fetch upstream main
+          git fetch origin main
 
       - name: Reset main to upstream/main
         run: |
@@ -37,4 +38,4 @@ jobs:
 
       - name: Push updated main
         run: |
-          git push origin main
+          git push --force-with-lease origin main
