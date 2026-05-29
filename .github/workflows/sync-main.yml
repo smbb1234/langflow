@@ -26,17 +26,31 @@ jobs:
           git config user.name "smbb1234"
           git config user.email "peter_926@live.cn"
 
-      - name: Add upstream and fetch
+      - name: Configure remotes
         run: |
-          git remote add upstream https://github.com/langflow-ai/langflow.git
-          git fetch upstream main
+          git remote set-url origin https://x-access-token:${{ secrets.SYNC_MAIN_PAT }}@github.com/smbb1234/langflow.git
+          git remote add upstream https://github.com/langflow-ai/langflow.git || true
+
+      - name: Fetch latest refs
+        run: |
           git fetch origin main
+          git fetch upstream main
 
       - name: Reset main to upstream/main
         run: |
           git checkout main
           git reset --hard upstream/main
+      
+      - name: Verify refs
+        run: |
+          echo "Local main:"
+          git rev-parse main
+          echo "origin/main:"
+          git rev-parse origin/main
+          echo "upstream/main:"
+          git rev-parse upstream/main
 
       - name: Push updated main
         run: |
-          git push --force-with-lease https://x-access-token:${{ secrets.SYNC_MAIN_PAT }}@github.com/smbb1234/langflow.git main
+          git fetch origin main
+          git push --force-with-lease origin main
