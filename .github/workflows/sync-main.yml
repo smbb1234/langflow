@@ -19,11 +19,12 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
+          token: ${{ secrets.SYNC_MAIN_PAT }}
 
       - name: Configure Git
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "smbb1234"
+          git config user.email "peter_926@live.cn"
 
       - name: Add upstream and fetch
         run: |
@@ -38,4 +39,4 @@ jobs:
 
       - name: Push updated main
         run: |
-          git push --force-with-lease origin main
+          git push --force-with-lease https://x-access-token:${{ secrets.SYNC_MAIN_PAT }}@github.com/smbb1234/langflow.git main
