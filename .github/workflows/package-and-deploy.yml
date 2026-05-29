@@ -42,7 +42,7 @@ on:
 jobs:
   package:
     name: Build Docker package
-    uses: ./.github/workflows/docker-build.yml
+    uses: ./.github/workflows/build-docker.yml
     with:
       release_type: ${{ inputs.release_type }}
       ref: ${{ inputs.ref }}
