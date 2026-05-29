@@ -37,4 +37,4 @@ jobs:
 
       - name: Push updated main
         run: |
-          git push origin main --force-with-lease
+          git push origin main
