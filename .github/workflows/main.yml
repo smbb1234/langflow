@@ -30,11 +30,11 @@ jobs:
           git remote add upstream https://github.com/langflow-ai/langflow.git
           git fetch upstream main
 
-      - name: Fast-forward main from upstream
+      - name: Reset main to upstream/main
         run: |
           git checkout main
-          git merge --ff-only upstream/main
+          git reset --hard upstream/main
 
       - name: Push updated main
         run: |
-          git push origin main
+          git push origin main --force-with-lease
